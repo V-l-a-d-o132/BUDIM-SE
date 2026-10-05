@@ -1,4 +1,4 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { verifyRecaptcha, rateLimit, readBody, publicRequestError } from '../_shared/security.ts';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -7,47 +7,12 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(ip: string, maxRequests = 10, windowMs = 60000): boolean {
-  const now = Date.now();
-  const key = `${ip}:${Math.floor(now / windowMs)}`;
-  const entry = rateLimitMap.get(key);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(key, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-  if (entry.count >= maxRequests) return false;
-  entry.count++;
-  return true;
-}
-
 function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0];
+  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? (origin ?? ALLOWED_ORIGINS[0]) : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': corsOrigin,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };
-}
-
-async function verifyRecaptcha(token: string): Promise<boolean> {
-  const secretKey = Deno.env.get('RECAPTCHA_SECRET_KEY');
-  if (!secretKey) {
-    console.warn('RECAPTCHA_SECRET_KEY not configured, skipping validation');
-    return true;
-  }
-  try {
-    const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
-    });
-    const data = await res.json();
-    return data.success === true;
-  } catch (e) {
-    console.error('reCAPTCHA verification error:', e);
-    return false;
-  }
 }
 
 function getRiskLevel(total: number): string {
@@ -64,7 +29,9 @@ function getRiskColor(total: number): string {
   return 'red';
 }
 
-serve(async (req) => {
+Deno.serve(async (req) => {
+  const gate = publicRequestError(req);
+  if (gate) return gate;
   const origin = req.headers.get('origin');
   const corsHeaders = getCorsHeaders(origin);
 
@@ -72,8 +39,7 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!checkRateLimit(clientIp, 10, 60000)) {
+  if (!await rateLimit(req, 'content-analyzer', 10)) {
     return new Response(
       JSON.stringify({ error: 'Too many requests. Please try again later.' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 429 }
@@ -88,7 +54,7 @@ serve(async (req) => {
   }
 
   try {
-    const { text, recaptcha_token } = await req.json();
+    const { text, recaptcha_token } = await readBody(req);
 
     if (!recaptcha_token) {
       return new Response(
@@ -268,7 +234,7 @@ ${text}
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message || 'Грешка при анализа',
+        error: 'Неуспешна обработка на анализа.',
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

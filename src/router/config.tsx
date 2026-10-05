@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-import { RouteObject, Navigate } from 'react-router-dom';
+import { type RouteObject, Navigate } from 'react-router-dom';
 import { NewsListPage, NewsDetailPage } from '../pages/news/page';
 
 const HomePage = lazy(() => import('../pages/home/page'));
@@ -21,6 +21,7 @@ const SourcesPage = lazy(() => import('../pages/sources/page'));
 const DigitalnaGramotnostPage = lazy(() => import('../pages/digitalna-gramotnost/page'));
 
 // Admin pages
+const AdminMfaPage = lazy(() => import('../pages/admin/mfa/page'));
 const AdminLoginPage = lazy(() => import('../pages/admin/login/page'));
 const AdminDashboardPage = lazy(() => import('../pages/admin/page'));
 const AdminInquiriesPage = lazy(() => import('../pages/admin/inquiries/page'));
@@ -50,6 +51,7 @@ const routes: RouteObject[] = [
   { path: '/sources', element: <SourcesPage /> },
   { path: '/digitalna-gramotnost', element: <DigitalnaGramotnostPage /> },
   // Admin
+  { path: '/admin/mfa', element: <AdminMfaPage /> },
   { path: '/admin/login', element: <AdminLoginPage /> },
   { path: '/admin', element: <AdminDashboardPage /> },
   { path: '/admin/inquiries', element: <AdminInquiriesPage /> },

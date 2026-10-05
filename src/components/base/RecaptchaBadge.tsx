@@ -1,4 +1,3 @@
-import ReCAPTCHA from 'react-google-recaptcha';
 
 const RECAPTCHA_SITE_KEY = '6Ldk4essAAAAACVM8lBvL0xtu5m-oOyM3mjKnNj4';
 

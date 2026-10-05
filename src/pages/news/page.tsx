@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { fetchNewsListCached, fetchNewsDetailCached } from '@/lib/supabase';
@@ -276,7 +277,7 @@ function NewsDetailPage() {
                 <p
                   key={i}
                   className="text-gray-700 leading-relaxed text-lg [&_a]:text-gray-900 [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-gray-600 [&_a]:transition-colors"
-                  dangerouslySetInnerHTML={{ __html: para }}
+                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(para, { ALLOWED_TAGS: ['a','b','strong','i','em','u','br','span'], ALLOWED_ATTR: ['href','title'] }) }}
                 />
               ))}
           </div>

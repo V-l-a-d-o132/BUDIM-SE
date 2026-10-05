@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { supabase } from '@/lib/supabase';
-import { GamePost } from './types';
-import { getSessionId } from './useSessionId';
+import { gameCommand } from './gameApi';
+import { type GamePost } from './types';
+
 import Icon from '@/components/base/Icon';
 
 const platformIcons: Record<string, string> = {
@@ -18,20 +18,9 @@ export default function PostHistory() {
 
   useEffect(() => {
     mounted.current = true;
-    const sessionId = getSessionId();
-
-    supabase
-      .from('social_game_posts')
-      .select('*')
-      .eq('session_id', sessionId)
-      .order('created_at', { ascending: false })
-      .limit(50)
-      .then(({ data }) => {
-        if (mounted.current) {
-          setPosts(data || []);
-          setLoading(false);
-        }
-      });
+    gameCommand('history').then(({ posts }) => {
+      if (mounted.current) { setPosts(posts || []); setLoading(false); }
+    }).catch(() => { if (mounted.current) setLoading(false); });
 
     return () => { mounted.current = false; };
   }, []);

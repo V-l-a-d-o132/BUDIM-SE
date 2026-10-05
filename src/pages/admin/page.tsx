@@ -1,3 +1,5 @@
+import { useAdminAuth } from '@/hooks/useAdminAuth';
+import { requiredAdminPermission } from '@/lib/admin-permissions';
 import { useEffect, useState } from 'react';
 import AdminGuard from './components/AdminGuard';
 import AdminLayout from './components/AdminLayout';
@@ -17,6 +19,7 @@ export default function AdminDashboard() {
     noIndex: true,
   });
 
+  const { admin } = useAdminAuth();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -47,7 +50,7 @@ export default function AdminDashboard() {
               { label: 'Запитвания', value: stats?.inquiries, icon: 'ri-mail-line', link: '/admin/inquiries' },
               { label: 'Публикувани новини', value: stats?.news_published, icon: 'ri-newspaper-line', link: '/admin/news' },
               { label: 'Чернови', value: stats?.news_draft, icon: 'ri-draft-line', link: '/admin/news' },
-            ].map((s, i) => (
+            ].filter(s => admin?.permissions.includes(requiredAdminPermission(s.link))).map((s, i) => (
               <a key={i} href={s.link} className="bg-white border border-gray-100 rounded-xl p-6 hover:border-gray-300 transition-colors cursor-pointer block">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-9 h-9 flex items-center justify-center bg-gray-50 rounded-lg">
@@ -66,7 +69,7 @@ export default function AdminDashboard() {
           <div className="bg-white border border-gray-100 rounded-xl p-6">
             <h2 className="text-sm font-medium text-gray-900 mb-4">Бързи действия</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <a
+              {admin?.permissions.includes('news') && <a
                 href="/admin/news?new=1"
                 className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer"
               >
@@ -77,8 +80,8 @@ export default function AdminDashboard() {
                   <p className="text-sm font-medium text-gray-900">Нова новина</p>
                   <p className="text-xs text-gray-400">Публикувай статия</p>
                 </div>
-              </a>
-              <a
+              </a>}
+              {admin?.permissions.includes('orders') && <a
                 href="/admin/orders"
                 className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer"
               >
@@ -89,7 +92,7 @@ export default function AdminDashboard() {
                   <p className="text-sm font-medium text-gray-900">Поръчки от Stripe</p>
                   <p className="text-xs text-gray-400">Виж всички продажби</p>
                 </div>
-              </a>
+              </a>}
               <a
                 href="/admin/inquiries"
                 className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer"

@@ -1,5 +1,5 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
+import { serviceClient, verifyRecaptcha, rateLimit, readBody, publicRequestError } from '../_shared/security.ts';
+import { validAssessmentAnswers } from '../_shared/assessment-validation.ts';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -8,47 +8,12 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(ip: string, maxRequests = 10, windowMs = 60000): boolean {
-  const now = Date.now();
-  const key = `${ip}:${Math.floor(now / windowMs)}`;
-  const entry = rateLimitMap.get(key);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(key, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-  if (entry.count >= maxRequests) return false;
-  entry.count++;
-  return true;
-}
-
 function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0];
+  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? (origin ?? ALLOWED_ORIGINS[0]) : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': corsOrigin,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };
-}
-
-async function verifyRecaptcha(token: string): Promise<boolean> {
-  const secretKey = Deno.env.get('RECAPTCHA_SECRET_KEY');
-  if (!secretKey) {
-    console.warn('RECAPTCHA_SECRET_KEY not configured, skipping validation');
-    return true;
-  }
-  try {
-    const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
-    });
-    const data = await res.json();
-    return data.success === true;
-  } catch (e) {
-    console.error('reCAPTCHA verification error:', e);
-    return false;
-  }
 }
 
 const PROFILE_NAMES: Record<number, string> = {
@@ -59,7 +24,9 @@ const PROFILE_NAMES: Record<number, string> = {
   5: 'Устойчив дигитален баланс',
 };
 
-serve(async (req) => {
+Deno.serve(async (req) => {
+  const gate = publicRequestError(req);
+  if (gate) return gate;
   const origin = req.headers.get('origin');
   const corsHeaders = getCorsHeaders(origin);
 
@@ -67,8 +34,7 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!checkRateLimit(clientIp, 10, 60000)) {
+  if (!await rateLimit(req, 'assessment', 10)) {
     return new Response(
       JSON.stringify({ error: 'Too many requests. Please try again later.' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 429 }
@@ -83,15 +49,8 @@ serve(async (req) => {
   }
 
   try {
-    const bodyText = await req.text();
-    if (bodyText.length > 50000) {
-      return new Response(
-        JSON.stringify({ error: 'Payload too large (max 50KB)' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 413 }
-      );
-    }
-
-    const { answers, recaptcha_token } = JSON.parse(bodyText);
+    const { answers, recaptcha_token } = await readBody(req);
+    if (!validAssessmentAnswers(answers)) return Response.json({ error: 'Необходими са 35 валидни отговора.' }, { status: 400, headers: corsHeaders });
 
     if (!recaptcha_token) {
       return new Response(
@@ -108,35 +67,7 @@ serve(async (req) => {
       );
     }
 
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-    );
-
-    if (!answers || typeof answers !== 'object' || Array.isArray(answers)) {
-      return new Response(
-        JSON.stringify({ error: 'Невалидни отговори' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-      );
-    }
-
-    const answerKeys = Object.keys(answers);
-    if (answerKeys.length > 40) {
-      return new Response(
-        JSON.stringify({ error: 'Твърде много отговори' }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-      );
-    }
-
-    for (const key of answerKeys) {
-      const val = answers[key];
-      if (typeof val !== 'number' || !Number.isInteger(val) || val < 0 || val > 8) {
-        return new Response(
-          JSON.stringify({ error: `Невалидна стойност за ${key}` }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
-        );
-      }
-    }
+    const supabaseClient = serviceClient();
 
     // ─── ЧАСТ 1: АВТОМАТИЧНА РЕАКТИВНОСТ ───────────
     const pciRaw = Array.from({ length: 7 }, (_, i) => answers[`0-${i}`] ?? 0)
@@ -286,10 +217,10 @@ serve(async (req) => {
           p5_norm: p5Norm,
         },
         radar_data: radarData,
-        user_agent: req.headers.get('user-agent'),
-        ip_address: req.headers.get('x-forwarded-for'),
+        user_agent: null,
+        ip_address: null,
       })
-      .select()
+      .select('id')
       .single();
 
     if (error) throw error;
@@ -320,7 +251,7 @@ serve(async (req) => {
     );
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: 'Неуспешно записване на резултата.' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
     );
   }

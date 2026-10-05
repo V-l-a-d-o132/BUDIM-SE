@@ -53,7 +53,7 @@ export function useNotifications(myPostIds: string[]) {
         const old = payload.old as { likes: number; shares: number };
 
         // Only notify for MY posts (by session_id)
-        if (updated.session_id !== sessionId) return;
+        if (!myPostIdsRef.current.includes(updated.id)) return;
 
         const prevL = prevLikes.current[updated.id] ?? old.likes;
         const prevS = prevComments.current[updated.id] ?? old.shares;

@@ -1,4 +1,5 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { rateLimit, readBody, publicRequestError } from '../_shared/security.ts';
+import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -7,26 +8,8 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(ip: string, maxRequests = 5, windowMs = 60000): boolean {
-  const now = Date.now();
-  const key = `${ip}:${Math.floor(now / windowMs)}`;
-  const entry = rateLimitMap.get(key);
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(key, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-
-  if (entry.count >= maxRequests) return false;
-
-  entry.count++;
-  return true;
-}
-
 function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0];
+  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? (origin ?? ALLOWED_ORIGINS[0]) : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': corsOrigin,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -35,6 +18,8 @@ function getCorsHeaders(origin: string | null) {
 }
 
 Deno.serve(async (req) => {
+  const gate = publicRequestError(req);
+  if (gate) return gate;
   const origin = req.headers.get('origin');
   const corsHeaders = getCorsHeaders(origin);
 
@@ -50,8 +35,7 @@ Deno.serve(async (req) => {
   }
 
   // Rate limiting: 5 req/min per IP (form submission)
-  const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!checkRateLimit(clientIp, 5, 60000)) {
+  if (!await rateLimit(req, 'partnership', 5)) {
     return new Response(
       JSON.stringify({ error: 'Too many requests. Please try again later.' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 429 }
@@ -67,7 +51,7 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const body = await req.json();
+    const body = await readBody(req, 8000);
     const { organization, type, email, message } = body;
 
     // --- Validation ---
@@ -79,7 +63,7 @@ Deno.serve(async (req) => {
     }
 
     const validTypes = ['school', 'ngo', 'corporate', 'media', 'other'];
-    if (!type || !validTypes.includes(type)) {
+    if (typeof type !== 'string' || !validTypes.includes(type)) {
       return new Response(JSON.stringify({ error: 'Невалиден вид организация.' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -87,14 +71,14 @@ Deno.serve(async (req) => {
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!email || !emailRegex.test(email) || email.length > 200) {
+    if (typeof email !== 'string' || !emailRegex.test(email) || email.length > 200) {
       return new Response(JSON.stringify({ error: 'Невалиден имейл адрес.' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
-    if (message && message.length > 500) {
+    if (message != null && (typeof message !== 'string' || message.length > 500)) {
       return new Response(JSON.stringify({ error: 'Описанието е твърде дълго (макс. 500 символа).' }), {
         status: 400,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -107,7 +91,7 @@ Deno.serve(async (req) => {
       type,
       email: email.trim().toLowerCase().slice(0, 200),
       message: message ? message.trim().slice(0, 500) : null,
-      ip_hint: req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? null,
+      ip_hint: null,
     };
 
     // --- Save to Supabase ---

@@ -223,7 +223,7 @@ const indicatorMeta: Record<
 export default function SelfAssessment() {
   const [started, setStarted] = useState(false);
   const [currentPart, setCurrentPart] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, number>>();
+  const [answers, setAnswers] = useState<Record<string, number>>({});
   const [showResults, setShowResults] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [resultData, setResultData] = useState<any>(null);
@@ -257,7 +257,7 @@ export default function SelfAssessment() {
     }
   };
 
-  const [selectedValues, setSelectedValues] = useState<Record<string, number>>();
+  const [selectedValues, setSelectedValues] = useState<Record<string, number>>({});
 
   const handleAnswer = (qi: number, value: number) => {
     const scale = getScale(currentPart, qi);
@@ -296,7 +296,7 @@ export default function SelfAssessment() {
       setSubmitError(null);
       const res = await fetch(`${SUPABASE_URL}/functions/v1/tavora-shield-submit`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
+        headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
         body: JSON.stringify({ answers, recaptcha_token: recaptchaToken }),
       });
       if (!res.ok) throw new Error('Грешка при изпращане');

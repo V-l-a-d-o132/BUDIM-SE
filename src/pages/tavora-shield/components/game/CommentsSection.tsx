@@ -1,7 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
-import { GameComment, AVATAR_COLORS } from './types';
-import { getSessionId } from './useSessionId';
+import { type GameComment } from './types';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { RECAPTCHA_SITE_KEY } from '@/components/base/RecaptchaBadge';
+import { gameCommand } from './gameApi';
 import { containsProfanity, getProfanityMessage } from './profanityFilter';
 import Icon from '@/components/base/Icon';
 
@@ -20,6 +22,7 @@ export default function CommentsSection({ postId, initialCount, username }: Comm
   const [justSent, setJustSent] = useState(false);
   const listRef = useRef<HTMLDivElement>(null);
   const mounted = useRef(true);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   useEffect(() => {
     mounted.current = true;
@@ -79,54 +82,23 @@ export default function CommentsSection({ postId, initialCount, username }: Comm
 
     setError('');
     setLoading(true);
-    const sessionId = getSessionId();
-    const avatarColor = AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
-    const finalUsername = username || 'Анонимен';
+    try {
+      const token = await recaptchaRef.current?.executeAsync();
+      if (!token) throw new Error('Проверката за бот не е успешна. Опитайте отново.');
+      await gameCommand('comment', { post_id: postId, content: text.trim(), username: username || 'Анонимен', recaptcha_token: token });
+      if (mounted.current) {
+        setText(''); setJustSent(true);
+        setTimeout(() => { if (mounted.current) setJustSent(false); }, 3000);
+      }
+    } catch (e) {
+      if (mounted.current) setError(e instanceof Error ? e.message : 'Грешка при изпращане.');
+    } finally { recaptchaRef.current?.reset(); }
 
-    // Optimistic insert — show immediately
-    const optimisticComment: GameComment = {
-      id: `opt-${Date.now()}`,
-      post_id: postId,
-      username: finalUsername,
-      avatar_color: avatarColor,
-      content: text.trim(),
-      session_id: sessionId,
-      approved: true,
-      flagged: false,
-      created_at: new Date().toISOString(),
-    };
-    setComments((prev) => [...prev, optimisticComment]);
-    const sentText = text.trim();
-    setText('');
-    setJustSent(true);
-    setTimeout(() => setJustSent(false), 1500);
-
-    const { data, error: dbError } = await supabase
-      .from('social_game_comments')
-      .insert({
-        post_id: postId,
-        username: finalUsername,
-        avatar_color: avatarColor,
-        content: sentText,
-        session_id: sessionId,
-        approved: true,
-      })
-      .select()
-      .maybeSingle();
-
-    if (!dbError && data && mounted.current) {
-      // Replace optimistic with real
-      setComments((prev) => prev.map((c) => c.id === optimisticComment.id ? data : c));
-    } else if (dbError && mounted.current) {
-      // Remove optimistic on error
-      setComments((prev) => prev.filter((c) => c.id !== optimisticComment.id));
-      setError('Грешка при изпращане. Опитай отново.');
-    }
     setLoading(false);
   };
 
   return (
-    <div className="mt-1.5 border-t border-gray-100 pt-1.5">
+    <div className="mt-1.5 border-t border-gray-100 pt-1.5"><ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} size="invisible" />{justSent && <p role="status" className="text-xs text-gray-600">Коментарът е записан и очаква модерация.</p>}
       {/* Comments list */}
       {(loaded ? comments.length > 0 : initialCount > 0) && (
         <div

@@ -1,7 +1,9 @@
-import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
-import { GamePost, AVATAR_COLORS } from './types';
-import { getSessionId } from './useSessionId';
+import { useState, useRef } from 'react';
+import ReCAPTCHA from 'react-google-recaptcha';
+import { RECAPTCHA_SITE_KEY } from '@/components/base/RecaptchaBadge';
+import { gameCommand } from './gameApi';
+import { type GamePost } from './types';
+
 import { usePostLimit } from './usePostLimit';
 
 interface RepostButtonProps {
@@ -14,6 +16,8 @@ interface RepostButtonProps {
 export default function RepostButton({ post, targetPlatform, onReposted, iconSize = 'text-base' }: RepostButtonProps) {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
   const { canPost, remaining, incrementCount } = usePostLimit();
 
   const handleRepost = async () => {
@@ -21,42 +25,18 @@ export default function RepostButton({ post, targetPlatform, onReposted, iconSiz
     setLoading(true);
 
     try {
-      const sessionId = getSessionId();
-      const avatarColor = AVATAR_COLORS[Math.floor(Math.random() * AVATAR_COLORS.length)];
+      setError('');
+      const token = await recaptchaRef.current?.executeAsync();
+      if (!token) throw new Error('Проверката за бот не беше успешна.');
+      const data = await gameCommand('repost', { post_id: post.id, platform: targetPlatform, recaptcha_token: token });
+      onReposted(data.post as GamePost);
+      incrementCount();
+      setDone(true);
 
-      const { data, error } = await supabase
-        .from('social_game_posts')
-        .insert({
-          platform: targetPlatform,
-          content: `🔁 Споделено: "${post.content.slice(0, 120)}${post.content.length > 120 ? '...' : ''}"`,
-          username: 'Ти (repost)',
-          avatar_color: avatarColor,
-          likes: Math.floor(post.likes * 0.3),
-          comments: Math.floor(post.comments * 0.2),
-          shares: 0,
-          is_viral: false,
-          viral_score: Math.max(5, post.viral_score - 20),
-          ai_label: 'Споделено съдържание',
-          ai_reason: 'Споделеното съдържание получава по-малко engagement от оригинала.',
-          approved: true,
-          session_id: sessionId,
-        })
-        .select()
-        .maybeSingle();
-
-      if (!error && data) {
-        onReposted(data as GamePost);
-        incrementCount();
-        setDone(true);
-        // Update shares count on original post
-        await supabase
-          .from('social_game_posts')
-          .update({ shares: post.shares + 1 })
-          .eq('id', post.id);
-      }
     } catch (e) {
-      console.error(e);
+      setError(e instanceof Error ? e.message : 'Споделянето не беше изпълнено.');
     } finally {
+      recaptchaRef.current?.reset();
       setLoading(false);
     }
   };
@@ -74,10 +54,10 @@ export default function RepostButton({ post, targetPlatform, onReposted, iconSiz
   }
 
   return (
-    <button
+    <><ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} size="invisible" /><button
       onClick={handleRepost}
       disabled={loading || done}
-      title={done ? 'Споделено на стената ти!' : `Сподели на стената си (${remaining} оставащи)`}
+      title={error || (done ? 'Записано — очаква модерация' : `Сподели на стената си (${remaining} оставащи)`)}
       className="cursor-pointer flex items-center gap-0.5 disabled:opacity-60 transition-all"
     >
       {loading ? (
@@ -87,6 +67,6 @@ export default function RepostButton({ post, targetPlatform, onReposted, iconSiz
       ) : (
         <i className={`ri-repeat-line text-gray-800 ${iconSize}`}></i>
       )}
-    </button>
+    </button>{error && <span role="alert" className="text-xs text-red-700">{error}</span>}</>
   );
 }

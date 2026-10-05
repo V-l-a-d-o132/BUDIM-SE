@@ -2,7 +2,7 @@
   "dependencies": {
     "@stripe/react-stripe-js": "4.0.2",
     "@supabase/supabase-js": "2.57.4",
-    "firebase": "12.0.0",
+    "dompurify": "3.4.16",
     "i18next": "25.4.1",
     "i18next-browser-languagedetector": "^8.2.0",
     "lucide-react": "0.539.0",
@@ -11,20 +11,27 @@
     "react-google-recaptcha": "^3.1.0",
     "react-i18next": "^15.6.0",
     "react-router-dom": "^7.6.3",
-    "recharts": "3.2.0"
+    "recharts": "3.2.0",
+    "sanitize-html": "2.18.0"
   },
   "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
     "@eslint/js": "^9.30.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react-swc": "^3.10.2",
+    "@types/react-google-recaptcha": "2.1.9",
+    "@types/sanitize-html": "2.16.2",
+    "@vitejs/plugin-react": "5.1.4",
     "autoprefixer": "^10.4.21",
+    "deno": "2.9.6",
     "eslint": "^9.30.1",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
     "postcss": "^8.5.6",
     "source-map": "^0.7.6",
+    "stripe": "16.12.0",
+    "supabase": "2.75.0",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.35.1",
@@ -36,7 +43,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "node --test tests/*.test.mjs",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
+    "check:edge": "deno check --node-modules-dir=manual supabase/functions/social-game/index.ts supabase/functions/tavora-shield-submit/index.ts supabase/functions/analyze-viral-post/index.ts supabase/functions/admin-news/index.ts supabase/functions/get-stripe-orders/index.ts supabase/functions/notify-google-index/index.ts supabase/functions/submit-partnership/index.ts supabase/functions/tavora-biometric-log/index.ts supabase/functions/tavora-literacy-log/index.ts supabase/functions/tavora-content-analyzer/index.ts"
   },
   "type": "module",
   "version": "0.0.0"

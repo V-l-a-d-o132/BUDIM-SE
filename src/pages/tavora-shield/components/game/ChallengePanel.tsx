@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CHALLENGES, Challenge } from './types';
+import { CHALLENGES, type Challenge } from './types';
 import Icon from '@/components/base/Icon';
 
 interface ChallengePanelProps {

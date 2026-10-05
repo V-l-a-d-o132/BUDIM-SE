@@ -1,4 +1,4 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { serviceClient, verifyRecaptcha, rateLimit, readBody, ownerHash, sha256, publicRequestError } from '../_shared/security.ts';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -7,50 +7,17 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(ip: string, maxRequests = 10, windowMs = 60000): boolean {
-  const now = Date.now();
-  const key = `${ip}:${Math.floor(now / windowMs)}`;
-  const entry = rateLimitMap.get(key);
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(key, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-  if (entry.count >= maxRequests) return false;
-  entry.count++;
-  return true;
-}
-
 function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0];
+  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? (origin ?? ALLOWED_ORIGINS[0]) : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': corsOrigin,
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   };
 }
 
-async function verifyRecaptcha(token: string): Promise<boolean> {
-  const secretKey = Deno.env.get('RECAPTCHA_SECRET_KEY');
-  if (!secretKey) {
-    console.warn('RECAPTCHA_SECRET_KEY not configured, skipping validation');
-    return true;
-  }
-  try {
-    const res = await fetch('https://www.google.com/recaptcha/api/siteverify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: `secret=${encodeURIComponent(secretKey)}&response=${encodeURIComponent(token)}`,
-    });
-    const data = await res.json();
-    return data.success === true;
-  } catch (e) {
-    console.error('reCAPTCHA verification error:', e);
-    return false;
-  }
-}
-
-serve(async (req) => {
+Deno.serve(async (req) => {
+  const gate = publicRequestError(req);
+  if (gate) return gate;
   const origin = req.headers.get('origin');
   const corsHeaders = getCorsHeaders(origin);
 
@@ -58,8 +25,7 @@ serve(async (req) => {
     return new Response('ok', { headers: corsHeaders });
   }
 
-  const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-  if (!checkRateLimit(clientIp, 15, 60000)) {
+  if (!await rateLimit(req, 'game-publish', 5)) {
     return new Response(
       JSON.stringify({ error: 'Too many requests. Please try again later.' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 429 }
@@ -74,25 +40,16 @@ serve(async (req) => {
   }
 
   try {
-    const { content, platform, username, session_id, challenge_id, recaptcha_token } = await req.json();
+    const { content, platform, username, challenge_id, recaptcha_token, owner_token } = await readBody(req, 12000);
 
-    if (!content || !platform) {
+    if (typeof content !== 'string' || !content.trim() || content.length > 2000 || !['instagram','tiktok','facebook'].includes(platform) || (username !== undefined && (typeof username !== 'string' || username.length > 50)) || (challenge_id != null && (typeof challenge_id !== 'string' || challenge_id.length > 100))) {
       return new Response(
         JSON.stringify({ error: 'Липсват задължителни полета' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 400 }
       );
     }
 
-    // Validate reCAPTCHA
-    if (recaptcha_token) {
-      const recaptchaValid = await verifyRecaptcha(recaptcha_token);
-      if (!recaptchaValid) {
-        return new Response(
-          JSON.stringify({ error: 'reCAPTCHA validation failed. Please try again.' }),
-          { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
-        );
-      }
-    }
+    if (!await verifyRecaptcha(recaptcha_token)) return Response.json({ error: 'reCAPTCHA verification required' }, { status: 403, headers: corsHeaders });
 
     // Profanity filter (basic)
     const profanityWords = ['педераст', 'курва', 'путка', 'еба', 'майка ти', 'уби', 'мръсница'];
@@ -104,7 +61,7 @@ serve(async (req) => {
       );
     }
 
-    const sessionId = session_id || crypto.randomUUID();
+    const owner = owner_token === undefined ? await sha256(crypto.randomUUID() + crypto.randomUUID()) : await ownerHash(owner_token);
 
     // Simple viral scoring algorithm
     const viralWords = ['🔥', '💥', 'скандал', 'шок', 'разкритие', 'невероятно', 'вирален', '-breaking'];
@@ -142,8 +99,7 @@ serve(async (req) => {
       aiReason = 'Комбинация от вирални и качествени елементи. Алгоритъмът е разколебан — доста интересен случай.';
     }
 
-    const post = {
-      id: crypto.randomUUID(),
+    const postData = {
       content: content.trim(),
       platform,
       username: username || 'Анонимен',
@@ -156,8 +112,11 @@ serve(async (req) => {
       ai_label: aiLabel,
       ai_reason: aiReason,
       challenge_id: challenge_id || null,
-      session_id: sessionId,
+
     };
+
+    const { data: post, error: saveError } = await serviceClient().rpc('create_game_post', { post_data: postData, owner_hash: owner });
+    if (saveError || !post) return Response.json({ error: 'Публикацията не е записана. Проверете лимита и опитайте отново.' }, { status: 400, headers: corsHeaders });
 
     return new Response(
       JSON.stringify({
@@ -168,14 +127,14 @@ serve(async (req) => {
         likes,
         ai_label: aiLabel,
         ai_reason: aiReason,
-        session_id: sessionId,
+
       }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
   } catch (error) {
     console.error('Error in analyze-viral-post:', error);
     return new Response(
-      JSON.stringify({ error: error.message || 'Грешка при обработката' }),
+      JSON.stringify({ error: 'Грешка при обработката' }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
     );
   }

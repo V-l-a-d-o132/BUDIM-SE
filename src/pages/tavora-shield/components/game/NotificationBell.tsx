@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { GameNotification } from './useNotifications';
+import { type GameNotification } from './useNotifications';
 import Icon from '@/components/base/Icon';
 
 interface NotificationBellProps {

@@ -90,20 +90,22 @@ export default function CommentsAdmin() {
 
   const toggleApproval = async (comment: GameComment) => {
     setActionLoading(comment.id);
-    await supabase
+    const { data, error } = await supabase
       .from('social_game_comments')
       .update({ approved: !comment.approved })
-      .eq('id', comment.id);
+      .eq('id', comment.id).select('id').single();
+    if (error || !data) { alert('Коментарът не е обновен. Проверете достъпа и опитайте отново.'); setActionLoading(null); return; }
     setComments((prev) => prev.map((c) => c.id === comment.id ? { ...c, approved: !c.approved } : c));
     setActionLoading(null);
   };
 
   const toggleFlag = async (comment: GameComment) => {
     setActionLoading(comment.id + '-flag');
-    await supabase
+    const { data, error } = await supabase
       .from('social_game_comments')
       .update({ flagged: !comment.flagged, approved: comment.flagged ? comment.approved : false })
-      .eq('id', comment.id);
+      .eq('id', comment.id).select('id').single();
+    if (error || !data) { alert('Коментарът не е обновен. Проверете достъпа и опитайте отново.'); setActionLoading(null); return; }
     setComments((prev) => prev.map((c) =>
       c.id === comment.id
         ? { ...c, flagged: !c.flagged, approved: c.flagged ? c.approved : false }
@@ -115,7 +117,8 @@ export default function CommentsAdmin() {
   const deleteComment = async (id: string) => {
     if (!confirm('Изтрий коментара?')) return;
     setActionLoading(id);
-    await supabase.from('social_game_comments').delete().eq('id', id);
+    const { data, error } = await supabase.from('social_game_comments').delete().eq('id', id).select('id').single();
+    if (error || !data) { alert('Коментарът не е изтрит.'); setActionLoading(null); return; }
     setComments((prev) => prev.filter((c) => c.id !== id));
     setActionLoading(null);
   };
@@ -195,7 +198,7 @@ export default function CommentsAdmin() {
             ) : (
               <div className="divide-y divide-gray-100">
                 {comments.map((comment) => {
-                  const post = posts[comment.post_id];
+                  const post = posts?.[comment.post_id];
                   return (
                     <div
                       key={comment.id}

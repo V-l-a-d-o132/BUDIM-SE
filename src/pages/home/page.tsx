@@ -103,7 +103,7 @@ const operations = [
 ];
 
 export default function Home() {
-  const [scrolled, setScrolled] = useState(false);
+  const [, setScrolled] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   usePageSeo({
