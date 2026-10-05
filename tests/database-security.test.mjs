@@ -1,9 +1,11 @@
 import { before, after, test } from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, readdirSync } from 'node:fs';
 import { PGlite } from '@electric-sql/pglite';
 
-const migration = readFileSync(new URL('../supabase/migrations/20261005200622_harden_data_and_admin_access.sql', import.meta.url), 'utf8');
+const migrationsDirectory = new URL('../supabase/migrations/', import.meta.url);
+const migration = readdirSync(migrationsDirectory).filter(name => name.endsWith('.sql')).sort()
+  .map(name => readFileSync(new URL(name, migrationsDirectory), 'utf8')).join('\n');
 const baseline = readFileSync(new URL('./fixtures/schema-before.sql', import.meta.url), 'utf8');
 let db;
 const users = { super_admin: '10000000-0000-4000-8000-000000000001', editor: '10000000-0000-4000-8000-000000000002', moderator: '10000000-0000-4000-8000-000000000003', ordinary: '10000000-0000-4000-8000-000000000004' };
@@ -134,6 +136,19 @@ test('only the private owner capability retrieves pending history', async () => 
 test('forged ownership cannot delete a foreign pending post', async () => {
   await assert.rejects(asRole('service_role',null,null,"select public.game_interact('delete',$1,$2)",[pending,hashB]), /Not owner/);
   assert.equal((await db.query('select id from public.social_game_posts where id=$1',[pending])).rows.length,1);
+});
+test('valid owner deletion removes its pending post, comments and private ownership atomically', async () => {
+  await db.exec('begin; set local role service_role');
+  try {
+    const result = (await db.query("select public.game_interact('delete',$1,$2) result", [pending,hashA])).rows[0].result;
+    assert.equal(result.deleted, true);
+    for (const query of ['select count(*)::int n from public.social_game_posts where id=$1',
+      'select count(*)::int n from public.social_game_comments where post_id=$1',
+      'select count(*)::int n from private.game_owners where post_id=$1']) {
+      assert.equal((await db.query(query,[pending])).rows[0].n,0);
+    }
+    assert.equal((await db.query('select count(*)::int n from public.social_game_posts where id=$1',[post])).rows[0].n,1);
+  } finally { await db.exec('rollback'); }
 });
 test('server assigns pending status, ignores client approval and counter injection cannot reach RPC', async () => {
   const data={ platform:'facebook',content:'Fixture',username:'Test',approved:true };

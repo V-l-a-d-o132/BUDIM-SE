@@ -61,7 +61,9 @@ The deployed migration is
 `supabase/migrations/20261005200622_harden_data_and_admin_access.sql`.
 Its version matches the managed database migration history. It hardens the
 existing project schema; it is not a complete initial schema for a new project.
-Do not execute it again manually on the same project.
+Do not execute it again manually on the same project. The follow-up migration
+`20261005202517_fix_game_owner_delete.sql` qualifies a comment-column reference
+so verified owners can also delete their pending posts without a SQL ambiguity.
 
 Ten changed/new Edge Functions were deployed: `admin-news`, `get-stripe-orders`,
 `notify-google-index`, `tavora-shield-submit`, `analyze-viral-post`, `social-game`,
@@ -101,7 +103,7 @@ The lockfile pins the tested dependency graph. Runtime dependency auditing
 reported zero known vulnerabilities at implementation time; this result is
 time-sensitive and does not cover all development dependencies.
 
-The 41 automated tests include actual migration execution in PGlite, public and
+The 42 automated tests include actual migration execution in PGlite, public and
 authenticated role/column permissions, MFA/session/role revocation, private
 capabilities, pending moderation, atomic reactions, validation and actual Edge
 handler code with isolated provider responses. PGlite uses a minimal Auth
