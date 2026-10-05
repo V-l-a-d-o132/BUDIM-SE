@@ -1,0 +1,34 @@
+{
+  "name": "Център БУДИМ СЕ",
+  "short_name": "БУДИМ СЕ",
+  "description": "Независима организация за медийна грамотност и дигитален суверенитет. Методологията „Петте степени" за когнитивна свобода.",
+  "lang": "bg",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/",
+  "scope": "/",
+  "categories": ["education", "books", "lifestyle"],
+  "screenshots": [
+    {
+      "src": "https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

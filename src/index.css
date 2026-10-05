@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Apple-style safe area padding — env() works on iOS Safari, max() provides fallback */
+  body {
+    padding-top: max(0px, env(safe-area-inset-top));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+
+  /* Ensure all interactive elements meet Apple's 44pt minimum touch target */
+  button, a, [role="button"], input, select, textarea {
+    min-height: 44px;
+  }
+
+  /* But allow small inline links inside text to stay compact */
+  p a, li a, span a, h1 a, h2 a, h3 a, h4 a {
+    min-height: auto;
+  }
+}
+
+@layer utilities {
+  /* Safe-area padding utility classes */
+  .safe-pb {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+  .safe-pt {
+    padding-top: max(16px, env(safe-area-inset-top));
+  }
+  .safe-px {
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+}
