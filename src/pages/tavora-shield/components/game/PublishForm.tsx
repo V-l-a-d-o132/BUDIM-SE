@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { supabase } from '@/lib/supabase';
-import { GamePost, Challenge } from './types';
-import { getSessionId } from './useSessionId';
+import { type GamePost, type Challenge } from './types';
+import { getOwnerToken } from './gameApi';
 import { containsProfanity, getProfanityMessage } from './profanityFilter';
 import Icon from '@/components/base/Icon';
 import { RECAPTCHA_SITE_KEY } from '@/components/base/RecaptchaBadge';
@@ -74,18 +74,18 @@ export default function PublishForm({ platform, onPublish, onClose, challenge, r
     setLoading(true);
     try {
       const finalUsername = username.trim() || 'Анонимен';
-      const sessionId = getSessionId();
+
       const res = await supabase.functions.invoke('analyze-viral-post', {
         body: {
           content: content.trim(),
           platform,
           username: finalUsername,
-          session_id: sessionId,
+          owner_token: getOwnerToken(),
           challenge_id: challenge?.id || null,
           recaptcha_token: recaptchaToken,
         },
       });
-      if (res.error) throw res.error;
+      if (res.error || res.data?.error || !res.data?.post) throw new Error(res.data?.error || 'Публикацията не е записана. Опитайте отново.');
       const data = res.data;
       setResult({
         viral: data.is_viral,
@@ -96,12 +96,11 @@ export default function PublishForm({ platform, onPublish, onClose, challenge, r
         post: data.post,
       });
       onPublish(data.post);
+      setRecaptchaError('');
       onPostPublished?.();
     } catch (e) {
       console.error(e);
-      if (e instanceof Error && e.message.includes('reCAPTCHA')) {
-        setRecaptchaError('Проверката за бот не беше успешна. Моля, опитай отново.');
-      }
+      setRecaptchaError(e instanceof Error ? e.message : 'Грешка при публикуване. Опитайте отново.');
     } finally {
       setLoading(false);
       recaptchaRef.current?.reset();
@@ -129,12 +128,12 @@ export default function PublishForm({ platform, onPublish, onClose, challenge, r
     return (
       <div className="absolute inset-0 z-50 bg-black/80 flex items-end">
         <div className="w-full bg-white rounded-t-2xl p-4 max-h-[90%] overflow-y-auto">
-          <div className="text-center mb-3">
+          <div className="text-center mb-3"><p className="text-xs text-gray-600 mb-2">Публикацията е записана и очаква модерация.</p>
             {result.viral ? (
               <>
                 <div className="text-3xl mb-1" style={{ animation: 'bounce 0.5s ease-out' }}>🔥</div>
                 <p className="text-sm font-bold text-red-600">ВИРАЛЕН!</p>
-                <p className="text-xs text-gray-500 mt-0.5">{result.likes.toLocaleString()} харесвания за минути</p>
+                <p className="text-xs text-gray-500 mt-0.5">{result.likes.toLocaleString()} симулирани харесвания</p>
               </>
             ) : (
               <>

@@ -21,6 +21,8 @@ export interface GamePost {
 }
 
 export interface GameComment {
+  approved?: boolean;
+  flagged?: boolean;
   id: string;
   created_at: string;
   post_id: string;

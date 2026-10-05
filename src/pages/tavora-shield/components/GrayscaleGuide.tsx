@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import Icon from '@/components/base/Icon';
-import { GamePost, AppId, Challenge, AVATAR_COLORS } from './game/types';
+import { type GamePost, type AppId, type Challenge } from './game/types';
 import { playViralSound } from './game/useSoundEffects';
 import PublishForm from './game/PublishForm';
 import CommentsSection from './game/CommentsSection';
@@ -1192,7 +1192,7 @@ export default function GrayscaleGuide() {
   const [rightTab, setRightTab] = useState<'instructions' | 'challenge' | 'history'>('instructions');
   const [myPostIds, setMyPostIds] = useState<string[]>([]);
   const { notifications, unreadCount, markAllRead } = useNotifications(myPostIds);
-  const { canPost, remaining, incrementCount } = usePostLimit();
+  const { remaining, incrementCount } = usePostLimit();
 
   const handleMyPostAdded = useCallback((post: GamePost) => {
     setMyPostIds((prev) => [...prev, post.id]);

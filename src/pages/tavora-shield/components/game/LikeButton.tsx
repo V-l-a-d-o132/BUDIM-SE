@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
-import { GamePost } from './types';
+import { gameCommand } from './gameApi';
+import { type GamePost } from './types';
 import { playLikeSound } from './useSoundEffects';
 
 interface LikeButtonProps {
@@ -33,12 +33,10 @@ export default function LikeButton({ post, className = '', iconSize = 'text-base
 
     setLoading(true);
     try {
-      const { error } = await supabase
-        .from('social_game_posts')
-        .update({ likes: newCount })
-        .eq('id', post.id);
+      const data = await gameCommand('like', { post_id: post.id, liked: newLiked });
+      setCount(data.likes);
+      setLiked(data.liked);
 
-      if (error) throw error;
     } catch {
       // Revert on error
       setLiked(!newLiked);

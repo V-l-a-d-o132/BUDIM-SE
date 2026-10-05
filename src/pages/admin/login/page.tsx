@@ -83,7 +83,7 @@ export default function AdminLogin() {
 
   useEffect(() => {
     if (!loading && admin) {
-      navigate('/admin', { replace: true });
+      navigate(admin?.mfaVerified ? '/admin' : '/admin/mfa', { replace: true });
     }
   }, [admin, loading, navigate]);
 
@@ -126,13 +126,9 @@ export default function AdminLogin() {
       return;
     }
 
-    const { data: adminRecord } = await supabase
-      .from('admin_users')
-      .select('role')
-      .eq('user_id', session.user.id)
-      .maybeSingle();
+    const { data: adminRecord, error: accessError } = await supabase.rpc('admin_access');
 
-    if (!adminRecord) {
+    if (accessError || !adminRecord) {
       await supabase.auth.signOut();
       recordFailedAttempt();
       setError('Нямате администраторски достъп.');
@@ -143,7 +139,8 @@ export default function AdminLogin() {
     // Success — clear attempts
     clearAttempts();
     setLockout({ locked: false, remainingMs: 0 });
-    navigate('/admin', { replace: true });
+    navigate(adminRecord.mfa_verified ? '/admin' : '/admin/mfa', { replace: true });
+    setSubmitting(false);
   };
 
   if (loading) {

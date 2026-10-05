@@ -1,0 +1,34 @@
+project_id = "plcmsgbsetpqwjkfmjzk"
+
+# These existing public functions validate requests in their bodies.
+# Admin functions additionally validate the user and current DB permission + MFA.
+[functions.admin-news]
+verify_jwt = false
+[functions.get-stripe-orders]
+verify_jwt = false
+[functions.notify-google-index]
+verify_jwt = false
+[functions.analyze-viral-post]
+verify_jwt = false
+[functions.tavora-shield-submit]
+verify_jwt = false
+[functions.submit-partnership]
+verify_jwt = false
+[functions.tavora-biometric-log]
+verify_jwt = false
+[functions.tavora-literacy-log]
+verify_jwt = false
+[functions.tavora-content-analyzer]
+verify_jwt = false
+[functions.social-game]
+verify_jwt = false
+[functions.create-book-checkout]
+verify_jwt = false
+[functions.sitemap]
+verify_jwt = false
+[functions.tavora-shield-content-analyzer]
+verify_jwt = true
+[functions.gemini-content-analyzer-v2]
+verify_jwt = true
+[functions.ping]
+verify_jwt = true

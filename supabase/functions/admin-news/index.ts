@@ -1,4 +1,7 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { cleanNewsBody, validNewsTitle, cleanImageUrl } from '../_shared/news-validation.ts';
+import { readBody } from '../_shared/security.ts';
+import { requireAdmin } from '../_shared/admin-auth.ts';
+import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -8,9 +11,11 @@ const ALLOWED_ORIGINS = [
 ];
 
 function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0];
+  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? (origin ?? ALLOWED_ORIGINS[0]) : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': corsOrigin,
+    'Vary': 'Origin',
+    'Cache-Control': 'no-store',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, x-client-info',
   };
@@ -52,21 +57,10 @@ Deno.serve(async (req) => {
     });
   }
 
-  const adminSupabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  );
-  const { data: adminRecord } = await adminSupabase
-    .from('admin_users')
-    .select('role')
-    .eq('user_id', user.id)
-    .maybeSingle();
+  const denied = await requireAdmin(supabase, 'news');
+  if (denied) return new Response(denied.body, { status: denied.status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
-  if (!adminRecord) {
-    return new Response(JSON.stringify({ error: 'Forbidden' }), {
-      status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
+  const adminSupabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false, autoRefreshToken: false } });
 
   const url = new URL(req.url);
   const method = req.method;
@@ -84,15 +78,15 @@ Deno.serve(async (req) => {
     }
 
     if (method === 'POST') {
-      const body = await req.json();
+      const body = await readBody(req, 120000);
       const { title, body: newsBody, image_url, published } = body;
 
-      if (!title || title.trim().length < 3) {
+      if (!validNewsTitle(title)) {
         return new Response(JSON.stringify({ error: 'Заглавието е задължително (мин. 3 символа).' }), {
           status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      if (!newsBody || newsBody.trim().length < 10) {
+      if (typeof newsBody !== 'string' || newsBody.trim().length < 10 || newsBody.length > 100000) {
         return new Response(JSON.stringify({ error: 'Текстът е задължителен (мин. 10 символа).' }), {
           status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
@@ -106,9 +100,9 @@ Deno.serve(async (req) => {
         .insert({
           title: title.trim(),
           slug,
-          body: newsBody.trim(),
-          image_url: image_url?.trim() || null,
-          published: published ?? false,
+          body: cleanNewsBody(newsBody),
+          image_url: cleanImageUrl(image_url),
+          published: typeof published === 'boolean' ? published : false,
           author_id: user.id,
           updated_at: new Date().toISOString(),
         })
@@ -122,20 +116,20 @@ Deno.serve(async (req) => {
     }
 
     if (method === 'PUT') {
-      const body = await req.json();
+      const body = await readBody(req, 120000);
       const { id, title, body: newsBody, image_url, published } = body;
 
-      if (!id) {
+      if (typeof id !== 'string' || !/^[a-f0-9-]{36}$/i.test(id)) {
         return new Response(JSON.stringify({ error: 'ID е задължително.' }), {
           status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
 
       const updateData: Record<string, unknown> = { updated_at: new Date().toISOString() };
-      if (title !== undefined) updateData.title = title.trim();
-      if (newsBody !== undefined) updateData.body = newsBody.trim();
-      if (image_url !== undefined) updateData.image_url = image_url?.trim() || null;
-      if (published !== undefined) updateData.published = published;
+      if (title !== undefined) { if (!validNewsTitle(title)) return Response.json({ error: 'Невалидно заглавие.' }, { status: 400, headers: corsHeaders }); updateData.title = title.trim(); }
+      if (newsBody !== undefined) updateData.body = cleanNewsBody(newsBody);
+      if (image_url !== undefined) updateData.image_url = cleanImageUrl(image_url);
+      if (published !== undefined) { if (typeof published !== 'boolean') return Response.json({ error: 'Невалиден статус.' }, { status: 400, headers: corsHeaders }); updateData.published = published; }
 
       const { data, error } = await adminSupabase
         .from('news')
@@ -145,20 +139,22 @@ Deno.serve(async (req) => {
         .maybeSingle();
 
       if (error) throw error;
+      if (!data) return Response.json({ error: 'Новината не е намерена.' }, { status: 404, headers: corsHeaders });
       return new Response(JSON.stringify({ news: data }), {
         status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     if (method === 'DELETE') {
-      const body = await req.json();
+      const body = await readBody(req, 120000);
       const { id } = body;
-      if (!id) {
+      if (typeof id !== 'string' || !/^[a-f0-9-]{36}$/i.test(id)) {
         return new Response(JSON.stringify({ error: 'ID е задължително.' }), {
           status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      const { error } = await adminSupabase.from('news').delete().eq('id', id);
+      const { data: deleted, error } = await adminSupabase.from('news').delete().eq('id', id).select('id').maybeSingle();
+      if (!error && !deleted) return Response.json({ error: 'Новината не е намерена.' }, { status: 404, headers: corsHeaders });
       if (error) throw error;
       return new Response(JSON.stringify({ success: true }), {
         status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -170,7 +166,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (err) {
-    console.error(err);
+    console.error('admin-news request failed');
     return new Response(JSON.stringify({ error: 'Сървърна грешка.' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

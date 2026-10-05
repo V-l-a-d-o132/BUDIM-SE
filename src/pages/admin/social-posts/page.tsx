@@ -183,7 +183,8 @@ export default function SocialPostsAdmin() {
 
   const toggleApproval = async (post: GamePost) => {
     setActionLoading(post.id);
-    await supabase.from('social_game_posts').update({ approved: !post.approved }).eq('id', post.id);
+    const { data, error } = await supabase.from('social_game_posts').update({ approved: !post.approved }).eq('id', post.id).select('id').single();
+    if (error || !data) { alert('Публикацията не е обновена. Проверете достъпа и опитайте отново.'); setActionLoading(null); return; }
     setPosts((prev) => prev.map((p) => p.id === post.id ? { ...p, approved: !p.approved } : p));
     setActionLoading(null);
   };
@@ -191,9 +192,8 @@ export default function SocialPostsAdmin() {
   const deletePost = async (id: string) => {
     if (!confirm('Сигурен ли си, че искаш да изтриеш този пост?')) return;
     setActionLoading(id);
-    await supabase.from('social_game_comments').delete().eq('post_id', id);
-    const { error } = await supabase.from('social_game_posts').delete().eq('id', id);
-    if (!error) {
+    const { data, error } = await supabase.from('social_game_posts').delete().eq('id', id).select('id').single();
+    if (!error && data) {
       setPosts((prev) => prev.filter((p) => p.id !== id));
       setStats((prev) => ({ ...prev, total: prev.total - 1 }));
     }
@@ -203,15 +203,15 @@ export default function SocialPostsAdmin() {
   const handleReset = async () => {
     setResetLoading(true);
     try {
-      await supabase.from('social_game_comments').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-      await supabase.from('social_game_posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      const { error } = await supabase.from('social_game_posts').delete().neq('id', '00000000-0000-0000-0000-000000000000');
+      if (error) throw error;
       setPosts([]);
       setStats({ total: 0, viral: 0, approved: 0, hidden: 0 });
       setShowResetModal(false);
       setResetSuccess(true);
       setTimeout(() => setResetSuccess(false), 5000);
     } catch (e) {
-      console.error(e);
+      alert('Нулирането не е изпълнено. Проверете достъпа и опитайте отново.');
     } finally {
       setResetLoading(false);
     }

@@ -105,35 +105,7 @@ export default function AdminNews() {
     if (data.error) {
       setStatusMsg(data.error);
     } else {
-      const savedSlug = data.news?.slug ?? form.title.toLowerCase().replace(/\s+/g, '-');
-      const savedTitle = data.news?.title ?? form.title;
-      const isPublished = form.published;
-
-      // Invalidate frontend cache
       invalidateNewsCache();
-
-      // Auto-index if published
-      if (isPublished) {
-        try {
-          const supabaseUrl = import.meta.env.VITE_PUBLIC_SUPABASE_URL;
-          const supabaseAnonKey = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY;
-          await fetch(`${supabaseUrl}/functions/v1/notify-google-index`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-              'apikey': supabaseAnonKey,
-            },
-            body: JSON.stringify({
-              slug: savedSlug,
-              title: savedTitle,
-              action: form.id ? 'URL_UPDATED' : 'URL_UPDATED',
-            }),
-          });
-        } catch {
-          // Non-critical — don't block save
-        }
-      }
 
       setStatusMsg(form.id ? 'Новината е обновена.' : 'Новината е създадена.');
       setEditing(false);

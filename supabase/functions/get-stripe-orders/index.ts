@@ -1,5 +1,6 @@
-import Stripe from 'https://esm.sh/stripe@14?target=deno';
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+import { requireAdmin } from '../_shared/admin-auth.ts';
+import Stripe from 'npm:stripe@16.12.0';
+import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -9,9 +10,11 @@ const ALLOWED_ORIGINS = [
 ];
 
 function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0];
+  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? (origin ?? ALLOWED_ORIGINS[0]) : ALLOWED_ORIGINS[0];
   return {
     'Access-Control-Allow-Origin': corsOrigin,
+    'Vary': 'Origin',
+    'Cache-Control': 'no-store',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type, Authorization, apikey, x-client-info',
   };
@@ -20,6 +23,8 @@ function getCorsHeaders(origin: string | null) {
 Deno.serve(async (req) => {
   const origin = req.headers.get('origin');
   const corsHeaders = getCorsHeaders(origin);
+
+  if (req.method !== 'POST' && req.method !== 'OPTIONS') return Response.json({ error: 'Method not allowed' }, { status: 405, headers: corsHeaders });
 
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders });
@@ -45,24 +50,11 @@ Deno.serve(async (req) => {
     });
   }
 
-  const adminSupabase = createClient(
-    Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
-  );
-  const { data: adminRecord } = await adminSupabase
-    .from('admin_users')
-    .select('role')
-    .eq('user_id', user.id)
-    .maybeSingle();
-
-  if (!adminRecord) {
-    return new Response(JSON.stringify({ error: 'Forbidden' }), {
-      status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-  }
+  const denied = await requireAdmin(supabase, 'orders');
+  if (denied) return new Response(denied.body, { status: denied.status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
   try {
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-06-20' });
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-06-20', httpClient: Stripe.createFetchHttpClient() });
 
     const body = await req.json().catch(() => ({ limit: 50 }));
     const limit = Math.min(body.limit ?? 50, 100);

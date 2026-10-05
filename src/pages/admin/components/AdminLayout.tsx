@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { requiredAdminPermission } from '@/lib/admin-permissions';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 
 const navItems = [
@@ -46,7 +47,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
 
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-0.5">
-          {navItems.map((item) => (
+          {navItems.filter(item => requiredAdminPermission(item.path) === 'access' || admin?.permissions.includes(requiredAdminPermission(item.path))).map((item) => (
             <Link
               key={item.path}
               to={item.path}
@@ -73,7 +74,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium text-gray-900 truncate">{admin?.user.email}</p>
-              <p className="text-xs text-gray-400">{admin?.role === 'super_admin' ? 'Супер администратор' : 'Редактор'}</p>
+              <p className="text-xs text-gray-400">{admin?.role === 'super_admin' ? 'Супер администратор' : admin?.role === 'moderator' ? 'Модератор' : 'Редактор'}</p>
             </div>
           </div>
           <button
