@@ -1,6 +1,7 @@
 import { requireAdmin } from '../_shared/admin-auth.ts';
 import Stripe from 'npm:stripe@22.6.0';
 import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
+import { readBody, serverFetch, requestBodyErrorResponse } from '../_shared/security.ts';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -40,7 +41,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_ANON_KEY')!,
-    { global: { headers: { Authorization: authHeader } } }
+    { global: { headers: { Authorization: authHeader }, fetch: serverFetch } }
   );
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
@@ -54,11 +55,12 @@ Deno.serve(async (req) => {
   if (denied) return new Response(denied.body, { status: denied.status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
   try {
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2026-08-26.dahlia', httpClient: Stripe.createFetchHttpClient() });
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2026-08-26.dahlia', httpClient: Stripe.createFetchHttpClient(), timeout: 10000, maxNetworkRetries: 1 });
 
-    const body = await req.json().catch(() => ({ limit: 50 }));
-    const limit = Math.min(body.limit ?? 50, 100);
+    const body = await readBody(req, 8000);
+    const limit = body.limit ?? 50;
     const starting_after = body.starting_after ?? undefined;
+    if (!Number.isInteger(limit) || limit < 1 || limit > 100 || (starting_after !== undefined && (typeof starting_after !== 'string' || !/^cs_[A-Za-z0-9_]{1,250}$/.test(starting_after)))) return Response.json({ error: 'Invalid pagination' }, { status: 400, headers: corsHeaders });
 
     const sessions = await stripe.checkout.sessions.list({
       limit,
@@ -106,7 +108,8 @@ Deno.serve(async (req) => {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (err) {
-    console.error(err);
+    const bodyError = requestBodyErrorResponse(err, corsHeaders); if (bodyError) return bodyError;
+    console.error('Stripe order listing unavailable');
     return new Response(JSON.stringify({ error: 'Stripe error' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

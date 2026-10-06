@@ -9,6 +9,10 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
   },
   global: {
+    fetch: (input, init = {}) => {
+      const signal = init.signal ?? (input instanceof Request ? input.signal : undefined);
+      return fetch(input, { ...init, signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(45000)]) : AbortSignal.timeout(45000) });
+    },
     headers: {
       'x-client-info': 'budimse-web',
     },
@@ -55,12 +59,14 @@ export async function fetchNewsListCached() {
   const cached = cacheGet<unknown[]>(cacheKey);
   if (cached) return cached;
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('news')
     .select('id, title, slug, image_url, created_at, body')
     .eq('published', true)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .abortSignal(AbortSignal.timeout(15000));
 
+  if (error) throw new Error('Новините временно не могат да бъдат заредени.');
   const result = data ?? [];
   cacheSet(cacheKey, result);
   return result;
@@ -71,13 +77,15 @@ export async function fetchNewsDetailCached(slug: string) {
   const cached = cacheGet<unknown>(cacheKey);
   if (cached) return cached;
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('news')
     .select('*')
     .eq('slug', slug)
     .eq('published', true)
+    .abortSignal(AbortSignal.timeout(15000))
     .maybeSingle();
 
+  if (error) throw new Error('Новината временно не може да бъде заредена.');
   if (data) cacheSet(cacheKey, data);
   return data;
 }

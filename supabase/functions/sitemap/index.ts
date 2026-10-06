@@ -1,11 +1,5 @@
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
-const ALLOWED_ORIGINS = [
-  'https://budimse.online',
-  'https://www.budimse.online',
-  'http://localhost:5173',
-  'http://localhost:3000',
-];
+import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
+import { corsHeaders, serverFetch } from '../_shared/security.ts';
 
 const BASE_URL = 'https://budimse.online';
 
@@ -28,55 +22,65 @@ const STATIC_PAGES = [
 ];
 
 Deno.serve(async (req) => {
-  const origin = req.headers.get('origin');
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0];
+  const headers = { ...corsHeaders(req), 'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS' };
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers });
+  if (!['GET', 'HEAD'].includes(req.method)) return Response.json({ error: 'Method not allowed' }, { status: 405, headers });
+  try {
 
-  const supabase = createClient(
-    Deno.env.get('SUPABASE_URL') ?? '',
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
-  );
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { auth: { persistSession: false, autoRefreshToken: false }, global: { fetch: serverFetch } },
+    );
 
-  const { data: articles } = await supabase
-    .from('news')
-    .select('slug, created_at, updated_at')
-    .eq('published', true)
-    .order('created_at', { ascending: false });
+    const { data: articles, error } = await supabase
+      .from('news')
+      .select('slug, created_at, updated_at')
+      .eq('published', true)
+      .order('created_at', { ascending: false }).limit(50000);
+    if (error) throw new Error('Published article lookup unavailable');
 
-  const now = new Date().toISOString().split('T')[0];
+    const now = new Date().toISOString().split('T')[0];
 
-  const staticEntries = STATIC_PAGES.map(
-    (p) => `  <url>
-    <loc>${BASE_URL}${p.url}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>${p.changefreq}</changefreq>
-    <priority>${p.priority}</priority>
-  </url>`,
-  ).join('\n');
+    const staticEntries = STATIC_PAGES.map(
+      (p) => `  <url>
+      <loc>${BASE_URL}${p.url}</loc>
+      <lastmod>${now}</lastmod>
+      <changefreq>${p.changefreq}</changefreq>
+      <priority>${p.priority}</priority>
+    </url>`,
+    ).join('\n');
 
-  const articleEntries = (articles ?? [])
-    .map((a) => {
-      const lastmod = (a.updated_at ?? a.created_at ?? now).split('T')[0];
-      return `  <url>
-    <loc>${BASE_URL}/news/${a.slug}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>`;
-    })
-    .join('\n');
+    const articleEntries = (articles ?? [])
+      .map((a) => {
+        const timestamp = Date.parse(a.updated_at ?? a.created_at ?? now);
+        const lastmod = Number.isFinite(timestamp) ? new Date(timestamp).toISOString().split('T')[0] : now;
+        return `  <url>
+      <loc>${BASE_URL}/news/${encodeURIComponent(a.slug)}</loc>
+      <lastmod>${lastmod}</lastmod>
+      <changefreq>monthly</changefreq>
+      <priority>0.7</priority>
+    </url>`;
+      })
+      .join('\n');
 
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
-${staticEntries}
-${articleEntries}
-</urlset>`;
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+  <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+          xmlns:news="http://www.google.com/schemas/sitemap-news/0.9">
+  ${staticEntries}
+  ${articleEntries}
+  </urlset>`;
 
-  return new Response(xml, {
-    headers: {
-      'Content-Type': 'application/xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=3600',
-      'Access-Control-Allow-Origin': corsOrigin,
-    },
-  });
+    return new Response(req.method === 'HEAD' ? null : xml, {
+      headers: {
+        ...headers,
+        'Content-Type': 'application/xml; charset=utf-8',
+        'Cache-Control': 'public, max-age=3600',
+      },
+    });
+  } catch {
+    return Response.json({ error: 'Sitemap temporarily unavailable' }, {
+      status: 503, headers: { ...headers, 'Retry-After': '60' },
+    });
+  }
 });

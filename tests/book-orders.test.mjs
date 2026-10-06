@@ -151,3 +151,30 @@ test('order totals include all tracked rows and refunds, beyond a display page',
   const after=(await service('select public.book_order_totals(false) result')).rows[0].result;
   assert.equal(after.gross_minor-before.gross_minor,1100*1499); assert.equal(after.refunded_minor-before.refunded_minor,1100*100); assert.equal(after.net_minor-before.net_minor,1100*1399); assert.equal(after.currency,'eur');
 });
+
+
+test('a queue of 500 payment redeliveries grants fulfillment once and keeps the full refund',async()=>{
+  const o=await begin();
+  const payload={order_id:o.id,format:o.format,session_id:`cs_test_${o.id}`,session_status:'complete',payment_status:'paid',payment_intent_id:`pi_${o.id}`,currency:'eur',amount_total:o.expected_amount};
+  const id=`evt_stress_${o.id}`;
+  const replies=await Promise.all(Array.from({length:500},()=>db.query('select public.apply_book_payment_event($1,$2,$3,$4,$5) result',[id,'checkout.session.completed',false,Math.floor(Date.now()/1000),payload])));
+  assert.equal(replies.filter(r=>r.rows[0].result.duplicate===true).length,499);
+  await refund(o,1499);await event(o);
+  const current=await get(o.id);assert.equal(current.payment_status,'refunded');assert.equal(current.amount_refunded,1499);
+  assert.equal((await db.query("select count(*)::integer n from private.book_order_history where order_id=$1 and action='payment_verified'",[o.id])).rows[0].n,1);
+});
+test('limiter cleanup removes at most 200 expired buckets and leaves live limits intact',async()=>{
+  const prefix=randomUUID().replaceAll('-','');
+  await db.query("insert into private.rate_limits(bucket,expires_at) select lpad($1||i::text,64,'0'),now()-interval '1 day' from generate_series(1,1000) i",[prefix]);
+  const live=prefix.padEnd(64,'f');
+  await db.query('insert into private.rate_limits(bucket,hits) values($1,5)',[live]);
+  const before=(await db.query('select count(*)::integer n from private.rate_limits where expires_at<now()')).rows[0].n;
+  const key=randomUUID().replaceAll('-','').padEnd(64,'a');
+  await service('select public.consume_rate_limit($1,7)',[key]);
+  const after=(await db.query('select count(*)::integer n from private.rate_limits where expires_at<now()')).rows[0].n;
+  assert.equal(before-after,200);
+  assert.equal((await db.query('select hits from private.rate_limits where bucket=$1',[live])).rows[0].hits,5);
+  const replies=await Promise.all(Array.from({length:50},()=>db.query('select public.consume_rate_limit($1,7) allowed',[key])));
+  assert.equal(replies.filter(r=>r.rows[0].allowed).length,6);
+  assert.equal((await db.query('select hits from private.rate_limits where bucket=$1',[key])).rows[0].hits,51);
+});

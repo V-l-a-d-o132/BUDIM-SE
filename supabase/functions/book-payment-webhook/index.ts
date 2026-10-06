@@ -1,5 +1,5 @@
 import Stripe from 'npm:stripe@22.6.0';
-import { serviceClient } from '../_shared/security.ts';
+import { serviceClient, readRawBody, requestBodyErrorResponse } from '../_shared/security.ts';
 import { signingSecret, bookEventData, STRIPE_VERSION } from '../_shared/book-payments.ts';
 
 const verifier = new Stripe('signature-verification-only', { apiVersion: STRIPE_VERSION });
@@ -10,21 +10,14 @@ Deno.serve(async (req: Request) => {
   if (req.method !== 'POST') return Response.json({ error: 'Method not allowed' }, { status: 405, headers });
   const mode = new URL(req.url).searchParams.get('mode');
   const signature = req.headers.get('stripe-signature');
-  if (!['live', 'test'].includes(mode ?? '') || !signature) return Response.json({ error: 'Invalid webhook' }, { status: 400, headers });
+  if (!['live', 'test'].includes(mode ?? '') || !signature || signature.length > 2048) return Response.json({ error: 'Invalid webhook' }, { status: 400, headers });
   const isLive = mode === 'live';
   let secret: string | null;
   try { secret = await signingSecret(isLive); } catch { return Response.json({ error: 'Webhook unavailable' }, { status: 503, headers }); }
   if (!secret) return Response.json({ error: 'Webhook unavailable' }, { status: 503, headers });
-  const declaredSize = Number(req.headers.get('content-length') ?? 0);
-  if (declaredSize > 1_000_000) return Response.json({ error: 'Payload too large' }, { status: 413, headers });
-  let raw = ''; const reader = req.body?.getReader(); let size = 0; const decoder = new TextDecoder();
-  if (reader) while (true) {
-    const chunk = await reader.read(); if (chunk.done) break;
-    size += chunk.value.byteLength;
-    if (size > 1_000_000) { await reader.cancel(); return Response.json({ error: 'Payload too large' }, { status: 413, headers }); }
-    raw += decoder.decode(chunk.value, { stream: true });
-  }
-  raw += decoder.decode();
+  let raw: string;
+  try { raw = await readRawBody(req, 1_000_000); }
+  catch (error) { return requestBodyErrorResponse(error, headers) ?? Response.json({ error: 'Invalid webhook' }, { status: 400, headers }); }
   let event: Stripe.Event;
   try { event = await verifier.webhooks.constructEventAsync(raw, signature, secret, 300, cryptoProvider); }
   catch { return Response.json({ error: 'Invalid signature' }, { status: 400, headers }); }

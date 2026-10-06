@@ -5,7 +5,7 @@ Deno.serve(async (req: Request) => {
   const rejected = publicRequestError(req); if (rejected) return rejected;
   const headers = corsHeaders(req);
   try {
-    let body; try { body = await readBody(req, 12000); } catch { throw new BookError('Невалидна заявка.'); }
+    const body = await readBody(req, 12000);
     if (typeof body.order_id !== 'string' || !UUID.test(body.order_id) || !['status', 'download'].includes(body.action ?? 'status')) throw new BookError('Невалидна заявка.');
     let tokenHash; try { tokenHash = await ownerHash(body.order_token); } catch { throw new BookError('Поръчката не е достъпна.', 404); }
     if (!await rateLimit(req, body.action === 'download' ? 'book-download' : 'book-status', body.action === 'download' ? 10 : 40)) throw new BookError('Твърде много заявки. Опитай след минута.', 429);

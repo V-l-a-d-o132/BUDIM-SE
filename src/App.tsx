@@ -3,6 +3,7 @@ import { BrowserRouter, useLocation } from 'react-router-dom'
 import { AppRoutes } from './router'
 import ScrollToTop from './components/ScrollToTop'
 import CookieBanner from './components/feature/CookieBanner'
+import ErrorBoundary from './components/base/ErrorBoundary'
 import './lib/privacy'
 
 function PrivacyRoute() {
@@ -13,12 +14,12 @@ function PrivacyRoute() {
 
 function App() {
   return (
-    <BrowserRouter basename={__BASE_PATH__}>
+    <ErrorBoundary><BrowserRouter basename={__BASE_PATH__}>
       <PrivacyRoute />
       <ScrollToTop />
       <AppRoutes />
       <CookieBanner />
-    </BrowserRouter>
+    </BrowserRouter></ErrorBoundary>
   )
 }
 

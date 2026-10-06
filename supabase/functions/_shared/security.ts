@@ -6,7 +6,28 @@ export function serviceClient() {
   const url = Deno.env.get('SUPABASE_URL');
   const key = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   if (!url || !key) throw new Error('Server configuration missing');
-  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false } });
+  return createClient(url, key, { auth: { persistSession: false, autoRefreshToken: false }, global: { fetch: serverFetch } });
+}
+
+// Preserve an upstream cancellation while bounding Auth, database and storage calls.
+export function serverFetch(input: RequestInfo | URL, init: RequestInit = {}): Promise<Response> {
+  const signal = init.signal ?? (input instanceof Request ? input.signal : undefined);
+  return fetch(input, { ...init, signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(10000)]) : AbortSignal.timeout(10000) });
+}
+
+export class RequestBodyError extends Error {
+  status: number;
+  constructor(message: string, status: number) { super(message); this.status = status; this.name = 'RequestBodyError'; }
+}
+
+export function requestBodyErrorResponse(error: unknown, headers: Record<string, string>): Response | null {
+  return error instanceof RequestBodyError ? Response.json({ error: error.message }, { status: error.status, headers }) : null;
+}
+
+export function rateLimitResponse(headers: Record<string, string>): Response {
+  return Response.json({ error: 'Твърде много заявки. Опитай след малко.' }, {
+    status: 429, headers: { ...headers, 'Retry-After': String(Math.ceil((60000 - Date.now() % 60000) / 1000)) },
+  });
 }
 
 export function corsHeaders(req: Request): Record<string, string> {
@@ -28,22 +49,39 @@ export function publicRequestError(req: Request): Response | null {
   return null;
 }
 
-export async function readBody(req: Request, maxBytes = 50000): Promise<Record<string, any>> {
+export async function readRawBody(req: Request, maxBytes = 50000, timeoutMs = 8000): Promise<string> {
+  if (Number(req.headers.get('content-length') ?? 0) > maxBytes) throw new RequestBodyError('Payload too large', 413);
   const reader = req.body?.getReader();
-  let text = '', size = 0;
-  const decoder = new TextDecoder();
-  if (reader) {
+  if (!reader) return '';
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new RequestBodyError('Request body timed out', 408)), timeoutMs); });
+  const reading = async () => {
+    let text = '', size = 0;
+    const decoder = new TextDecoder('utf-8', { fatal: true });
     while (true) {
       const { done, value } = await reader.read();
       if (done) break;
       size += value.byteLength;
-      if (size > maxBytes) { await reader.cancel(); throw new Error('Payload too large'); }
+      if (size > maxBytes) throw new RequestBodyError('Payload too large', 413);
       text += decoder.decode(value, { stream: true });
     }
     text += decoder.decode();
-  }
-  const body = JSON.parse(text);
-  if (!body || typeof body !== 'object' || Array.isArray(body)) throw new Error('Invalid request');
+    return text;
+  };
+  try { return await Promise.race([reading(), deadline]); }
+  catch (error) {
+    // A broken stream's cancellation callback must not postpone the response.
+    void reader.cancel().catch(() => {});
+    if (error instanceof RequestBodyError) throw error;
+    throw new RequestBodyError('Invalid request body', 400);
+  } finally { clearTimeout(timer); }
+}
+
+export async function readBody(req: Request, maxBytes = 50000, timeoutMs = 8000): Promise<Record<string, any>> {
+  const text = await readRawBody(req, maxBytes, timeoutMs);
+  let body;
+  try { body = JSON.parse(text); } catch { throw new RequestBodyError('Invalid JSON', 400); }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) throw new RequestBodyError('Invalid request', 400);
   return body;
 }
 

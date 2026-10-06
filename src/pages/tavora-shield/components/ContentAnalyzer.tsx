@@ -86,6 +86,7 @@ export default function ContentAnalyzer() {
     try {
       const response = await fetch(`${SUPABASE_URL}/functions/v1/tavora-content-analyzer`, {
         method: 'POST',
+        signal: AbortSignal.timeout(45000),
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${SUPABASE_ANON_KEY}`,

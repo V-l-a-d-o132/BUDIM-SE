@@ -1,0 +1,472 @@
+{
+  "date": "2026-10-06",
+  "website": "https://budimse.online",
+  "evidence": {
+    "managed_database": {
+      "replay_test": {
+        "deliveries": 500,
+        "duplicates": 500,
+        "allowed": 7,
+        "denied": 17
+      },
+      "final_synthetic_orders": [
+        {
+          "payment_status": "refunded",
+          "fulfillment_status": "cancelled",
+          "amount_paid": 1499,
+          "amount_refunded": 1499,
+          "payment_grants": 1
+        },
+        {
+          "payment_status": "refunded",
+          "fulfillment_status": "cancelled",
+          "amount_paid": 1499,
+          "amount_refunded": 1499,
+          "payment_grants": 1
+        }
+      ],
+      "concurrency_attempt": {
+        "overlapped": false,
+        "hold_seconds": 30,
+        "times": [
+          {
+            "started": "2026-10-06 11:44:54.424677+00",
+            "finished": "2026-10-06 11:45:24.456011+00"
+          },
+          {
+            "started": "2026-10-06 11:45:32.999172+00",
+            "finished": "2026-10-06 11:45:33.003861+00"
+          }
+        ],
+        "limitation": "Management SQL requests ran sequentially; no proof of two overlapping Postgres sessions."
+      },
+      "health": {
+        "server_version": "17.6",
+        "database_bytes": 14797971,
+        "connections": 10,
+        "active_connections": 1,
+        "lock_waiters": 0,
+        "app_tables": 19,
+        "rls_tables": 19
+      },
+      "fixture_cleanup": {
+        "remaining_orders": 0,
+        "remaining_tokens": 0,
+        "remaining_history": 0,
+        "remaining_events": 0,
+        "remaining_refunds": 0
+      }
+    },
+    "function_logs_after": [
+      {
+        "max_execution_ms": 940,
+        "p95_execution_ms": 778.5,
+        "path": "/functions/v1/admin-book-orders",
+        "requests": 6,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 1254,
+        "p95_execution_ms": 1254,
+        "path": "/functions/v1/analyze-viral-post",
+        "requests": 1,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 1589,
+        "p95_execution_ms": 1589,
+        "path": "/functions/v1/book-payment-webhook",
+        "requests": 1,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 2719,
+        "p95_execution_ms": 2381.25,
+        "path": "/functions/v1/book-store",
+        "requests": 6,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 1147,
+        "p95_execution_ms": 1147,
+        "path": "/functions/v1/create-book-checkout",
+        "requests": 1,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 944,
+        "p95_execution_ms": 944,
+        "path": "/functions/v1/gemini-content-analyzer-v2",
+        "requests": 1,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 2213,
+        "p95_execution_ms": 2172,
+        "path": "/functions/v1/get-book-order",
+        "requests": 6,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 2707,
+        "p95_execution_ms": 2294.199999999999,
+        "path": "/functions/v1/social-game",
+        "requests": 7,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 1061,
+        "p95_execution_ms": 1055.9,
+        "path": "/functions/v1/submit-partnership",
+        "requests": 2,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 797,
+        "p95_execution_ms": 797,
+        "path": "/functions/v1/tavora-biometric-log",
+        "requests": 1,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 1316,
+        "p95_execution_ms": 1099.3499999999997,
+        "path": "/functions/v1/tavora-content-analyzer",
+        "requests": 8,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 751,
+        "p95_execution_ms": 751,
+        "path": "/functions/v1/tavora-literacy-log",
+        "requests": 1,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 852,
+        "p95_execution_ms": 852,
+        "path": "/functions/v1/tavora-shield-content-analyzer",
+        "requests": 1,
+        "server_errors": 0
+      },
+      {
+        "max_execution_ms": 1373,
+        "p95_execution_ms": 1173.4999999999995,
+        "path": "/functions/v1/tavora-shield-submit",
+        "requests": 7,
+        "server_errors": 0
+      }
+    ],
+    "audits": {
+      "production_vulnerabilities": 0,
+      "full": {
+        "critical": 0,
+        "moderate": 0,
+        "high": 5
+      },
+      "remaining_development_advisory": "GHSA-vfj7-8cjw-p6xm",
+      "security_advisor_warning": "auth_leaked_password_protection",
+      "performance_advisor_remaining": "unused_index"
+    },
+    "frontend_published": false,
+    "hosting_security_headers_confirmed": false,
+    "functions_updated": 19
+  },
+  "runs": [
+    {
+      "phase": "before",
+      "started": "2026-10-06T11:21:23.139Z",
+      "finished": "2026-10-06T11:22:25.609Z",
+      "safety": {
+        "max_concurrency": 8,
+        "max_starts_per_second": 8,
+        "timeout_ms": 15000,
+        "provider_calls": 0,
+        "successful_form_writes": 0,
+        "payment_creations": 0
+      },
+      "groups": [
+        {
+          "group": "website",
+          "concurrency": 2,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 144,
+          "p95_ms": 9271,
+          "max_ms": 9271,
+          "statuses": {
+            "200": 12
+          }
+        },
+        {
+          "group": "website",
+          "concurrency": 4,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 161,
+          "p95_ms": 6157,
+          "max_ms": 6157,
+          "statuses": {
+            "200": 12
+          }
+        },
+        {
+          "group": "website",
+          "concurrency": 8,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 7632,
+          "p95_ms": 8205,
+          "max_ms": 8205,
+          "statuses": {
+            "200": 12
+          }
+        },
+        {
+          "group": "api",
+          "concurrency": 2,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 776,
+          "p95_ms": 8042,
+          "max_ms": 8042,
+          "statuses": {
+            "200": 4,
+            "400": 4,
+            "401": 2,
+            "404": 2
+          }
+        },
+        {
+          "group": "api",
+          "concurrency": 4,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 692,
+          "p95_ms": 9353,
+          "max_ms": 9353,
+          "statuses": {
+            "200": 4,
+            "400": 4,
+            "401": 2,
+            "404": 2
+          }
+        },
+        {
+          "group": "api",
+          "concurrency": 8,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 8641,
+          "p95_ms": 9853,
+          "max_ms": 9853,
+          "statuses": {
+            "200": 4,
+            "400": 4,
+            "401": 2,
+            "404": 2
+          }
+        },
+        {
+          "group": "security",
+          "concurrency": 2,
+          "requests": 13,
+          "failures": 4,
+          "p50_ms": 239,
+          "p95_ms": 1667,
+          "max_ms": 1667,
+          "statuses": {
+            "400": 4,
+            "401": 4,
+            "403": 3,
+            "500": 2
+          }
+        }
+      ],
+      "failures": [
+        {
+          "group": "security",
+          "concurrency": 2,
+          "name": "gemini-content-analyzer-v2",
+          "status": 400,
+          "ms": 105,
+          "bytes": 75,
+          "ok": false,
+          "error": "Expected 410 but received 400"
+        },
+        {
+          "group": "security",
+          "concurrency": 2,
+          "name": "tavora-shield-content-analyzer",
+          "status": 400,
+          "ms": 182,
+          "bytes": 75,
+          "ok": false,
+          "error": "Expected 410 but received 400"
+        },
+        {
+          "group": "security",
+          "concurrency": 2,
+          "name": "analyze-viral-post",
+          "status": 500,
+          "ms": 446,
+          "bytes": 54,
+          "ok": false,
+          "error": "Expected 400/413/429 but received 500"
+        },
+        {
+          "group": "security",
+          "concurrency": 2,
+          "name": "submit-partnership",
+          "status": 500,
+          "ms": 817,
+          "bytes": 46,
+          "ok": false,
+          "error": "Expected 400/413/429 but received 500"
+        }
+      ]
+    },
+    {
+      "phase": "after",
+      "started": "2026-10-06T11:51:06.441Z",
+      "finished": "2026-10-06T11:52:23.617Z",
+      "safety": {
+        "max_concurrency": 8,
+        "max_starts_per_second": 8,
+        "timeout_ms": 15000,
+        "provider_calls": 0,
+        "successful_form_writes": 0,
+        "payment_creations": 0
+      },
+      "groups": [
+        {
+          "group": "website",
+          "concurrency": 2,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 166,
+          "p95_ms": 8838,
+          "max_ms": 8838,
+          "statuses": {
+            "200": 12
+          }
+        },
+        {
+          "group": "website",
+          "concurrency": 4,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 220,
+          "p95_ms": 8444,
+          "max_ms": 8444,
+          "statuses": {
+            "200": 12
+          }
+        },
+        {
+          "group": "website",
+          "concurrency": 8,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 7740,
+          "p95_ms": 8429,
+          "max_ms": 8429,
+          "statuses": {
+            "200": 12
+          }
+        },
+        {
+          "group": "api",
+          "concurrency": 2,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 1396,
+          "p95_ms": 11978,
+          "max_ms": 11978,
+          "statuses": {
+            "200": 4,
+            "400": 4,
+            "401": 2,
+            "404": 2
+          }
+        },
+        {
+          "group": "api",
+          "concurrency": 4,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 892,
+          "p95_ms": 10852,
+          "max_ms": 10852,
+          "statuses": {
+            "200": 4,
+            "400": 4,
+            "401": 2,
+            "404": 2
+          }
+        },
+        {
+          "group": "api",
+          "concurrency": 8,
+          "requests": 12,
+          "failures": 0,
+          "p50_ms": 8323,
+          "p95_ms": 9556,
+          "max_ms": 9556,
+          "statuses": {
+            "200": 4,
+            "400": 4,
+            "401": 2,
+            "404": 2
+          }
+        },
+        {
+          "group": "security",
+          "concurrency": 2,
+          "requests": 17,
+          "failures": 0,
+          "p50_ms": 820,
+          "p95_ms": 1660,
+          "max_ms": 1660,
+          "statuses": {
+            "400": 4,
+            "401": 4,
+            "403": 3,
+            "410": 4,
+            "413": 2
+          }
+        }
+      ],
+      "failures": []
+    },
+    {
+      "phase": "limits",
+      "started": "2026-10-06T11:56:30.115Z",
+      "finished": "2026-10-06T11:56:39.886Z",
+      "safety": {
+        "max_concurrency": 8,
+        "max_starts_per_second": 8,
+        "timeout_ms": 15000,
+        "provider_calls": 0,
+        "successful_form_writes": 0,
+        "payment_creations": 0
+      },
+      "groups": [
+        {
+          "group": "limiter",
+          "concurrency": 4,
+          "requests": 14,
+          "failures": 0,
+          "p50_ms": 605,
+          "p95_ms": 8006,
+          "max_ms": 8006,
+          "statuses": {
+            "400": 5,
+            "429": 9
+          }
+        }
+      ],
+      "failures": []
+    }
+  ]
+}
