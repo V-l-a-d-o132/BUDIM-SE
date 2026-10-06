@@ -1120,7 +1120,7 @@ function LeaderboardPanel() {
       <div className="bg-white border border-gray-200 rounded-xl p-5">
         <div className="flex items-center gap-2 mb-4">
           <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-          <h4 className="text-sm font-semibold text-gray-900">Статистика в реално време</h4>
+          <h4 className="text-sm font-semibold text-gray-900">Статистика на учебната игра</h4>
         </div>
         <div className="grid grid-cols-3 gap-3 mb-4">
           <div className="text-center p-3 bg-gray-50 rounded-xl"><p className="text-2xl font-light text-gray-900">{stats.total}</p><p className="text-[10px] text-gray-500 mt-0.5">Общо постове</p></div>
@@ -1130,11 +1130,11 @@ function LeaderboardPanel() {
         {stats.total > 0 && (
           <div className="space-y-2">
             <div>
-              <div className="flex justify-between mb-1"><span className="text-[10px] text-gray-500">Вирален % (манипулативно)</span><span className="text-[10px] font-semibold text-red-600">{viralPct}%</span></div>
+              <div className="flex justify-between mb-1"><span className="text-[10px] text-gray-500">Дял с висок игрови индекс</span><span className="text-[10px] font-semibold text-red-600">{viralPct}%</span></div>
               <div className="w-full bg-gray-100 rounded-full h-1.5"><div className="h-1.5 rounded-full bg-red-500 transition-all duration-700" style={{ width: `${viralPct}%` }}></div></div>
             </div>
             <div>
-              <div className="flex justify-between mb-1"><span className="text-[10px] text-gray-500">Качествено съдържание</span><span className="text-[10px] font-semibold text-green-600">{qualityPct}%</span></div>
+              <div className="flex justify-between mb-1"><span className="text-[10px] text-gray-500">Дял с нисък игрови индекс</span><span className="text-[10px] font-semibold text-green-600">{qualityPct}%</span></div>
               <div className="w-full bg-gray-100 rounded-full h-1.5"><div className="h-1.5 rounded-full bg-green-500 transition-all duration-700" style={{ width: `${qualityPct}%` }}></div></div>
             </div>
             <p className="text-[9px] text-gray-400 italic mt-2">
@@ -1250,7 +1250,7 @@ export default function GrayscaleGuide() {
                   <span className="text-[9px] text-amber-600 font-medium">{remaining}/3</span>
                 </div>
               </div>
-              <p className="text-xs text-amber-700 leading-relaxed">Отвори Instagram, TikTok или Facebook и публикувай нещо. AI анализира текста и показва колко лайкове получаваш. Лайквай, коментирай и repost-вай постовете на другите. Известията се появяват в горния ъгъл на телефона.</p>
+              <p className="text-xs text-amber-700 leading-relaxed">Избери учебната имитация на Instagram, TikTok или Facebook. Харесванията и игровите оценки са симулирани чрез авторски правила и AI; не предсказват реален обхват, качество или манипулативност. Публикациите се обработват от Groq и след модерация могат да се виждат от други посетители. Използвай псевдоним и не публикувай лични данни.</p>
             </div>
           </div>
         </div>

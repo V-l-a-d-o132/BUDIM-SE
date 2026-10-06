@@ -20,7 +20,6 @@ const faqItems = [
     answer:
       'Част от изследванията сочат, че честите прекъсвания и постоянният поток от информация могат да намалят способността за дълбок фокус и да увеличат реактивното поведение.',
     sources: [
-      { label: 'APA — Attention in the Age of Technology', url: 'https://www.apa.org/monitor/2015/03/cover-attention' },
       { label: 'UC Irvine — Cost of Interrupted Work', url: 'https://www.ics.uci.edu/~gmark/chi08-mark.pdf' },
     ],
   },
@@ -32,7 +31,7 @@ const faqItems = [
     sources: [
       { label: 'SAGE Journals — Social Media & Mental Health', url: 'https://journals.sagepub.com/doi/10.1177/2167702617723376' },
       { label: 'CDC — Youth Risk Behavior Survey 2023', url: 'https://www.cdc.gov/media/releases/2023/p0213-yrbs.html' },
-      { label: 'Jonathan Haidt — The Anxious Generation', url: 'https://jonathanhaidt.com/anxious-generation/' },
+      { label: 'Valkenburg et al. (2022) — Umbrella review', url: 'https://pubmed.ncbi.nlm.nih.gov/34563980/' },
     ],
   },
   {
@@ -58,7 +57,7 @@ const faqItems = [
     answer:
       'Поведенческата психология описва как навиците се изграждат чрез повтарящи се стимули и награди. Този механизъм често се използва при проектирането на дигитални продукти.',
     sources: [
-      { label: 'APA PsycNet — Behaviorism & Habit Formation', url: 'https://psycnet.apa.org/record/1954-15040-000' },
+      { label: 'Wood & Neal (2007) — Habits and goals', url: 'https://pubmed.ncbi.nlm.nih.gov/17907866/' },
       { label: 'NIH — Habit Formation in the Brain', url: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2763509/' },
     ],
   },
@@ -160,23 +159,23 @@ const chapterItems = [
 const benefitItems = [
   {
     icon: 'ri-time-line' as const,
-    title: 'Възвърни времето си',
-    desc: 'При много хора се наблюдава връщане на часове дневно, когато спрат автоматичното скролване.',
+    title: 'Наблюдавай времето си',
+    desc: 'Проследи кога отваряш приложенията по навик и избери кои моменти искаш да организираш различно.',
   },
   {
     icon: 'ri-brain-line' as const,
-    title: 'По-дълбок фокус',
-    desc: 'Възстановяваш способността да работиш по нещо повече от няколко минути, без прекъсване.',
+    title: 'Опитай паузи без известия',
+    desc: 'Експериментирай с периоди без прекъсвания и наблюдавай дали това помага на избрана задача.',
   },
   {
     icon: 'ri-group-line' as const,
-    title: 'По-добри разговори',
-    desc: 'Когато телефонът не е на масата, присъствието ти се усеща — от другите и от теб.',
+    title: 'Обсъди дигиталните граници',
+    desc: 'Използвай въпросите от книгата като повод за разговор за вниманието, устройствата и личните граници.',
   },
   {
     icon: 'ri-emotion-happy-line' as const,
-    title: 'По-малко безпокойство',
-    desc: 'Прекалената информация често се свързва с тревожност. Контролът върху входа може да допринесе за спокойствие.',
+    title: 'Разглеждай съдържанието критично',
+    desc: 'Проверявай източника, контекста и основанията за твърденията. Книгата предлага упражнения, без обещание за психологически или здравен резултат.',
   },
 ];
 
@@ -332,7 +331,7 @@ export default function Order() {
             <div className="max-w-6xl mx-auto">
               <div className="text-center mb-10 md:mb-12">
                 <p className="text-xs tracking-widest text-gray-400 uppercase mb-3">Защо тази книга</p>
-                <h2 className="text-2xl md:text-3xl font-light text-gray-900">Какво ще промени за теб</h2>
+                <h2 className="text-2xl md:text-3xl font-light text-gray-900">Какво можеш да изследваш и опиташ</h2>
               </div>
 
               <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">

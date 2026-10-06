@@ -28,7 +28,7 @@ const modules: { id: Module; label: string; icon: string; description: string }[
     id: 'assessment',
     label: 'Самооценка',
     icon: 'ri-brain-line',
-    description: 'На коя от петте степени се намираш сега?',
+    description: 'Авторски въпросник за размисъл върху дигиталните навици.',
   },
 ];
 

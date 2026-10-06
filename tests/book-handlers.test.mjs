@@ -37,6 +37,8 @@ before(async()=>{
     if(url.pathname.endsWith('/rpc/book_payment_configuration')) return Response.json({});
     if(url.pathname.endsWith('/rpc/configure_book_payment_secret')) return Response.json('configured');
     if(url.pathname.endsWith('/rpc/apply_book_payment_event')) return eventFailure?Response.json({message:'fixture storage failure'},{status:503}):Response.json({order_id:id,payment_status:'paid'});
+    if(url.pathname.endsWith('/book_orders')) return Response.json([{...savedOrder,stripe_session_id:'cs_test_fixture',stripe_payment_intent_id:'pi_fixture'}]);
+    if(url.hostname==='api.stripe.com' && url.pathname==='/v1/checkout/sessions' && init.method==='GET') return Response.json({object:'list',has_more:false,data:[{id:'cs_test_fixture',created:1,status:'complete',payment_status:'paid',livemode:false,currency:'eur',amount_total:1499,metadata:{store:'budimse_books_v1',order_id:id,format:'physical'},payment_intent:{id:'pi_fixture',livemode:false,currency:'eur',amount_received:1499,status:'succeeded',latest_charge:{livemode:false,currency:'eur',amount_refunded:0,balance_transaction:{id:'txn_fixture',currency:'eur',amount:1499,fee:72,net:1427,status:'pending'}}}}]});
     if(url.hostname==='api.stripe.com' && url.pathname==='/v1/checkout/sessions') return Response.json({id:'cs_test_fixture',object:'checkout.session',url:'https://checkout.stripe.com/c/pay/cs_test_fixture',livemode:modeMismatch,metadata:{order_id:id},status:'open'});
     if(url.hostname==='api.stripe.com' && url.pathname==='/v1/webhook_endpoints') return Response.json({id:'we_fixture',object:'webhook_endpoint',secret:'whsec_setup_fixture',livemode:false});
     if(url.pathname.includes('/storage/v1/object/sign/')) return Response.json({signedURL:'/object/sign/book-downloads/editions/fixture.pdf?token=fixture'});
@@ -119,6 +121,14 @@ test('authorized webhook setup encrypts the secret without returning it to the b
   const data=await response.json(); assert.equal(data.configured,true); assert.equal('secret' in data,false);
   const stored=requests.find(r=>r.url.includes('/configure_book_payment_secret')); assert.equal(stored.body.new_value,'whsec_setup_fixture');
   const provider=requests.find(r=>r.url.includes('/webhook_endpoints')); assert.match(provider.body.url,/book-payment-webhook\?mode=test$/);
+});
+test('MFA-authorized reconciliation compares provider facts without returning secrets or customer fields',async()=>{
+  authorized=true;const response=await call('admin-book-orders',{action:'reconcile',livemode:false},{Authorization:'Bearer fixture'});assert.equal(response.status,200);
+  const result=await response.json();assert.equal(result.mismatches,0);assert.equal(result.by_currency.eur.net_minor,1499);assert.equal(result.rows[0].charge_transaction.fee_minor,72);
+  assert.equal(result.scope,'stripe_sessions_page');assert.equal(result.has_more,false);
+  for(const field of ['customer_email','customer_phone','shipping_address','order_token','client_secret']) assert.equal(field in result.rows[0],false);
+  const provider=requests.find(r=>r.url.includes('api.stripe.com'));assert.ok(new URL(provider.url).searchParams.getAll('expand[0]').includes('data.payment_intent.latest_charge.balance_transaction'));
+  assert.equal(requests.some(r=>r.url.includes('/apply_book_payment_event')),false);
 });
 test('ebook activation rejects traversal and false PDF content',async()=>{
   authorized=true;

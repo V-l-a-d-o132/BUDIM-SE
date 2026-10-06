@@ -1,26 +1,30 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/base/Icon';
+import '@/lib/privacy';
 
 export default function CookieBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem('cookie_consent');
-    if (!consent) {
-      // Small delay so it doesn't flash on first render
-      const t = setTimeout(() => setVisible(true), 800);
-      return () => clearTimeout(t);
-    }
+    setVisible(!window.BudimPrivacy?.get());
+    const open = () => setVisible(true);
+    const changed = () => setVisible(!window.BudimPrivacy?.get());
+    window.addEventListener('budimse:privacy-open', open);
+    window.addEventListener('budimse:privacy-changed', changed);
+    return () => {
+      window.removeEventListener('budimse:privacy-open', open);
+      window.removeEventListener('budimse:privacy-changed', changed);
+    };
   }, []);
 
   const accept = () => {
-    localStorage.setItem('cookie_consent', 'accepted');
+    window.BudimPrivacy?.save(true);
     setVisible(false);
   };
 
   const decline = () => {
-    localStorage.setItem('cookie_consent', 'declined');
+    window.BudimPrivacy?.save(false);
     setVisible(false);
   };
 
@@ -39,18 +43,19 @@ export default function CookieBanner() {
             <Icon name="ri-shield-check-line" size={14} className="text-white/40" />
           </div>
           <p className="text-xs text-white/50 leading-relaxed">
-            Използваме аналитични бисквитки (Google Analytics) за подобряване на сайта.
-            Личните ви данни се обработват съгласно{' '}
+            Сайтът работи с необходимото локално съхранение. Само с ваше разрешение
+            зареждаме Meta Pixel за измерване на реклами: Meta получава посещението,
+            IP адреса и данни за браузъра. Преди избор и при отказ този тракер не се зарежда. Вижте{' '}
             <Link to="/privacy" className="text-white/70 underline hover:text-white transition-colors">
               Политиката за поверителност
             </Link>{' '}
-            и GDPR. Можете да откажете аналитичните бисквитки — сайтът ще продължи да работи нормално.
+            . Можете да промените избора от „Настройки на бисквитките“ в края на всяка страница.
           </p>
         </div>
         <div className="flex items-center gap-3 flex-shrink-0">
           <button
             onClick={decline}
-            className="text-xs text-white/40 hover:text-white/70 transition-colors whitespace-nowrap cursor-pointer px-3 py-2"
+            className="text-xs bg-white text-gray-900 px-5 py-2 rounded-md hover:bg-gray-100 transition-colors whitespace-nowrap cursor-pointer font-medium"
           >
             Само необходими
           </button>
@@ -58,7 +63,7 @@ export default function CookieBanner() {
             onClick={accept}
             className="text-xs bg-white text-gray-900 px-5 py-2 rounded-md hover:bg-gray-100 transition-colors whitespace-nowrap cursor-pointer font-medium"
           >
-            Приемам всички
+            Разреши Meta Pixel
           </button>
         </div>
       </div>

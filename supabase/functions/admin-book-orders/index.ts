@@ -2,6 +2,7 @@ import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 import { requireAdmin } from '../_shared/admin-auth.ts';
 import { publicRequestError, corsHeaders, serviceClient, readBody } from '../_shared/security.ts';
 import { bookMode, bookStripe, BOOK_EVENTS, BOOK_WEBHOOK_URL, BOOK_BUCKET, STRIPE_VERSION, UUID, BookError, bookResponse } from '../_shared/book-payments.ts';
+import { reconcileBookSessions } from '../_shared/book-reconciliation.ts';
 
 Deno.serve(async (req: Request) => {
   const rejected = publicRequestError(req); if (rejected) return rejected;
@@ -17,6 +18,19 @@ Deno.serve(async (req: Request) => {
     const isLive = body.livemode === undefined ? bookMode() : body.livemode;
     if (typeof isLive !== 'boolean') throw new BookError('Невалиден режим.');
     const action = body.action ?? 'list';
+    if (action === 'reconcile') {
+      if (body.starting_after !== undefined && (typeof body.starting_after !== 'string' || !/^cs_(?:test_|live_)?[a-zA-Z0-9]{1,240}$/.test(body.starting_after))) throw new BookError('Невалидна страница.');
+      const stripe = await bookStripe(isLive);
+      const sessions = await stripe.checkout.sessions.list({ limit: 50, starting_after: body.starting_after,
+        expand: ['data.payment_intent.latest_charge.balance_transaction'] });
+      const ids = sessions.data.map(session => session.metadata?.order_id).filter((id): id is string => !!id && UUID.test(id));
+      const stored = ids.length ? await db.from('book_orders').select('id,format,livemode,stripe_session_id,stripe_payment_intent_id,currency,expected_amount,amount_paid,amount_refunded,payment_status').eq('livemode', isLive).in('id', ids) : { data: [], error: null };
+      if (stored.error) throw new Error('Reconciliation unavailable');
+      return Response.json({ ...reconcileBookSessions(sessions.data, stored.data ?? [], isLive),
+        scope: 'stripe_sessions_page', livemode: isLive, has_more: sessions.has_more,
+        next_cursor: sessions.has_more ? sessions.data.at(-1)?.id ?? null : null,
+        checked_at: new Date().toISOString() }, { headers });
+    }
     if (action === 'list') {
       const limit = body.limit ?? 50;
       if (!Number.isInteger(limit) || limit < 1 || limit > 100) throw new BookError('Невалиден размер на страница.');
