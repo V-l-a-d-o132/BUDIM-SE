@@ -22,18 +22,23 @@ const modules: { id: Module; label: string; icon: string; description: string }[
     id: 'grayscale',
     label: 'Режим на фокус',
     icon: 'ri-contrast-2-line',
-    description: 'Как да намалите визуалната стимулация',
+    description: 'Учебни прототипи iOS и Android с отделни настройки за цветове, известия и приложения',
   },
   {
     id: 'assessment',
     label: 'Самооценка',
     icon: 'ri-brain-line',
-    description: 'Авторски въпросник за размисъл върху дигиталните навици.',
+    description: '35 авторски въпроса с прозрачна карта на отговорите',
   },
 ];
 
 export default function TavoraShield() {
   const [activeModule, setActiveModule] = useState<Module>('analyzer');
+  const [visitedModules, setVisitedModules] = useState<Module[]>(['analyzer']);
+  const selectModule = (module: Module) => {
+    setActiveModule(module);
+    setVisitedModules(previous => previous.includes(module) ? previous : [...previous, module]);
+  };
 
   usePageSeo({
     title: 'Анализатор на съдържание | БУДИМ СЕ',
@@ -77,9 +82,9 @@ export default function TavoraShield() {
             <span className="font-medium">в дигиталното съдържание.</span>
           </h1>
           <p className="text-lg text-gray-600 leading-relaxed max-w-2xl">
-            Образователен инструмент за разпознаване на езикови и структурни похвати в дигиталното
-            съдържание. Постави текст и виж кои сигнали се открояват — с ориентировъчна оценка,
-            която не осъжда съдържанието или автора.
+            Разгледай възможни езикови сигнали в текст, изпробвай настройки за фокус
+            и направи самооценка на дигиталните си навици. Всеки инструмент показва
+            какво може да обобщи и какви са ограниченията му.
           </p>
         </div>
       </section>
@@ -91,7 +96,10 @@ export default function TavoraShield() {
             {modules.map((m) => (
               <button
                 key={m.id}
-                onClick={() => setActiveModule(m.id)}
+                type="button"
+                aria-pressed={activeModule === m.id}
+                aria-controls={`module-${m.id}`}
+                onClick={() => selectModule(m.id)}
                 className={`text-left p-4 rounded-lg border transition-all cursor-pointer ${
                   activeModule === m.id
                     ? 'bg-gray-900 border-gray-900 text-white'
@@ -114,14 +122,14 @@ export default function TavoraShield() {
       {/* Active module */}
       <section className="pb-12 px-4 md:pb-20 md:px-6">
         <div className="max-w-6xl mx-auto">
-          {activeModule === 'analyzer' && <ContentAnalyzer />}
-          {activeModule === 'grayscale' && <GrayscaleGuide />}
-          {activeModule === 'assessment' && <SelfAssessment />}
+          {visitedModules.includes('analyzer') && <div id="module-analyzer" hidden={activeModule !== 'analyzer'}><ContentAnalyzer /></div>}
+          {visitedModules.includes('grayscale') && <div id="module-grayscale" hidden={activeModule !== 'grayscale'}><GrayscaleGuide /></div>}
+          {visitedModules.includes('assessment') && <div id="module-assessment" hidden={activeModule !== 'assessment'}><SelfAssessment /></div>}
         </div>
       </section>
 
       {/* Security Banner */}
-      <section className="py-4 px-4 md:py-6 md:px-6 bg-gray-50 border-t border-gray-100">
+      {activeModule === 'analyzer' && <section className="py-4 px-4 md:py-6 md:px-6 bg-gray-50 border-t border-gray-100">
         <div className="max-w-3xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center">
@@ -137,7 +145,7 @@ export default function TavoraShield() {
           </div>
           <RecaptchaBadge />
         </div>
-      </section>
+      </section>}
 
       {/* CTA */}
       <section className="py-10 md:py-16 px-4 md:px-6 bg-white border-t border-gray-100">
@@ -146,8 +154,9 @@ export default function TavoraShield() {
             Рамката в пълна форма.
           </h2>
           <p className="text-gray-600 mb-8 max-w-xl mx-auto">
-            Инструментите тук показват какви езикови и структурни сигнали може да съдържа един текст.
-            Книгата обяснява защо те действат — и дава структуриран път към по-осъзнат избор.
+            Книгата представя авторската рамка и практики за наблюдение на дигиталните навици.
+            Инструментите тук са образователни примери; резултатите им не доказват научна
+            валидност на рамката.
           </p>
           <Link
             to="/order"
