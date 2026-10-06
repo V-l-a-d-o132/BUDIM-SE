@@ -31,6 +31,7 @@ async function denied(role, user, aal, query, params = []) {
 before(async () => {
   db = new PGlite();
   await db.exec(baseline);
+  await db.exec(readFileSync(new URL('./fixtures/book-platform.sql', import.meta.url), 'utf8'));
   await db.exec(migration);
   for (const [role, u] of Object.entries(users)) {
     await db.query('insert into auth.users(id) values($1)', [u]);
@@ -43,6 +44,7 @@ before(async () => {
   await db.query("insert into public.social_game_comments(post_id,content,approved,flagged) values($1,'Approved comment',true,false),($1,'Pending comment',false,false),($1,'Flagged comment',true,true),($2,'Hidden parent',true,false)", [post,pending]);
   await db.query("insert into public.tavora_shield_results(answers,pci_score,eei_score,cri_score,asi_score,total_score,classification,classification_details,radar_data) values('{\"fixture\":1}',0,0,0,0,0,'Fixture','{}','{}')");
   await db.exec("insert into public.contact_submissions(organization,type,email) values('Security fixture','other','test@example.invalid'); insert into public.news(title,slug,body,published) values('Published fixture','security-published','Fixture body text',true),('Private draft','security-draft','Private fixture body',false)");
+  await db.exec("insert into public.book_orders(format,quantity,unit_amount,expected_amount,livemode,customer_email) values('physical',1,1499,1499,false,'book-fixture@example.invalid')");
 });
 after(async () => { await db?.close(); });
 
@@ -86,6 +88,13 @@ test('password-only administrators cannot edit moderation or retrieve orders', a
 test('MFA super administrator can access customer data', async () => {
   assert.equal((await asRole('authenticated','super_admin','aal2','select id from public.contact_submissions')).rows.length,1);
   assert.equal((await asRole('authenticated','super_admin','aal2',"select public.admin_authorize('orders') allowed")).rows[0].allowed,true);
+});
+test('only the current MFA super administrator can read saved book customer records', async () => {
+  for (const role of ['ordinary','editor','moderator']) assert.equal((await asRole('authenticated',role,'aal2','select id from public.book_orders')).rows.length,0);
+  assert.equal((await asRole('authenticated','super_admin','aal1','select id from public.book_orders')).rows.length,0);
+  assert.equal((await asRole('authenticated','super_admin','aal2','select id from public.book_orders')).rows.length,1);
+  await denied('authenticated','super_admin','aal2',"update public.book_orders set amount_paid=1499");
+  await denied('authenticated','super_admin','aal2',"select public.configure_book_payment_secret(false,'webhook','whsec_forged')");
 });
 test('MFA editor can read drafts, but cannot read inquiries, orders or moderate', async () => {
   assert.equal((await asRole('authenticated','editor','aal2','select id from public.news')).rows.length,2);

@@ -24,6 +24,16 @@ verify_jwt = false
 verify_jwt = false
 [functions.create-book-checkout]
 verify_jwt = false
+[functions.book-store]
+verify_jwt = false
+[functions.get-book-order]
+verify_jwt = false
+# Stripe signatures authenticate this external callback.
+[functions.book-payment-webhook]
+verify_jwt = false
+# The handler checks the current role, session and MFA before every action.
+[functions.admin-book-orders]
+verify_jwt = false
 [functions.sitemap]
 verify_jwt = false
 [functions.tavora-shield-content-analyzer]

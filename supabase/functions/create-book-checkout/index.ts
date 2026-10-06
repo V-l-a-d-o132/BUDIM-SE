@@ -1,144 +1,52 @@
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
-import Stripe from 'https://esm.sh/stripe@14.21.0'
+import { publicRequestError, corsHeaders, readBody, rateLimit, serviceClient } from '../_shared/security.ts';
+import { bookMode, bookStripe, signingSecret, purchaseInput, returnOrigin, BOOK_STORE, BookError, bookResponse } from '../_shared/book-payments.ts';
 
-const ALLOWED_ORIGINS = [
-  'https://budimse.online',
-  'https://www.budimse.online',
-  'http://localhost:5173',
-  'http://localhost:3000',
-]
-
-const rateLimitMap = new Map<string, { count: number; resetAt: number }>()
-
-function checkRateLimit(ip: string, maxRequests = 10, windowMs = 60000): boolean {
-  const now = Date.now()
-  const key = `${ip}:${Math.floor(now / windowMs)}`
-  const entry = rateLimitMap.get(key)
-
-  if (!entry || now > entry.resetAt) {
-    rateLimitMap.set(key, { count: 1, resetAt: now + windowMs })
-    return true
-  }
-
-  if (entry.count >= maxRequests) return false
-
-  entry.count++
-  return true
-}
-
-function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? origin : ALLOWED_ORIGINS[0]
-  return {
-    'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  }
-}
-
-serve(async (req) => {
-  const origin = req.headers.get('origin')
-  const corsHeaders = getCorsHeaders(origin)
-
-  if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
-  }
-
-  // Rate limiting: 10 req/min per IP
-  const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
-  if (!checkRateLimit(clientIp, 10, 60000)) {
-    return new Response(
-      JSON.stringify({ error: 'Too many requests. Please try again later.' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 429 }
-    )
-  }
-
-  // Origin validation
-  if (origin && !ALLOWED_ORIGINS.includes(origin)) {
-    return new Response(
-      JSON.stringify({ error: 'Invalid origin' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 403 }
-    )
-  }
-
+Deno.serve(async (req: Request) => {
+  const rejected = publicRequestError(req);
+  if (rejected) return rejected;
+  const headers = corsHeaders(req);
   try {
-    const stripeKey = Deno.env.get('STRIPE_SECRET_KEY')
-    if (!stripeKey) {
-      throw new Error('Stripe secret key not configured')
+    let body;
+    try { body = await readBody(req, 12000); } catch { throw new BookError('Невалидна заявка.'); }
+    const input = await purchaseInput(body);
+    if (!await rateLimit(req, 'book-checkout', 10)) throw new BookError('Твърде много заявки. Опитай след минута.', 429);
+    const isLive = bookMode();
+    if (!await signingSecret(isLive)) throw new BookError('Покупката временно не е достъпна.', 503);
+    const db = serviceClient();
+    const begun = await db.rpc('begin_book_order', { request_id: input.requestId, owner_hash: input.tokenHash, book_format: input.format, book_quantity: input.quantity, is_live: isLive, immediate_delivery: input.immediateDelivery });
+    if (begun.error) {
+      if (begun.error.message?.includes('Digital edition unavailable')) throw new BookError('Електронното издание още не е достъпно за покупка.', 409);
+      if (begun.error.message?.includes('Order request conflict')) throw new BookError('Заявката вече е използвана за друга поръчка.', 409);
+      throw new Error('Order storage unavailable');
     }
-
-    const stripe = new Stripe(stripeKey, {
-      apiVersion: '2023-10-16',
-    })
-
-    const body = await req.json()
-    const { quantity = 1, format = 'physical', origin: bodyOrigin } = body
-
-    const requestOrigin = bodyOrigin || origin || req.headers.get('referer') || 'https://localhost'
-
-    // Strict quantity validation
-    const qty = Number(quantity)
-    if (!Number.isInteger(qty) || qty < 1 || qty > 100) {
-      throw new Error('Невалидно количество. Допустими стойности: 1–100.')
+    const order = begun.data;
+    if (!order || typeof order.id !== 'string') throw new Error('Order storage unavailable');
+    const stripe = await bookStripe(isLive);
+    if (order.stripe_session_id) {
+      const previous = await stripe.checkout.sessions.retrieve(order.stripe_session_id);
+      if (previous.livemode !== isLive || previous.metadata?.order_id !== order.id) throw new Error('Checkout mode mismatch');
+      if (previous.status !== 'open' || !previous.url) throw new BookError('Тази платежна сесия е приключила. Провери статуса на поръчката.', 409);
+      return Response.json({ orderId: order.id, sessionId: previous.id, url: previous.url, orderToken: input.token, livemode: isLive }, { headers });
     }
-
-    // Price in euro cents (EUR) — server-side only, never trust frontend price
-    const prices: Record<string, number> = {
-      physical: 1499, // €14.99
-    }
-
-    const priceAmount = prices[format] ?? prices.physical
-
-    const productName = 'Петте степени — Физическа книга'
-
+    const origin = returnOrigin(req);
+    const accessFragment = typeof body.order_token === 'string' ? `#access=${input.token}` : '';
+    const metadata = { store: BOOK_STORE, order_id: order.id, format: input.format };
+    const suffix = order.id.replaceAll('-', '').slice(0, 8).split('').map((c: string) => String.fromCharCode(97 + parseInt(c, 16))).join('');
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'eur',
-            product_data: {
-              name: productName,
-              description: 'Авторски приложен труд на Владимир Атанасов за вниманието и дигиталните навици',
-              images: ['https://static.readdy.ai/image/658b459fcf05a7723f8029c45615de2f/7fd715118976d07fe2b11b1e6367a1e7.jpeg'],
-            },
-            unit_amount: priceAmount,
-          },
-          quantity: qty,
-        },
-      ],
-      mode: 'payment',
-      success_url: `${requestOrigin}/order?success=true`,
-      cancel_url: `${requestOrigin}/order?canceled=true`,
-      billing_address_collection: 'required',
-      phone_number_collection: {
-        enabled: true,
-      },
-      shipping_address_collection: {
-        allowed_countries: ['BG', 'DE', 'AT', 'CH', 'GB', 'NL', 'BE', 'FR', 'IT', 'ES', 'GR'],
-      },
-      locale: 'bg',
-      custom_text: {
-        submit: {
-          message: 'Ще получите потвърждение на имейл след успешно плащане.',
-        },
-      },
-    })
-
-    return new Response(
-      JSON.stringify({ sessionId: session.id, url: session.url }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 200,
-      }
-    )
-  } catch (error) {
-    console.error('Checkout error:', error)
-    return new Response(
-      JSON.stringify({ error: (error as Error).message }),
-      {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        status: 400,
-      }
-    )
-  }
-})
+      mode: 'payment', locale: 'bg', integration_identifier: `budimse_books_${suffix}`,
+      adaptive_pricing: { enabled: false },
+      line_items: [{ quantity: input.quantity, price_data: { currency: 'eur', unit_amount: order.unit_amount,
+        product_data: { name: input.format === 'digital' ? 'Петте степени — Електронно издание' : 'Петте степени — Физическа книга',
+          description: input.format === 'digital' ? 'Електронна книга за лично ползване. Защитено изтегляне след потвърдено плащане.' : 'Авторски приложен труд на Владимир Атанасов за вниманието и дигиталните навици' } } }],
+      client_reference_id: order.id, metadata, payment_intent_data: { metadata },
+      success_url: `${origin}/order?order=${order.id}&session_id={CHECKOUT_SESSION_ID}${accessFragment}`,
+      cancel_url: `${origin}/order?order=${order.id}&canceled=true${accessFragment}`,
+      ...(input.format === 'physical' ? { phone_number_collection: { enabled: true }, shipping_address_collection: { allowed_countries: ['BG', 'DE', 'AT', 'CH', 'GB', 'NL', 'BE', 'FR', 'IT', 'ES', 'GR'] as const } } : {}),
+      custom_text: { submit: { message: input.format === 'digital' ? 'След потвърдено плащане електронната книга ще бъде достъпна на страницата на поръчката.' : 'След плащането можеш да проследиш поръчката и доставката на страницата на поръчката.' } },
+    }, { idempotencyKey: `budimse-book:${isLive ? 'live' : 'test'}:${order.id}` });
+    if (session.livemode !== isLive || !session.url) throw new Error('Checkout mode mismatch');
+    const bound = await db.rpc('bind_book_checkout', { order_id: order.id, session_id: session.id, session_url: session.url });
+    if (bound.error) throw new Error('Checkout binding unavailable');
+    return Response.json({ orderId: order.id, sessionId: session.id, url: session.url, orderToken: input.token, livemode: isLive }, { headers });
+  } catch (error) { return bookResponse(error, headers); }
+});
