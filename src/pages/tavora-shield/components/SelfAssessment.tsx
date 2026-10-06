@@ -175,44 +175,44 @@ const indicatorMeta: Record<
   }
 > = {
   pci: {
-    label: 'Автоматична реактивност',
+    label: 'Съобщена автоматична реактивност',
     short: 'АР',
     higherIsBetter: false,
-    measures: 'Доколко действията ти спрямо устройството са автоматични — без съзнателно решение.',
-    howToRead: 'По-нисък резултат показва по-малко автоматични реакции и повече съзнателен избор.',
+    measures: 'Честотата на автоматични реакции спрямо устройството, която съобщаваш в тези седем отговора.',
+    howToRead: 'По-нисък сбор означава по-рядко съобщени автоматични реакции по тези въпроси.',
     reflection: 'Кога за последен път посягаше към телефона с конкретна причина, а не по навик?',
     actions: ['Постави телефона извън обсега си за 30 минути, докато работиш.', 'Преди да отключиш, запитай се: какво точно искам да направя сега?'],
     degreeLink: '/step-1',
     degreeName: 'Биологичният автоматизъм',
   },
   eei: {
-    label: 'Дигитална умора',
+    label: 'Съобщена дигитална умора',
     short: 'ДУ',
     higherIsBetter: false,
-    measures: 'Доколко времето пред екрана те зарежда или те изтощава.',
-    howToRead: 'По-нисък резултат показва по-малко изтощение след дигитална консумация.',
+    measures: 'Честотата на умора и други описани затруднения, която съобщаваш в тези седем отговора.',
+    howToRead: 'По-нисък сбор означава по-рядко съобщена умора по тези въпроси.',
     reflection: 'След колко време пред екрана започваш да се чувстваш празен, а не зареден?',
     actions: ['Планирай една конкретна офлайн почивка в деня си.', 'Забележи кое съдържание те изтощава и го ограничи съзнателно.'],
     degreeLink: '/step-2',
     degreeName: 'Алгоритмичният прицел',
   },
   cri: {
-    label: 'Критична устойчивост',
-    short: 'КУ',
+    label: 'Съобщени офлайн навици',
+    short: 'ОН',
     higherIsBetter: true,
-    measures: 'Доколко имаш изградени моменти, в които съзнателно си офлайн.',
-    howToRead: 'По-висок резултат показва по-стабилни офлайн навици и по-добра способност за пауза.',
+    measures: 'Честотата на описаните офлайн навици според тези седем отговора.',
+    howToRead: 'По-висок сбор означава по-често съобщени офлайн навици; не измерва психологическа устойчивост.',
     reflection: 'Къде в деня си имаш (или можеш да създадеш) пространство без екран?',
     actions: ['Определи един „час без екран“ всеки ден.', 'Остави телефона в друга стая по време на хранене.'],
     degreeLink: '/step-3',
     degreeName: 'Когнитивна свобода',
   },
   asi: {
-    label: 'Дигитална самостоятелност',
+    label: 'Трудности с дигиталната самостоятелност',
     short: 'ДС',
     higherIsBetter: false,
-    measures: 'Доколко мислите и изборите ти са твои, а не ехо от алгоритмите.',
-    howToRead: 'По-нисък резултат показва по-ясно разграничаване на собствените мисли и по-голяма самостоятелност.',
+    measures: 'Сборът от съобщените затруднения и обърнатите отговори за защитни навици в тази част. Той не установява произхода на мислите или влиянието на алгоритмите.',
+    howToRead: 'По-нисък сбор означава по-рядко съобщени затруднения със самостоятелността по тези въпроси.',
     reflection: 'Коя своя мисъл през последните дни не идва от това, което си гледал онлайн?',
     actions: ['Остави си 10 минути на ден в тишина, без стимул.', 'Запиши една своя идея, преди да отвориш социалните мрежи.'],
     degreeLink: '/step-4',
@@ -322,13 +322,11 @@ export default function SelfAssessment() {
         if (!recaptchaToken) return;
         setIsAnalyzing(true);
         const ok = await submitToSupabase(recaptchaToken);
-        setTimeout(() => {
-          setIsAnalyzing(false);
-          if (ok) {
-            setShowResults(true);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }
-        }, 2500);
+        setIsAnalyzing(false);
+        if (ok) {
+          setShowResults(true);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
       }
     });
   };
@@ -385,11 +383,12 @@ export default function SelfAssessment() {
           <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-5">
             <Icon name="ri-brain-line" size={28} className="text-gray-600" />
           </div>
-          <h3 className="text-xl font-medium text-gray-900 mb-2">На коя степен се намираш?</h3>
+           <h3 className="text-xl font-medium text-gray-900 mb-2">Разгледай дигиталните си навици</h3>
           <p className="text-sm text-gray-500 max-w-xl mx-auto mb-8">
-            35 въпроса в 5 части. Резултатът ще покаже на коя от петте степени от книгата се намираш —
-            от Биологичния автоматизъм до Съзнателната свобода.
-          </p>
+             35 въпроса в 5 части. Получаваш ориентир за размисъл в авторската рамка на книгата.
+             Въпросникът няма психометрична валидация и не измерва зависимост, психично здраве или място сред други хора.
+           </p>
+           <p className="text-xs text-gray-600 leading-relaxed max-w-xl mx-auto mb-6">При изпращане отговорите се обработват на сървъра за изчисляване на резултата. В текущата версия не се записват в базата данни. Използваме Google reCAPTCHA за защита на изпращането. <Link to="/privacy" className="underline">Обработка на данните</Link>.</p>
           <div className="flex items-center justify-center gap-6 sm:gap-8 mb-8 text-center">
             {[['35', 'въпроса'], ['5', 'части'], ['10', 'минути']].map(([n, l]) => (
               <div key={l}>
@@ -434,17 +433,20 @@ export default function SelfAssessment() {
                 <Icon name="ri-information-line" size={16} className="text-gray-400 mt-0.5 flex-shrink-0" />
                 <p className="text-xs text-gray-600 leading-relaxed">
                   Този резултат е образователна самооценка, основана на отговорите ти в момента.
-                  Той не представлява медицинска, психологическа или клинична диагноза.
+                   Той не представлява медицинска, психологическа или клинична диагноза.
+                   Тежестите, скалите и границите са авторски избор; няма публикувана оценка за надеждност,
+                   валидност или норми за сравнение с населението.
                 </p>
               </div>
 
+              <details className="bg-white border border-gray-200 rounded-lg p-4 text-xs text-gray-600"><summary className="cursor-pointer font-medium">Как се изчислява резултатът</summary><p className="mt-3 leading-relaxed">{resultData.methodology}</p><p className="mt-2">Точките са дял от максимума на авторската скала, а не процент риск или сравнение с други хора. Високите стойности за офлайн навици имат различна посока от тези за затрудненията.</p></details>
               {/* Главна карта — профилът */}
               <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-10 text-center">
-                <p className="text-xs text-gray-400 uppercase tracking-widest mb-3">Твоят профил в момента</p>
+                 <p className="text-xs text-gray-400 uppercase tracking-widest mb-3">Обобщение на избраните отговори</p>
                 <div className="text-5xl sm:text-7xl font-light text-gray-200 mb-2 leading-none">0{resultData.stepNumber}</div>
                 <h3 className="text-xl sm:text-2xl font-medium text-gray-900 mb-1">{resultData.profileName}</h3>
                 <p className="text-sm text-gray-400 mb-6">
-                  Съответства на Степен {resultData.stepNumber} — {resultData.stepName}
+                   Авторски ориентир към Степен {resultData.stepNumber} — {resultData.stepName}
                 </p>
 
                 {/* Общ дигитален баланс — визуална лента */}
@@ -461,7 +463,7 @@ export default function SelfAssessment() {
                   </div>
                   <div className="flex items-center justify-between text-xs text-gray-400 mt-1.5">
                     <span>Степен 5</span>
-                    <span className="font-medium text-gray-700">Общ дигитален баланс</span>
+                     <span className="font-medium text-gray-700">Авторски индекс {resultData.dependencyIndex}/100</span>
                     <span>Степен 1</span>
                   </div>
                 </div>
@@ -479,7 +481,7 @@ export default function SelfAssessment() {
               {/* Детайлен профил по показатели */}
               <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-8">
                 <h4 className="text-base font-medium text-gray-900 mb-1">Разбивка по показатели</h4>
-                <p className="text-xs text-gray-400 mb-5">Какво измерва всеки показател и как да разчетеш резултата</p>
+                <p className="text-xs text-gray-400 mb-5">Какво обобщава всеки авторски показател</p>
                 <div className="space-y-4">
                   {(['pci', 'eei', 'cri', 'asi'] as const).map((key) => {
                     const data = resultData.radarData[key];
@@ -492,9 +494,9 @@ export default function SelfAssessment() {
                           <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-xs text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">{meta.short}</span>
                             <span className="text-sm text-gray-700 font-medium">{meta.label}</span>
-                            <span className="text-xs text-gray-400">({isProtective ? 'по-висок = по-добре' : 'по-нисък = по-добре'})</span>
+                            <span className="text-xs text-gray-400">({isProtective ? 'по-висок сбор: по-чести офлайн навици' : 'по-нисък сбор: по-рядко съобщени затруднения'})</span>
                           </div>
-                          <span className="text-sm font-medium text-gray-900">{data.percentage}%</span>
+                           <span className="text-sm font-medium text-gray-900">{data.value}/{data.max} точки</span>
                         </div>
                         <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden mb-4">
                           <div
@@ -504,7 +506,7 @@ export default function SelfAssessment() {
                         </div>
                         <div className="space-y-2 text-xs text-gray-600 leading-relaxed">
                           <div>
-                            <span className="text-gray-400 uppercase tracking-wide">Какво измерва: </span>
+                            <span className="text-gray-400 uppercase tracking-wide">Какво обобщава: </span>
                             {meta.measures}
                           </div>
                           <div>
@@ -569,7 +571,7 @@ export default function SelfAssessment() {
       ) : isAnalyzing ? (
         <div className="bg-white border border-gray-200 rounded-lg p-12 text-center">
           <div className="w-12 h-12 rounded-full border-2 border-gray-200 border-t-gray-900 animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-sm">Анализираме отговорите ти...</p>
+          <p className="text-gray-600 text-sm">Изчисляваме сбора от отговорите...</p>
         </div>
       ) : (
         <div className="bg-white border border-gray-200 rounded-lg p-5 sm:p-8">

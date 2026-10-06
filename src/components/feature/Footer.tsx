@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/base/Icon';
+import { openPrivacySettings } from '@/lib/privacy';
 
 const steps = [
   { path: '/step-1', title: 'Биологичният автоматизъм' },
@@ -77,6 +78,7 @@ export default function Footer() {
               <div className="space-y-2 md:space-y-2.5 text-sm">
                 <Link to="/privacy" className="block hover:text-white/70 transition-colors py-1">Политика за поверителност</Link>
                 <Link to="/terms" className="block hover:text-white/70 transition-colors py-1">Условия за ползване</Link>
+                <button type="button" onClick={openPrivacySettings} className="block text-left hover:text-white/70 transition-colors py-1">Настройки на бисквитките</button>
               </div>
             </div>
           </div>

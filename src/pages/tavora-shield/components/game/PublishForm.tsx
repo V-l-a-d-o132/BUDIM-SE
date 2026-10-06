@@ -260,6 +260,7 @@ export default function PublishForm({ platform, onPublish, onClose, challenge, r
 
         <div className="mb-2">
           <label className="text-[9px] text-gray-400 font-medium uppercase tracking-wide mb-1 block">Твоят псевдоним</label>
+          <p className="text-[10px] text-gray-600 mb-2">Текстът се обработва от AI доставчика Groq и може да бъде публикуван в играта след модерация. Не въвеждай лични или поверителни данни. Лайковете са симулация.</p>
           <input
             type="text"
             value={username}

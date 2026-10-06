@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import Icon from '@/components/base/Icon';
 import { RECAPTCHA_SITE_KEY } from '@/components/base/RecaptchaBadge';
+import { Link } from 'react-router-dom';
 
 const SUPABASE_URL = import.meta.env.VITE_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY;
@@ -15,7 +16,7 @@ interface AnalysisResult {
   positiveNotes: string | null;
   auditExplanation: string;
   recommendation: string;
-  vectorAnalysis: { vector: string; score: number; maxScore?: number; description: string }[];
+  vectorAnalysis: { vector: string; score: number; maxScore?: number; description: string; evidence?: string[] }[];
   detectedPatterns: string[];
   isDominant: boolean;
   dominantVector: string;
@@ -26,6 +27,7 @@ export default function ContentAnalyzer() {
   const [text, setText] = useState('');
   const [analysis, setAnalysis] = useState<AnalysisResult | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisError, setAnalysisError] = useState('');
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const [recaptchaError, setRecaptchaError] = useState('');
 
@@ -72,28 +74,12 @@ export default function ContentAnalyzer() {
   const analyzeContent = async () => {
     if (!text.trim()) return;
 
+    setAnalysisError('');
+    if (text.trim().length < 10) { setAnalysis(null); setAnalysisError('Въведи поне едно изречение — минимум 10 символа.'); return; }
+
     const recaptchaToken = await executeRecaptcha();
     if (!recaptchaToken) return;
 
-    if (text.trim().length < 10) {
-      setAnalysis({
-        totalRisk: 0,
-        riskLevel: 'ГРЕШКА',
-        riskColor: 'gray',
-        riskCategory: '',
-        cognitiveReaction: 'Текстът е твърде кратък за смислен анализ. Моля, въведете поне 10 символа.',
-        positiveNotes: null,
-        auditExplanation: '',
-        recommendation: 'Опитайте с по-дълъг текст — поне едно изречение.',
-        vectorAnalysis: [],
-        detectedPatterns: [],
-        isDominant: false,
-        dominantVector: '',
-        socialBonus: 0,
-      });
-      recaptchaRef.current?.reset();
-      return;
-    }
     setIsAnalyzing(true);
     setAnalysis(null);
 
@@ -138,21 +124,8 @@ export default function ContentAnalyzer() {
       if (message.includes('reCAPTCHA') || message.includes('Too many requests')) {
         setRecaptchaError(message);
       }
-      setAnalysis({
-        totalRisk: 0,
-        riskLevel: 'ГРЕШКА',
-        riskColor: 'gray',
-        riskCategory: '',
-        cognitiveReaction: `Грешка: ${message}`,
-        positiveNotes: null,
-        auditExplanation: '',
-        recommendation: 'Провери дали GROQ_API_KEY е конфигуриран в Supabase → Settings → Edge Functions → Secrets.',
-        vectorAnalysis: [],
-        detectedPatterns: [],
-        isDominant: false,
-        dominantVector: '',
-        socialBonus: 0,
-      });
+      setAnalysis(null);
+      setAnalysisError(message);
     } finally {
       setIsAnalyzing(false);
       recaptchaRef.current?.reset();
@@ -165,13 +138,14 @@ export default function ContentAnalyzer() {
         <div className="mb-6">
           <h3 className="text-xl font-medium text-gray-900 mb-2">Анализ на съдържание</h3>
           <p className="text-sm text-gray-500">
-            Постави заглавие, публикация или текст от социална мрежа. Инструментът открива езикови и структурни сигнали по пет категории.
+            Постави кратък откъс. AI предлага възможни езикови сигнали по пет авторски категории.
           </p>
+          <p className="text-xs text-gray-600 leading-relaxed mt-3">Това не е факт-проверка. Моделът може да сгреши, да пропусне ирония или контекст и не установява намеренията на автора. Индексът е авторски ориентир, без научна валидация. При „Анализирай“ текстът се изпраща през Supabase към Groq за обработка. Не въвеждай лични или поверителни данни. <Link to="/privacy" className="underline">Как се обработват данните</Link>.</p>
 
           <div className="mt-4 bg-gray-50 border border-gray-100 rounded-lg p-4">
             <p className="text-xs text-gray-500 uppercase tracking-widest mb-3 font-medium">Какво открива анализаторът</p>
             <ul className="space-y-2 text-xs text-gray-600 leading-relaxed">
-              <li><strong className="text-gray-800">Емоционален натиск</strong> — език, който цели да предизвика силни чувства, вместо да представи фактите.</li>
+              <li><strong className="text-gray-800">Емоционален език</strong> — силно емоционални думи; сами по себе си те не доказват натиск или манипулация.</li>
               <li><strong className="text-gray-800">Внушение за спешност</strong> — намек, че трябва да действаш незабавно, иначе ще „изпуснеш“ или ще „съжаляваш“.</li>
               <li><strong className="text-gray-800">Социален натиск</strong> — внушение, че „всички мислят така“ или че ще бъдеш изолиран, ако не се съгласиш.</li>
               <li><strong className="text-gray-800">Поляризиращ език</strong> — противопоставяне на „ние срещу тях“ и омаловажаване на други гледни точки.</li>
@@ -226,6 +200,7 @@ export default function ContentAnalyzer() {
           badge="bottomright"
         />
 
+        {analysisError && <p role="alert" className="text-sm text-red-700 mt-4">{analysisError}</p>}
         {analysis && (
           <div className="space-y-4 mt-6 pt-6 border-t border-gray-100">
             {/* Risk Score */}
@@ -233,14 +208,15 @@ export default function ContentAnalyzer() {
               <div className="flex items-start justify-between mb-3">
                 <div>
                   <span className={`text-4xl font-light ${getRiskTextColor(analysis.riskColor)}`}>
-                    {analysis.totalRisk}%
+                     {analysis.totalRisk}<span className="text-sm">/100</span>
                   </span>
-                  <span className="text-xs text-gray-400 ml-2">общ сигнал за въздействие</span>
+                   <span className="text-xs text-gray-400 ml-2">авторски индекс на езиковите сигнали</span>
                 </div>
                 <span className={`text-sm font-medium px-3 py-1 rounded-full bg-gray-50 ${getRiskTextColor(analysis.riskColor)}`}>
                   {analysis.riskLevel}
                 </span>
               </div>
+              <p className="text-xs text-gray-500 mb-3">{analysis.auditExplanation}</p>
 
               {/* Risk bar */}
               <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden mb-4">
@@ -266,8 +242,8 @@ export default function ContentAnalyzer() {
             <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-gray-50 text-xs text-gray-500 leading-relaxed">
               <Icon name="ri-information-line" size={14} className="mt-0.5 flex-shrink-0 text-gray-400" />
               <p>
-                Резултатът е ориентировъчен и има образователна функция. Той не определя дали
-                съдържанието е вярно или невярно и не доказва намеренията на автора.
+                Това не е вероятност за манипулация или вреда. Резултатът зависи от модела и откъса,
+                може да се промени при повторен анализ и не проверява факти, източници или намерения.
               </p>
             </div>
 
@@ -308,6 +284,7 @@ export default function ContentAnalyzer() {
                         {item.description && item.description !== 'Не е засечено.' && item.description !== 'Не е засечен' && (
                           <p className="text-xs text-gray-500 leading-relaxed">{item.description}</p>
                         )}
+                        {item.evidence?.map((quote,i)=><blockquote key={i} className="mt-2 pl-3 border-l-2 border-gray-200 text-xs text-gray-700">„{quote}“</blockquote>)}
                       </div>
                     );
                   })}

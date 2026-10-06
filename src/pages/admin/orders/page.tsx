@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { bookApi, euro, paymentLabels, deliveryLabels } from '@/lib/book-orders';
 import type { BookOrder } from '@/lib/book-orders';
 import { usePageSeo } from '@/hooks/usePageSeo';
+import StripeReconciliation from './StripeReconciliation';
 
 type AdminOrder = Omit<BookOrder, 'amount_total' | 'downloadable'> & {
   expected_amount: number; customer_email: string | null; customer_name: string | null;
@@ -112,6 +113,7 @@ export default function AdminOrders() {
       ['Възстановени суми', euro(stats.refunded_minor)], ['Плащания след възстановявания', euro(stats.net_minor)],
     ].map(([label,value]) => <div key={label} className="p-4 bg-white border rounded-xl"><p className="text-xs text-gray-500 mb-2">{label}</p><p className="text-xl text-gray-900">{value}</p></div>)}</div>}
     <p className="text-xs text-gray-500">Справката обхваща записаните в новата система поръчки на книгата. Показаните суми са в EUR и са преди таксите на Stripe.</p>
+    <StripeReconciliation mode={selectedMode ?? null} api={api} />
     <section className="bg-white border rounded-xl p-5 space-y-3">
       <h2 className="font-medium text-gray-900">Плащания и електронно издание</h2>
       <p className="text-sm text-gray-600">Известявания от Stripe: {configured ? 'настроени' : 'очакват настройка'} за {selectedMode ? 'реални плащания' : 'тестови плащания'}.</p>
