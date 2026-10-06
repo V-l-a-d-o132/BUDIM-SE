@@ -1,5 +1,5 @@
 import { requireAdmin } from '../_shared/admin-auth.ts';
-import Stripe from 'npm:stripe@16.12.0';
+import Stripe from 'npm:stripe@22.6.0';
 import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 
 const ALLOWED_ORIGINS = [
@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
   if (denied) return new Response(denied.body, { status: denied.status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
   try {
-    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2024-06-20', httpClient: Stripe.createFetchHttpClient() });
+    const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, { apiVersion: '2026-08-26.dahlia', httpClient: Stripe.createFetchHttpClient() });
 
     const body = await req.json().catch(() => ({ limit: 50 }));
     const limit = Math.min(body.limit ?? 50, 100);
@@ -74,8 +74,8 @@ Deno.serve(async (req) => {
       customer_email: s.customer_details?.email ?? null,
       customer_name: s.customer_details?.name ?? null,
       customer_address: s.customer_details?.address ?? null,
-      shipping_address: s.shipping_details?.address ?? null,
-      shipping_name: s.shipping_details?.name ?? null,
+      shipping_address: s.collected_information?.shipping_details?.address ?? null,
+      shipping_name: s.collected_information?.shipping_details?.name ?? null,
       line_items: s.line_items?.data?.map((li) => ({
         description: li.description,
         quantity: li.quantity,
@@ -86,15 +86,20 @@ Deno.serve(async (req) => {
     }));
 
     const paid = sessions.data.filter((s) => s.payment_status === 'paid');
-    const totalRevenue = paid.reduce((sum, s) => sum + (s.amount_total ?? 0), 0);
+    const byCurrency: Record<string, { paid_orders: number; gross_minor: number }> = {};
+    for (const session of paid) {
+      const currency = session.currency ?? 'unknown';
+      byCurrency[currency] ??= { paid_orders: 0, gross_minor: 0 };
+      byCurrency[currency].paid_orders++;
+      byCurrency[currency].gross_minor += session.amount_total ?? 0;
+    }
 
     return new Response(JSON.stringify({
       orders,
       has_more: sessions.has_more,
       stats: {
-        total_orders: paid.length,
-        total_revenue_stotinki: totalRevenue,
-        currency: 'bgn',
+        scope: 'returned_page',
+        by_currency: byCurrency,
       },
     }), {
       status: 200,

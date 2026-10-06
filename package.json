@@ -30,7 +30,7 @@
     "globals": "^16.3.0",
     "postcss": "^8.5.6",
     "source-map": "^0.7.6",
-    "stripe": "16.12.0",
+    "stripe": "22.6.0",
     "supabase": "2.75.0",
     "tailwindcss": "^3.4.17",
     "typescript": "~5.8.3",
@@ -46,7 +46,7 @@
     "preview": "vite preview",
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
-    "check:edge": "deno check --node-modules-dir=manual supabase/functions/social-game/index.ts supabase/functions/tavora-shield-submit/index.ts supabase/functions/analyze-viral-post/index.ts supabase/functions/admin-news/index.ts supabase/functions/get-stripe-orders/index.ts supabase/functions/notify-google-index/index.ts supabase/functions/submit-partnership/index.ts supabase/functions/tavora-biometric-log/index.ts supabase/functions/tavora-literacy-log/index.ts supabase/functions/tavora-content-analyzer/index.ts"
+    "check:edge": "deno check --node-modules-dir=manual supabase/functions/social-game/index.ts supabase/functions/tavora-shield-submit/index.ts supabase/functions/analyze-viral-post/index.ts supabase/functions/admin-news/index.ts supabase/functions/get-stripe-orders/index.ts supabase/functions/notify-google-index/index.ts supabase/functions/submit-partnership/index.ts supabase/functions/tavora-biometric-log/index.ts supabase/functions/tavora-literacy-log/index.ts supabase/functions/tavora-content-analyzer/index.ts supabase/functions/create-book-checkout/index.ts supabase/functions/book-store/index.ts supabase/functions/get-book-order/index.ts supabase/functions/book-payment-webhook/index.ts supabase/functions/admin-book-orders/index.ts"
   },
   "type": "module",
   "version": "0.0.0"

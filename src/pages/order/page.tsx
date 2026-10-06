@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+import BookPurchasePanel from './BookPurchasePanel';
 import Navbar from '@/components/feature/Navbar';
 import Footer from '@/components/feature/Footer';
 import { usePageSeo } from '@/hooks/usePageSeo';
@@ -179,21 +180,10 @@ const benefitItems = [
   },
 ];
 
-const trustBadges = [
-  { icon: 'ri-shield-keyhole-line' as const, text: 'Сигурно плащане чрез Stripe' },
-  { icon: 'ri-truck-line' as const, text: 'Доставка до България и Европа' },
-  { icon: 'ri-mail-line' as const, text: 'Потвърждение на имейл' },
-  { icon: 'ri-refresh-line' as const, text: '14-дневно право на връщане' },
-];
-
 export default function Order() {
-  const [quantity, setQuantity] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
-
   usePageSeo({
     title: 'Поръчай книгата „Петте степени" — Владимир Атанасов',
-    description: 'Поръчай „Петте степени" от Владимир Атанасов. Авторски приложен труд за вниманието, дигиталните навици и петстепенния път от автоматична реакция към по-осъзнато използване на технологиите. €14,99, доставка до България и Европа.',
+    description: 'Поръчай „Петте степени" от Владимир Атанасов. Авторски приложен труд за вниманието, дигиталните навици и петстепенния път от автоматична реакция към по-осъзнато използване на технологиите. Физическа книга €14,99, електронно издание €3,99.',
     canonical: '/order',
     ogType: 'product',
     schemaType: 'ItemPage',
@@ -208,58 +198,6 @@ export default function Order() {
       },
     },
   });
-
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('success') === 'true') {
-      setSubmitStatus('success');
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (urlParams.get('canceled') === 'true') {
-      setSubmitStatus('error');
-    }
-  }, []);
-
-  const handleCheckout = async () => {
-    setIsSubmitting(true);
-    setSubmitStatus('idle');
-
-    try {
-      const supabaseUrl = import.meta.env.VITE_PUBLIC_SUPABASE_URL;
-      const supabaseAnonKey = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY;
-
-      const response = await fetch(`${supabaseUrl}/functions/v1/create-book-checkout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${supabaseAnonKey}`,
-          'apikey': supabaseAnonKey,
-        },
-        body: JSON.stringify({
-          quantity,
-          format: 'physical',
-          origin: window.location.origin,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Неуспешна заявка');
-      }
-
-      const { url } = await response.json();
-      if (!url) throw new Error('Липсва checkout URL');
-
-      window.location.href = url;
-    } catch (error) {
-      console.error('Payment error:', error);
-      setSubmitStatus('error');
-      setIsSubmitting(false);
-    }
-  };
-
-  const unitPriceEur = 14.99;
-  const totalPriceEur = (unitPriceEur * quantity).toFixed(2);
-  const totalPriceDisplay = totalPriceEur.replace('.', ',');
 
   return (
     <>
@@ -292,24 +230,7 @@ export default function Order() {
       <div className="min-h-screen bg-white relative z-10">
         <Navbar />
 
-        {/* Success Banner */}
-        {submitStatus === 'success' && (
-          <div className="pt-20">
-            <div className="bg-gray-900 text-white px-4 md:px-6 py-8 md:py-10 text-center">
-              <div className="max-w-2xl mx-auto">
-                <div className="w-14 h-14 flex items-center justify-center mx-auto mb-4">
-                  <Icon name="ri-mail-send-line" size={36} className="text-white" />
-                </div>
-                <h2 className="text-2xl md:text-3xl font-medium mb-2">Поръчката е приета</h2>
-                <p className="text-gray-300 text-sm md:text-base">
-                  Благодарим ти. Ще получиш потвърждение на имейл и информация за доставката.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        <main className={`pb-12 md:pb-20 ${submitStatus === 'success' ? 'pt-8 md:pt-10' : 'pt-20 md:pt-24'}`}>
+        <main className="pb-12 md:pb-20 pt-20 md:pt-24">
 
           {/* ── Hero + Purchase Panel ── */}
           <section className="px-4 md:px-6">
@@ -369,94 +290,8 @@ export default function Order() {
                   </div>
                 </div>
 
-                {/* RIGHT — Purchase Card (sticky on desktop) */}
                 <div className="order-1 lg:order-2">
-                  <div className="border border-gray-200 rounded-xl p-5 md:p-7 lg:sticky lg:top-28 bg-white">
-
-                    {/* Price */}
-                    <div className="mb-5 md:mb-6">
-                      <div className="flex items-baseline gap-3 mb-1">
-                        <span className="text-3xl md:text-4xl font-medium text-gray-900">€{totalPriceDisplay}</span>
-                      </div>
-                      <p className="text-sm text-gray-500 flex items-center gap-1.5">
-                        <Icon name="ri-truck-line" size={14} className="text-gray-400" />
-                        Физическа книга · доставка до 5–7 работни дни
-                      </p>
-                    </div>
-
-                    {/* Quantity */}
-                    <div className="mb-5 md:mb-6">
-                      <label className="block text-xs font-medium text-gray-500 uppercase tracking-widest mb-3">
-                        Количество
-                      </label>
-                      <div className="flex items-center gap-3">
-                        <button
-                          type="button"
-                          onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                          className="w-11 h-11 flex items-center justify-center border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer text-gray-700"
-                          aria-label="Намали количество"
-                        >
-                          <Icon name="ri-subtract-line" size={18} className="text-gray-700" />
-                        </button>
-                        <span className="w-10 text-center text-lg font-medium text-gray-900">{quantity}</span>
-                        <button
-                          type="button"
-                          onClick={() => setQuantity(Math.min(10, quantity + 1))}
-                          className="w-11 h-11 flex items-center justify-center border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer text-gray-700"
-                          aria-label="Увеличи количество"
-                        >
-                          <Icon name="ri-add-line" size={18} className="text-gray-700" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Error State */}
-                    {submitStatus === 'error' && (
-                      <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-lg flex items-start gap-2">
-                        <div className="w-5 h-5 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <Icon name="ri-error-warning-line" size={18} className="text-red-500" />
-                        </div>
-                        <p className="text-sm text-red-700">Плащането беше отменено. Можеш да опиташ отново.</p>
-                      </div>
-                    )}
-
-                    {/* CTA Button */}
-                    <button
-                      type="button"
-                      onClick={handleCheckout}
-                      disabled={isSubmitting}
-                      className="w-full py-4 md:py-5 bg-gray-900 text-white rounded-xl hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap flex items-center justify-center gap-2.5 cursor-pointer font-medium text-base"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <Icon name="ri-loader-4-line" size={20} className="animate-spin" />
-                          Пренасочване...
-                        </>
-                      ) : (
-                        <>
-                          <Icon name="ri-shopping-bag-line" size={20} />
-                          Купи сега — €{totalPriceDisplay}
-                        </>
-                      )}
-                    </button>
-
-                    <p className="text-xs text-gray-400 text-center mt-3 flex items-center justify-center gap-1.5">
-                      <Icon name="ri-map-pin-line" size={12} className="text-gray-300" />
-                      Адресът за доставка се въвежда на следващата стъпка
-                    </p>
-
-                    {/* Trust Badges */}
-                    <div className="mt-6 pt-5 border-t border-gray-100 grid grid-cols-2 gap-3">
-                      {trustBadges.map((badge) => (
-                        <div key={badge.text} className="flex items-center gap-2.5">
-                          <div className="w-9 h-9 flex items-center justify-center rounded-lg bg-gray-50 flex-shrink-0">
-                            <Icon name={badge.icon} size={18} className="text-gray-500" />
-                          </div>
-                          <span className="text-xs text-gray-600 leading-tight">{badge.text}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
+                  <BookPurchasePanel />
                 </div>
               </div>
             </div>
@@ -602,11 +437,11 @@ export default function Order() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  onClick={() => document.getElementById('book-purchase')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
                   className="inline-flex items-center gap-2.5 px-8 py-4 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors cursor-pointer whitespace-nowrap"
                 >
                   <Icon name="ri-shopping-bag-line" size={20} />
-                  Вземи книгата — €{totalPriceDisplay}
+                  Избери издание
                 </button>
               </div>
             </div>
