@@ -296,6 +296,7 @@ export default function SelfAssessment() {
       setSubmitError(null);
       const res = await fetch(`${SUPABASE_URL}/functions/v1/tavora-shield-submit`, {
         method: 'POST',
+        signal: AbortSignal.timeout(30000),
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
         body: JSON.stringify({ answers, recaptcha_token: recaptchaToken }),
       });

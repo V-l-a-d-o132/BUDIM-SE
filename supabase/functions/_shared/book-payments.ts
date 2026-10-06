@@ -1,5 +1,5 @@
 import Stripe from 'npm:stripe@22.6.0';
-import { serviceClient, ownerHash, ALLOWED_ORIGINS } from './security.ts';
+import { serviceClient, ownerHash, ALLOWED_ORIGINS, requestBodyErrorResponse, rateLimitResponse } from './security.ts';
 
 export const BOOK_STORE = 'budimse_books_v1';
 export const BOOK_EVENTS: Stripe.WebhookEndpointCreateParams.EnabledEvent[] = ['checkout.session.completed', 'checkout.session.async_payment_succeeded', 'checkout.session.async_payment_failed', 'checkout.session.expired', 'payment_intent.payment_failed', 'charge.refunded'];
@@ -35,7 +35,7 @@ export async function bookStripe(isLive: boolean): Promise<Stripe> {
     key = result.data;
   }
   if (!key || !prefix.test(key)) throw new BookError('Липсва настройка за избрания режим на плащане.', 503);
-  return new Stripe(key, { apiVersion: STRIPE_VERSION, httpClient: Stripe.createFetchHttpClient() });
+  return new Stripe(key, { apiVersion: STRIPE_VERSION, httpClient: Stripe.createFetchHttpClient(), timeout: 10000, maxNetworkRetries: 1 });
 }
 
 export async function signingSecret(isLive: boolean): Promise<string | null> {
@@ -111,6 +111,8 @@ export function bookEventData(event: Stripe.Event): Record<string, any> | null {
 }
 
 export function bookResponse(error: unknown, headers: Record<string, string>): Response {
+  const bodyError = requestBodyErrorResponse(error, headers); if (bodyError) return bodyError;
+  if (error instanceof BookError && error.status === 429) return rateLimitResponse(headers);
   if (error instanceof BookError) return Response.json({ error: error.message }, { status: error.status, headers });
   console.error('Book operation failed', error instanceof Error ? error.name : 'UnknownError');
   return Response.json({ error: 'Операцията временно не е достъпна. Опитай отново.' }, { status: 503, headers });

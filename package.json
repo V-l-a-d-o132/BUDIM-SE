@@ -38,6 +38,10 @@
     "unplugin-auto-import": "^19.3.0",
     "vite": "^7.0.3"
   },
+  "overrides": {
+    "tar": "7.5.22",
+    "postcss-selector-parser": "7.1.6"
+  },
   "name": "react",
   "private": true,
   "scripts": {
@@ -46,7 +50,8 @@
     "preview": "vite preview",
     "test": "node --test tests/*.test.mjs",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
-    "check:edge": "deno check --node-modules-dir=manual supabase/functions/social-game/index.ts supabase/functions/tavora-shield-submit/index.ts supabase/functions/analyze-viral-post/index.ts supabase/functions/admin-news/index.ts supabase/functions/get-stripe-orders/index.ts supabase/functions/notify-google-index/index.ts supabase/functions/submit-partnership/index.ts supabase/functions/tavora-biometric-log/index.ts supabase/functions/tavora-literacy-log/index.ts supabase/functions/tavora-content-analyzer/index.ts supabase/functions/create-book-checkout/index.ts supabase/functions/book-store/index.ts supabase/functions/get-book-order/index.ts supabase/functions/book-payment-webhook/index.ts supabase/functions/admin-book-orders/index.ts"
+    "check:edge": "deno check --node-modules-dir=manual supabase/functions/social-game/index.ts supabase/functions/tavora-shield-submit/index.ts supabase/functions/analyze-viral-post/index.ts supabase/functions/admin-news/index.ts supabase/functions/get-stripe-orders/index.ts supabase/functions/notify-google-index/index.ts supabase/functions/submit-partnership/index.ts supabase/functions/tavora-biometric-log/index.ts supabase/functions/tavora-literacy-log/index.ts supabase/functions/tavora-content-analyzer/index.ts supabase/functions/create-book-checkout/index.ts supabase/functions/book-store/index.ts supabase/functions/get-book-order/index.ts supabase/functions/book-payment-webhook/index.ts supabase/functions/admin-book-orders/index.ts supabase/functions/gemini-content-analyzer-v2/index.ts supabase/functions/tavora-shield-content-analyzer/index.ts supabase/functions/ping/index.ts supabase/functions/sitemap/index.ts",
+    "stress:live": "node scripts/stress-live.mjs"
   },
   "type": "module",
   "version": "0.0.0"

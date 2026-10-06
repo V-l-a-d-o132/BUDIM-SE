@@ -1,6 +1,6 @@
 import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 import { requireAdmin } from '../_shared/admin-auth.ts';
-import { publicRequestError, corsHeaders, serviceClient, readBody } from '../_shared/security.ts';
+import { publicRequestError, corsHeaders, serviceClient, readBody, serverFetch } from '../_shared/security.ts';
 import { bookMode, bookStripe, BOOK_EVENTS, BOOK_WEBHOOK_URL, BOOK_BUCKET, STRIPE_VERSION, UUID, BookError, bookResponse } from '../_shared/book-payments.ts';
 import { reconcileBookSessions } from '../_shared/book-reconciliation.ts';
 
@@ -9,7 +9,7 @@ Deno.serve(async (req: Request) => {
   const headers = corsHeaders(req);
   const authorization = req.headers.get('authorization');
   if (!authorization) return Response.json({ error: 'Unauthorized' }, { status: 401, headers });
-  const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authorization } }, auth: { persistSession: false } });
+  const userClient = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_ANON_KEY')!, { global: { headers: { Authorization: authorization }, fetch: serverFetch }, auth: { persistSession: false } });
   const denied = await requireAdmin(userClient, 'orders');
   if (denied) return new Response(denied.body, { status: denied.status, headers: { ...headers, 'Content-Type': 'application/json' } });
   try {

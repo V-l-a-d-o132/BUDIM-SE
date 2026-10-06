@@ -1,4 +1,4 @@
-import { corsHeaders, publicRequestError, readBody, ownerHash, rateLimit, serviceClient, verifyRecaptcha } from '../_shared/security.ts';
+import { corsHeaders, publicRequestError, readBody, ownerHash, rateLimit, serviceClient, verifyRecaptcha, requestBodyErrorResponse, rateLimitResponse } from '../_shared/security.ts';
 
 Deno.serve(async (req: Request) => {
   const gate = publicRequestError(req);
@@ -9,8 +9,11 @@ Deno.serve(async (req: Request) => {
     const actor = await ownerHash(body.owner_token);
     const allowed = ['history', 'like', 'comment', 'repost', 'delete'];
     if (!allowed.includes(body.action)) return Response.json({ error: 'Invalid action' }, { status: 400, headers });
-    if (!await rateLimit(req, `game-${body.action}`, body.action === 'like' ? 45 : 15)) {
-      return Response.json({ error: 'Too many requests' }, { status: 429, headers });
+    let permitted;
+    try { permitted = await rateLimit(req, `game-${body.action}`, body.action === 'like' ? 45 : 15); }
+    catch { return Response.json({ error: 'Операцията временно не е достъпна. Опитай отново.' }, { status: 503, headers }); }
+    if (!permitted) {
+      return rateLimitResponse(headers);
     }
     const client = serviceClient();
     if (body.action === 'history') {
@@ -44,7 +47,8 @@ Deno.serve(async (req: Request) => {
     const { data, error } = await client.rpc('game_interact', { action: body.action, post_id: body.post_id, actor_hash: actor, details });
     if (error) return Response.json({ error: 'Операцията не е разрешена или публикацията не е достъпна.' }, { status: 403, headers });
     return Response.json(data, { headers });
-  } catch {
+  } catch (error) {
+    const bodyError = requestBodyErrorResponse(error, headers); if (bodyError) return bodyError;
     return Response.json({ error: 'Неуспешна обработка на заявката.' }, { status: 400, headers });
   }
 });

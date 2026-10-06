@@ -17,7 +17,7 @@ export const deliveryLabels: Record<string, string> = { awaiting_payment: 'Оч�
 export async function bookApi(name: string, body?: Record<string, unknown>, accessToken?: string) {
   const key = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY;
   const response = await fetch(`${import.meta.env.VITE_PUBLIC_SUPABASE_URL}/functions/v1/${name}`, {
-    method: body ? 'POST' : 'GET', cache: 'no-store',
+    method: body ? 'POST' : 'GET', cache: 'no-store', signal: AbortSignal.timeout(60000),
     headers: { 'Content-Type': 'application/json', apikey: key, ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}) },
     ...(body ? { body: JSON.stringify(body) } : {}),
   });
@@ -27,7 +27,7 @@ export async function bookApi(name: string, body?: Record<string, unknown>, acce
 }
 
 export function orderAccess(id: string): string | null {
-  return sessionStorage.getItem(`book-order:${id}`);
+  try { return sessionStorage.getItem(`book-order:${id}`); } catch { return null; }
 }
 export function privateOrderLink(id: string, token: string): string {
   return `${window.location.origin}/order?order=${encodeURIComponent(id)}#access=${token}`;

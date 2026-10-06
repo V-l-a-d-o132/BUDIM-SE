@@ -26,6 +26,8 @@ function stripHtml(html: string): string {
 function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
+  const [retry, setRetry] = useState(0);
 
   usePageSeo({
     title: 'Новини — Анализи и наблюдения от терен',
@@ -45,12 +47,16 @@ function NewsListPage() {
   });
 
   useEffect(() => {
+    let active = true;
+    setLoading(true); setLoadError(false);
     fetchNewsListCached().then((data) => {
+      if (!active) return;
       const items = (data as NewsItem[]) ?? [];
       setNews(items.length > 0 ? items : (mockNews as NewsItem[]));
-      setLoading(false);
-    });
-  }, []);
+    }).catch(() => { if (active) setLoadError(true); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [retry]);
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -71,6 +77,11 @@ function NewsListPage() {
           {loading ? (
             <div className="flex items-center justify-center py-20">
               <Icon name="ri-loader-4-line" size={24} className="text-gray-300 animate-spin" />
+            </div>
+          ) : loadError ? (
+            <div role="alert" className="py-12 text-gray-600">
+              <p>Новините временно не могат да бъдат заредени.</p>
+              <button onClick={() => setRetry(n => n + 1)} className="mt-4 underline text-gray-900">Опитай отново</button>
             </div>
           ) : (
             <div className="space-y-0">
@@ -133,6 +144,8 @@ function NewsDetailPage() {
   const [item, setItem] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [loadError, setLoadError] = useState(false);
+  const [retry, setRetry] = useState(0);
 
   // Dynamic SEO — updates when item loads
   usePageSeo({
@@ -194,7 +207,10 @@ function NewsDetailPage() {
 
   useEffect(() => {
     if (!slug) return;
+    let active = true;
+    setLoading(true); setLoadError(false); setNotFound(false); setItem(null);
     fetchNewsDetailCached(slug).then((data) => {
+      if (!active) return;
       if (data) {
         setItem(data as NewsItem);
       } else {
@@ -202,9 +218,10 @@ function NewsDetailPage() {
         if (mock) setItem(mock as NewsItem);
         else setNotFound(true);
       }
-      setLoading(false);
-    });
-  }, [slug]);
+    }).catch(() => { if (active) setLoadError(true); })
+      .finally(() => { if (active) setLoading(false); });
+    return () => { active = false; };
+  }, [slug, retry]);
 
   if (loading) {
     return (
@@ -213,6 +230,17 @@ function NewsDetailPage() {
         <div className="flex items-center justify-center pt-40">
           <Icon name="ri-loader-4-line" size={24} className="animate-spin text-gray-300" />
         </div>
+      </div>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <div className="min-h-screen bg-white"><Navbar />
+        <main role="alert" className="pt-40 text-center text-gray-600">
+          <p>Новината временно не може да бъде заредена.</p>
+          <button onClick={() => setRetry(n => n + 1)} className="mt-4 underline text-gray-900">Опитай отново</button>
+        </main>
       </div>
     );
   }

@@ -1,5 +1,5 @@
 import { cleanNewsBody, validNewsTitle, cleanImageUrl } from '../_shared/news-validation.ts';
-import { readBody } from '../_shared/security.ts';
+import { readBody, serverFetch, serviceClient, requestBodyErrorResponse } from '../_shared/security.ts';
 import { requireAdmin } from '../_shared/admin-auth.ts';
 import { createClient } from 'npm:@supabase/supabase-js@2.57.4';
 
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_ANON_KEY')!,
-    { global: { headers: { Authorization: authHeader } } }
+    { global: { headers: { Authorization: authHeader }, fetch: serverFetch } }
   );
   const { data: { user }, error: authError } = await supabase.auth.getUser();
   if (authError || !user) {
@@ -60,7 +60,7 @@ Deno.serve(async (req) => {
   const denied = await requireAdmin(supabase, 'news');
   if (denied) return new Response(denied.body, { status: denied.status, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Cache-Control': 'no-store' } });
 
-  const adminSupabase = createClient(Deno.env.get('SUPABASE_URL')!, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false, autoRefreshToken: false } });
+  const adminSupabase = serviceClient();
 
   const url = new URL(req.url);
   const method = req.method;
@@ -166,6 +166,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (err) {
+    const bodyError = requestBodyErrorResponse(err, corsHeaders); if (bodyError) return bodyError;
     console.error('admin-news request failed');
     return new Response(JSON.stringify({ error: 'Сървърна грешка.' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' },

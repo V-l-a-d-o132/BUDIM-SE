@@ -6,8 +6,7 @@ Deno.serve(async (req: Request) => {
   if (rejected) return rejected;
   const headers = corsHeaders(req);
   try {
-    let body;
-    try { body = await readBody(req, 12000); } catch { throw new BookError('Невалидна заявка.'); }
+    const body = await readBody(req, 12000);
     const input = await purchaseInput(body);
     if (!await rateLimit(req, 'book-checkout', 10)) throw new BookError('Твърде много заявки. Опитай след минута.', 429);
     const isLive = bookMode();

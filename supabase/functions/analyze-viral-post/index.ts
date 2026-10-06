@@ -1,4 +1,4 @@
-import { serviceClient, verifyRecaptcha, rateLimit, readBody, ownerHash, sha256, publicRequestError } from '../_shared/security.ts';
+import { serviceClient, verifyRecaptcha, rateLimit, readBody, ownerHash, sha256, publicRequestError, corsHeaders as responseHeaders, requestBodyErrorResponse, rateLimitResponse } from '../_shared/security.ts';
 
 const ALLOWED_ORIGINS = [
   'https://budimse.online',
@@ -7,29 +7,15 @@ const ALLOWED_ORIGINS = [
   'http://localhost:3000',
 ];
 
-function getCorsHeaders(origin: string | null) {
-  const corsOrigin = ALLOWED_ORIGINS.includes(origin ?? '') ? (origin ?? ALLOWED_ORIGINS[0]) : ALLOWED_ORIGINS[0];
-  return {
-    'Access-Control-Allow-Origin': corsOrigin,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  };
-}
 
 Deno.serve(async (req) => {
   const gate = publicRequestError(req);
   if (gate) return gate;
   const origin = req.headers.get('origin');
-  const corsHeaders = getCorsHeaders(origin);
+  const corsHeaders = responseHeaders(req);
 
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
-  }
-
-  if (!await rateLimit(req, 'game-publish', 5)) {
-    return new Response(
-      JSON.stringify({ error: 'Too many requests. Please try again later.' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 429 }
-    );
   }
 
   if (origin && !ALLOWED_ORIGINS.includes(origin)) {
@@ -40,6 +26,7 @@ Deno.serve(async (req) => {
   }
 
   try {
+    if (!await rateLimit(req, 'game-publish', 5)) return rateLimitResponse(corsHeaders);
     const { content, platform, username, challenge_id, recaptcha_token, owner_token } = await readBody(req, 12000);
 
     if (typeof content !== 'string' || !content.trim() || content.length > 2000 || !['instagram','tiktok','facebook'].includes(platform) || (username !== undefined && (typeof username !== 'string' || username.length > 50)) || (challenge_id != null && (typeof challenge_id !== 'string' || challenge_id.length > 100))) {
@@ -132,10 +119,11 @@ Deno.serve(async (req) => {
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 200 }
     );
   } catch (error) {
-    console.error('Error in analyze-viral-post:', error);
+    const bodyError = requestBodyErrorResponse(error, corsHeaders); if (bodyError) return bodyError;
+    console.error('Publication service unavailable');
     return new Response(
       JSON.stringify({ error: 'Грешка при обработката' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 503 }
     );
   }
 });
