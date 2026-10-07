@@ -8,6 +8,7 @@ import { sourceReferences } from '@/lib/source-references';
 
 interface Category {
   id: string;
+  noteNumber: number;
   icon: string;
   label: string;
   title: string;
@@ -17,201 +18,220 @@ interface Category {
 
 const categories: Category[] = [
   {
-    id: 'dopamine',
-    icon: 'ri-brain-line',
-    label: 'Невронаука',
-    title: 'Допамин, мотивация и награда',
-    description:
-      "Berridge и Robinson разграничават харесването на награда от мотивационното желание за нея. Schultz и колеги изследват невронни сигнали при предвиждане на награда. Тези работи помагат за разбирането на мотивацията, но не доказват, че конкретно приложение причинява зависимост или че авторският модел на книгата е валидиран.",
-    links: [
-      'https://pmc.ncbi.nlm.nih.gov/articles/PMC5171207/',
-      'https://pubmed.ncbi.nlm.nih.gov/9054347/',
-    ],
+    "id": "habits",
+    "noteNumber": 1,
+    "icon": "ri-refresh-line",
+    "label": "Навици",
+    "title": "Как се изгражда навик",
+    "description": "Проучването разглежда избрани всекидневни действия. Подкрепя предпазливостта към универсални срокове за навици; не изследва метод за прекратяване на проблемна употреба на смартфон.",
+    "links": [
+      "https://doi.org/10.1002/ejsp.674"
+    ]
   },
   {
-    id: 'habits',
-    icon: 'ri-loop-right-line',
-    label: 'Поведенческа психология',
-    title: 'Навици и автоматично поведение',
-    description:
-      "Wood и Neal разглеждат как повторението в стабилен контекст свързва ситуации с обичайни реакции и как навиците взаимодействат с целите. Приложението към дигитални навици в книгата е авторска интерпретация; изследването не е изпитване на петстепенния подход.",
-    links: [
-      'https://pubmed.ncbi.nlm.nih.gov/17907866/',
-      'https://dornsife.usc.edu/wendy-wood/wp-content/uploads/sites/183/2023/10/wood.neal_.2007psychrev_a_new_look_at_habits_and_the_interface_between_habits_and_goals.pdf',
-    ],
+    "id": "dopamine",
+    "noteNumber": 2,
+    "icon": "ri-brain-line",
+    "label": "Мотивация",
+    "title": "Желание и удоволствие",
+    "description": "Обзор върху различието между желание за награда и удоволствие. Отделните процеси не бива да се приравняват механично към „Автопилота“ и „Навигатора“ или да се използват за лична диагноза по обикновено наблюдение.",
+    "links": [
+      "https://doi.org/10.1037/amp0000059"
+    ]
   },
   {
-    id: 'attention',
-    icon: 'ri-focus-3-line',
-    label: 'Когнитивна наука',
-    title: 'Внимание и прекъсвания',
-    description:
-      "Mark и колеги изследват прекъсванията в работна среда: в експеримента участниците компенсират с по-бърза работа, но съобщават повече стрес и натоварване. Времето до връщане към задача не е универсално време за възстановяване на концентрацията. От тези резултати не следва обещание, че книга или определена пауза ще възстановят фокуса на всеки човек.",
-    links: [
-      'https://ics.uci.edu/~gmark/chi08-mark.pdf',
-      'https://www.microsoft.com/en-us/research/wp-content/uploads/2016/10/p903-mark.pdf',
-    ],
+    "id": "selfcontrol",
+    "noteNumber": 3,
+    "icon": "ri-lightbulb-line",
+    "label": "Самоконтрол",
+    "title": "Волята като „батерия“",
+    "description": "Многолабораторното повторение не намира убедителен ефект в изследвания протокол. Това е основание популярната идея за изчерпващ се ресурс на самоконтрола да не се представя като установен прост закон. Умората в ежедневието остава отделен, реален въпрос.",
+    "links": [
+      "https://doi.org/10.1177/1745691616652873"
+    ]
   },
   {
-    id: 'selfcontrol',
-    icon: 'ri-shield-check-line',
-    label: 'Психология на волята',
-    title: 'Самоконтрол и воля',
-    description:
-      "Моделът за изчерпване на самоконтрола е влиятелна хипотеза, а не установено обяснение за всеки случай на умора. Предварително регистрираната многолабораторна репликация на Hagger и колеги не възпроизвежда убедително първоначалния ефект. Carter и McCullough обсъждат публикационни пристрастия. Тази несигурност трябва да съпътства всяко позоваване на „изчерпване на волята“.",
-    links: [
-      'https://pubmed.ncbi.nlm.nih.gov/12605077/',
-      'https://pubmed.ncbi.nlm.nih.gov/27474142/',
-      'https://pmc.ncbi.nlm.nih.gov/articles/PMC4115664/',
-    ],
+    "id": "attention",
+    "noteNumber": 4,
+    "icon": "ri-smartphone-line",
+    "label": "Внимание",
+    "title": "Присъствието на смартфон",
+    "description": "Обобщение на 56 изследвания със смесени резултати и методологични ограничения. Не подкрепя общото твърдение, че близостта на телефон неизбежно влошава всяка познавателна способност.",
+    "links": [
+      "https://doi.org/10.1080/15213269.2023.2286647"
+    ]
   },
   {
-    id: 'mentalhealth',
-    icon: 'ri-mental-health-line',
-    label: 'Психично здраве',
-    title: 'Психично здраве и социални мрежи',
-    description:
-      "Изследванията разглеждат връзки между употребата на дигитални технологии и благосъстоянието, с различни методи и ограничения. Orben и Przybylski намират малки асоциации в анализираните масиви. Valkenburg и колеги обобщават разнородни резултати. Съвпадението във времето и корелацията не доказват причинност; данните на CDC за тенденции не определят индивидуална причина или диагноза.",
-    links: [
-      'https://journals.sagepub.com/doi/10.1177/2167702617723376',
-      'https://www.nature.com/articles/s41562-018-0506-1',
-      'https://www.cdc.gov/media/releases/2023/p0213-yrbs.html',
-    ],
+    "id": "algorithms",
+    "noteNumber": 5,
+    "icon": "ri-file-list-3-line",
+    "label": "Препоръки",
+    "title": "Подреждане на лентата и убеждения",
+    "description": "Експериментът е в конкретен американски изборен контекст. Промяна в потреблението не се превръща автоматично в измерима промяна на политическите нагласи. Резултатът не изчерпва ефектите на всяка платформа, тема или продължителност.",
+    "links": [
+      "https://www.gsb.stanford.edu/faculty-research/publications/how-do-social-media-feed-algorithms-affect-attitudes-behavior"
+    ]
   },
   {
-    id: 'disinfo',
-    icon: 'ri-spam-2-line',
-    label: 'Медийна грамотност',
-    title: 'Когнитивни изкривявания и дезинформация',
-    description:
-      'Дезинформацията не работи само чрез лъжата — тя работи чрез повторението, шума и когнитивното претоварване. Hasher, Goldstein и Toppino документират ефекта на илюзорната истина: повтарянето на твърдение го прави да изглежда по-вярно, независимо от съдържанието му. Fazio и колеги показват, че дори хора с вярна предварителна информация са уязвими към този ефект. Sweller описва как ограниченията на работната памет правят мозъка по-склонен към евристики при информационно претоварване. Kahneman обобщава цялата тази динамика в рамката на Система 1 и Система 2 — бързото, автоматично мислене срещу бавното, аналитично.',
-    links: [
-      'https://www.sciencedirect.com/science/article/abs/pii/S0022537177800121',
-      'https://www.apa.org/pubs/journals/features/xge-0000098.pdf',
-      'https://www.sciencedirect.com/science/article/abs/pii/0364021388900237',
-    ],
+    "id": "disinfo",
+    "noteNumber": 6,
+    "icon": "ri-article-line",
+    "label": "Медийна грамотност",
+    "title": "Разпространение на неверни новини",
+    "description": "Анализ на разпространението на проверени като верни или неверни истории в Twitter през 2006–2017 г. Изводите се отнасят до този масив и не означават, че всяка невярна публикация навсякъде ще се разпространява повече.",
+    "links": [
+      "https://doi.org/10.1126/science.aap9559"
+    ]
   },
   {
-    id: 'apophenia',
-    icon: 'ri-eye-line',
-    label: 'Когнитивна наука',
-    title: 'Апофения и разпознаване на модели',
-    description:
-      "Whitson и Galinsky експериментално изследват как усещането за липса на контрол може да повлияе на възприемането на несъществуващи модели. Friston предлага теоретична рамка за предсказване и обработка на информация. Това са различни научни подходи; нито един сам по себе си не доказва, че употребата на социални мрежи причинява конспиративно мислене.",
-    links: [
-      'https://pubmed.ncbi.nlm.nih.gov/18832647/',
-      'https://www.nature.com/articles/nrn2787',
-    ],
+    "id": "meta",
+    "noteNumber": 7,
+    "icon": "ri-government-line",
+    "label": "Регулации",
+    "title": "Споразумението с Meta",
+    "description": "На 26 август 2026 г. щатски прокуратури обявяват споразумение с Meta. Подписаният документ предвижда пакет до 17,1 млрд. долара с гарантирани и условни плащания, включващ и претенции за поверителност. Щатите твърдят вреди от дизайна и представянето на платформите; споразумението не е признание на отговорност от Meta. То не доказва еднакъв причинен ефект при всеки потребител. За плащанията виж раздел VI и приложения B и E; за липсата на признание — X.C.",
+    "links": [
+      "https://coag.gov/press-releases/weiser-announces-historic-settlement-with-meta/",
+      "https://oag.ca.gov/news/press-releases/attorney-general-bonta-secures-transformative-17-billion-settlement-meta",
+      "https://oag.maryland.gov/News/pages/Attorney-General-Brown-Announces-Settlement-with-Big-Tech-Giant-Meta.aspx",
+      "https://coag.gov/app/uploads/2026/08/01-Exhibit-1-MDL-Consent-Judgment-FINAL-Settlment-Agreement-Fully-Executed.pdf"
+    ]
   },
   {
-    id: 'neuroplasticity',
-    icon: 'ri-refresh-line',
-    label: 'Невронаука',
-    title: 'Невропластичност и мрежа на покоя',
-    description:
-      "Menon прави обзор на мрежата на покоя, а Beaty и Poerio разглеждат връзки с творческото мислене и блуждаенето на ума. Тези публикации не доказват, че скуката или отказът от екран имат еднакъв възстановителен ефект за всички. Практическите предложения в книгата са авторски упражнения, без установена лечебна ефективност.",
-    links: [
-      'https://pmc.ncbi.nlm.nih.gov/articles/PMC10524518/',
-      'https://pmc.ncbi.nlm.nih.gov/articles/PMC4410786/',
-      'https://pmc.ncbi.nlm.nih.gov/articles/PMC5490683/',
-    ],
+    "id": "settlement",
+    "noteNumber": 8,
+    "icon": "ri-time-line",
+    "label": "Регулации",
+    "title": "Одобрение и първа вноска",
+    "description": "North Carolina Department of Justice съобщава за съдебно одобрение на 26 август 2026 г. и за първо плащане към този щат на 1 октомври. Следващите вноски са разсрочени до 2035 г. Първата вноска не означава, че целият пакет вече е изплатен. Това разграничение е важно при четене на заглавията за сумата.",
+    "links": [
+      "https://ncdoj.gov/attorney-general-jeff-jacksons-landmark-meta-settlement-goes-into-effect/",
+      "https://ncdoj.gov/meta-pays-more-than-45-million-in-first-payment-to-nc-from-attorney-general-jacksons-landmark-settlement/"
+    ]
   },
   {
-    id: 'phantom',
-    icon: 'ri-smartphone-line',
-    label: 'Телесни сигнали',
-    title: 'Телесни ефекти (фантомни вибрации и др.)',
-    description:
-      "Обзорът на Deb и наблюдателните изследвания сред медицински обучаеми описват фантомни вибрации и звънене и някои връзки с употребата на смартфон. Ограничените извадки и наблюдателният дизайн не установяват универсална причина или заболяване. „Screen apnea“ не се представя тук като установена диагноза; изброените публикации не я доказват.",
-    links: [
-      'https://pubmed.ncbi.nlm.nih.gov/25408384/',
-      'https://pmc.ncbi.nlm.nih.gov/articles/PMC6149296/',
-      'https://pubmed.ncbi.nlm.nih.gov/36445195/',
-    ],
+    "id": "mentalhealth",
+    "noteNumber": 9,
+    "icon": "ri-heart-pulse-line",
+    "label": "Благополучие",
+    "title": "Социални медии и подрастващи",
+    "description": "Обзор на ползи, рискове и пропуски в доказателствата. Различава общи заключения за населението от конкретни вредни преживявания. Особено полезни са резюмето и главата за връзките между социалните медии и здравето на подрастващите.",
+    "links": [
+      "https://doi.org/10.17226/27396"
+    ]
   },
   {
-    id: 'socialcomparison',
-    icon: 'ri-user-follow-line',
-    label: 'Социална психология',
-    title: 'Социално сравнение',
-    description:
-      "Теорията на Festinger описва социалното сравнение като общ психологически процес. Обзорът на Valkenburg и колеги се отнася до социалните мрежи и психичното здраве, а не до доказване на отделен механизъм на сравнение във всеки потребител. Начинът на употреба и индивидуалният контекст имат значение; не определяме психологически профил от тези общи изследвания.",
-    links: [
-      'https://www2.psych.ubc.ca/~schaller/528Readings/Festinger1954.pdf',
-      'https://pubmed.ncbi.nlm.nih.gov/34563980/',
-    ],
+    "id": "molly",
+    "noteNumber": 10,
+    "icon": "ri-heart-line",
+    "label": "Благополучие",
+    "title": "Случаят Моли Ръсел",
+    "description": "Molly Rose Foundation: Molly’s Inquest възпроизвежда заключението от разследването. Документите се отнасят до конкретен трагичен случай; употребата им изисква внимание към установените обстоятелства и към близките.",
+    "links": [
+      "https://www.judiciary.uk/prevention-of-future-death-reports/molly-russell-prevention-of-future-deaths-report/",
+      "https://mollyrosefoundation.org/mollys-inquest/"
+    ]
   },
   {
-    id: 'intimacy',
-    icon: 'ri-heart-pulse-line',
-    label: 'Интимност и поведение',
-    title: 'Интимност и поведенчески сценарии',
-    description:
-      "Bridges и колеги анализират съдържанието на избрани популярни видеа за възрастни. Анализът описва сцени в тази извадка; не доказва сам по себе си как те влияят върху интимния живот на всеки зрител. Концепциите за сценарии и самонаблюдение в книгата са отделни интерпретативни рамки, а не резултат от посоченото изследване.",
-    links: [
-      'https://pubmed.ncbi.nlm.nih.gov/20980228/',
-      'https://journals.sagepub.com/doi/10.1177/1077801210382866',
-    ],
+    "id": "regulation",
+    "noteNumber": 11,
+    "icon": "ri-government-line",
+    "label": "Регулации",
+    "title": "Актът за цифровите услуги",
+    "description": "Тези изисквания не са обещание за напълно „неутрално“ съдържание. Точният обхват зависи от услугата и приложимите разпоредби.",
+    "links": [
+      "https://eur-lex.europa.eu/eli/reg/2022/2065"
+    ]
   },
   {
-    id: 'algorithms',
-    icon: 'ri-settings-4-line',
-    label: 'Поведенчески дизайн',
-    title: 'Алгоритми и attention economy',
-    description:
-      "Моделът на Fogg и книгата на Eyal са рамки за поведенчески и продуктов дизайн. Center for Humane Technology представя застъпническа перспектива. Тези източници имат различен статут от експериментално изследване и не доказват намерението или вредата от всеки конкретен алгоритъм.",
-    links: [
-      'https://behaviormodel.org/',
-      'https://www.nirandfar.com/hooked/',
-      'https://www.humanetech.com/',
-    ],
+    "id": "australia",
+    "noteNumber": 12,
+    "icon": "ri-user-line",
+    "label": "Регулации",
+    "title": "Възрастови ограничения в Австралия",
+    "description": "Периодът след въвеждането е ограничен към датата на тази редакция. Описанието на закона не представлява оценка, че дългосрочната му ефективност вече е доказана.",
+    "links": [
+      "https://www.esafety.gov.au/about-us/industry-regulation/social-media-age-restrictions"
+    ]
   },
   {
-    id: 'sharenting',
-    icon: 'ri-camera-line',
-    label: 'Дигитален отпечатък',
-    title: 'AI, данни и дигитален отпечатък',
-    description:
-      "LAION-5B описва мащабен масив от връзки към изображения и текст. Изследването на Rocher и колеги оценява риск от повторна идентификация в набори с демографски атрибути; то не доказва, че всяка снимка може да бъде идентифицирана по същия начин. NIST оценява технологии за разпознаване на лица. Това са различни рискове и трябва да се разграничават при разговор за дигиталния отпечатък.",
-    links: [
-      'https://arxiv.org/abs/2210.08402',
-      'https://pages.nist.gov/frvt/',
-      'https://pmc.ncbi.nlm.nih.gov/articles/PMC6650473/',
-    ],
+    "id": "recommendations",
+    "noteNumber": 13,
+    "icon": "ri-settings-3-line",
+    "label": "Настройки",
+    "title": "Промяна на препоръките",
+    "description": "Описание от доставчика на услугата. Новите препоръки отново се персонализират според взаимодействията. Функцията не е равнозначна на изтриване на всички лични данни. Наличността и интерфейсът могат да се променят.",
+    "links": [
+      "https://about.fb.com/news/2024/11/introducing-recommendations-reset-instagram/"
+    ]
   },
   {
-    id: 'regulation',
-    icon: 'ri-government-line',
-    label: 'Регулации и политики',
-    title: 'Регулации и платформи',
-    description:
-      "Digital Services Act съдържа задължения за оценяване и ограничаване на системни рискове при определените много големи платформи и търсачки. Официалният австралийски регулатор описва възрастовите ограничения за обхванатите социални платформи. Регулациите са нормативни решения; сами по себе си не валидират авторския модел или отделна научна хипотеза.",
-    links: [
-      'https://digital-strategy.ec.europa.eu/en/policies/digital-services-act',
-      'https://eur-lex.europa.eu/eli/reg/2022/2065/oj/eng',
-      'https://www.esafety.gov.au',
-    ],
+    "id": "privacy",
+    "noteNumber": 14,
+    "icon": "ri-lock-line",
+    "label": "Поверителност",
+    "title": "Какво прави „Инкогнито“",
+    "description": "Официално обяснение какво се запазва на устройството и какво може да остава видимо за сайтове и мрежови доставчици. Режимът не гарантира анонимност или липса на персонализирано влияние.",
+    "links": [
+      "https://support.google.com/chrome/answer/95464?hl=en-GB"
+    ]
   },
+  {
+    "id": "mobileinternet",
+    "noteNumber": 15,
+    "icon": "ri-smartphone-line",
+    "label": "Внимание",
+    "title": "Ограничаване на мобилния интернет",
+    "description": "Рандомизирано изследване с ограничаване на мобилния интернет за две седмици. Обажданията, съобщенията и достъпът през други устройства остават възможни. Резултатите подкрепят изследването на такава промяна; не доказват, че пълното откъсване е необходимо или подходящо за всеки.",
+    "links": [
+      "https://doi.org/10.1093/pnasnexus/pgaf017"
+    ]
+  },
+  {
+    "id": "thinking",
+    "noteNumber": 16,
+    "icon": "ri-book-open-line",
+    "label": "Почивка",
+    "title": "Оставане насаме с мислите",
+    "description": "Поредица от експерименти за преживяването при оставане насаме с мислите. Проучването не установява, че употребата на смартфон е причинила затрудненията на участниците.",
+    "links": [
+      "https://doi.org/10.1126/science.1250830"
+    ]
+  },
+  {
+    "id": "neuroplasticity",
+    "noteNumber": 17,
+    "icon": "ri-brain-line",
+    "label": "Почивка",
+    "title": "Мрежата по подразбиране",
+    "description": "Основополагаща публикация за мозъчната активност при различни условия. Тя не установява универсален десетминутен „рестарт“ и не е изпитване на упражнението за пауза, предложено в книгата.",
+    "links": [
+      "https://doi.org/10.1073/pnas.98.2.676"
+    ]
+  }
 ];
 
 const allLabels = Array.from(new Set(categories.map((c) => c.label)));
 
 // Към коя част от авторската рамка се отнася всяка категория източници
 const degreeMap: Record<string, string> = {
-  dopamine: 'Степен 1 — Биологичният автоматизъм',
-  habits: 'Степен 1 — Биологичният автоматизъм',
-  attention: 'Степен 2 — Алгоритмичният прицел',
-  selfcontrol: 'Степен 3 — Когнитивна свобода',
-  mentalhealth: 'Степен 2 — Алгоритмичният прицел',
-  disinfo: 'Степен 2 — Алгоритмичният прицел',
-  apophenia: 'Степен 2 — Алгоритмичният прицел',
-  neuroplasticity: 'Степен 4 — Завръщане и реинтеграция',
-  phantom: 'Степен 1 — Биологичният автоматизъм',
-  socialcomparison: 'Степен 2 — Алгоритмичният прицел',
-  intimacy: 'Степен 4 — Завръщане и реинтеграция',
-  algorithms: 'Степен 2 — Алгоритмичният прицел',
-  sharenting: 'Степен 5 — Съзнателна свобода',
-  regulation: 'Степен 5 — Съзнателна свобода',
+  "habits": "Степен 1 — Да забележиш навика",
+  "dopamine": "Степен 1 — Да забележиш навика",
+  "selfcontrol": "Степен 3 — Да опиташ промяна",
+  "attention": "Степен 1 — Да забележиш навика",
+  "algorithms": "Степен 2 — Да разбереш средата",
+  "disinfo": "Степен 2 — Да разбереш средата",
+  "meta": "Степен 2 — Да разбереш средата",
+  "settlement": "Степен 2 — Да разбереш средата",
+  "mentalhealth": "Степен 2 — Да разбереш средата",
+  "molly": "Степен 2 — Да разбереш средата",
+  "regulation": "Степен 2 — Да разбереш средата",
+  "australia": "Степен 5 — Да поддържаш свободата си",
+  "recommendations": "Степен 3 — Да опиташ промяна",
+  "privacy": "Степен 5 — Да поддържаш свободата си",
+  "mobileinternet": "Степен 3 — Да опиташ промяна",
+  "thinking": "Степен 4 — Да върнеш място за живота",
+  "neuroplasticity": "Степен 4 — Да върнеш място за живота"
 };
 
 function truncateUrl(url: string, maxLen = 60): string {
@@ -232,11 +252,10 @@ export default function SourcesPage() {
   usePageSeo({
     title: 'Изследвания и източници — „Петте степени" | БУДИМ СЕ',
     description:
-      'Научните, психологическите и когнитивните източници, вдъхновяващи книгата „Петте степени": допамин, навици, внимание, самоконтрол, социални мрежи, дезинформация, невропластичност и платформена регулация.',
+      '17 бележки към „Петте степени“: научни публикации, официални документи и описания на функции. Какво подкрепят източниците и къде свършва приложимостта им.',
     canonical: '/sources',
     schemaType: 'CollectionPage',
-    keywords:
-      'допамин мотивация, навици поведенческа психология, внимание прекъсвания, самоконтрол воля, психично здраве социални мрежи подрастващи, дезинформация илюзорна истина, апофения разпознаване на модели, невропластичност, фантомни вибрации, социално сравнение Festinger, attention economy поведенчески дизайн, дигитален отпечатък AI, Digital Services Act регулации платформи, петте степени',
+    keywords: 'Петте степени, източници, навици, внимание, медийна грамотност, Meta споразумение 2026, препоръки, лични данни',
     breadcrumbs: [
       { name: 'Начало', url: '/' },
       { name: 'Научни източници', url: '/sources' },
@@ -249,10 +268,11 @@ export default function SourcesPage() {
         { '@type': 'Thing', name: 'Самоконтрол и воля' },
         { '@type': 'Thing', name: 'Психично здраве и социални мрежи' },
         { '@type': 'Thing', name: 'Дезинформация и медийна грамотност' },
-        { '@type': 'Thing', name: 'Невропластичност' },
+        { '@type': 'Thing', name: 'Почивка и мозъчна активност' },
         { '@type': 'Thing', name: 'Платформена регулация' },
       ],
-      numberOfItems: 14,
+      numberOfItems: categories.length,
+      dateModified: '2026-10-07',
     },
   });
 
@@ -298,7 +318,7 @@ export default function SourcesPage() {
           </div>
 
           <span className="inline-block text-xs tracking-[0.3em] text-white/30 uppercase font-medium border border-white/10 px-3 py-1.5 rounded-sm mb-6">
-            Методологична база
+            Бележки към книгата
           </span>
 
           <h1 className="text-5xl md:text-6xl font-light text-white leading-[1.05] mb-6">
@@ -307,8 +327,8 @@ export default function SourcesPage() {
           </h1>
 
           <p className="text-lg md:text-xl text-white/60 font-light leading-relaxed max-w-2xl mb-8">
-            „Петте степени" е практическа рамка, изградена от опит, наблюдение и реална работа с хора.
-            Тази страница показва изследванията, концепциите и регулаторните източници, които допълват модела.
+            Тук са 17-те бележки от книгата, с постоянните им номера. Посочваме какво подкрепя
+            всеки източник и какви изводи не можем да направим от него. Проверено към 7 октомври 2026 г.
           </p>
 
           <div className="border border-white/10 rounded-sm p-5 max-w-2xl bg-white/[0.03] mb-8">
@@ -317,16 +337,16 @@ export default function SourcesPage() {
                 <i className="ri-information-line text-white/30 text-sm" />
               </div>
               <p className="text-sm text-white/40 leading-relaxed">
-                Това не е академична библиография и не твърди, че моделът е отделна научна теория.
-                Това е карта на механизмите, върху които стъпва практическата рамка.
+                Личните разкази и условните примери не са научни данни. „Петте степени“ и практиката
+                „Будим се“ са авторска рамка; източниците не представляват нейно клинично изпитване.
               </p>
             </div>
           </div>
 
           <div className="flex items-center gap-6 text-xs text-white/25">
-            <span>{categories.length} категории</span>
+            <span>{categories.length} бележки</span>
             <span className="w-px h-3 bg-white/10" />
-            <span>{totalLinks} източника</span>
+            <span>{totalLinks} документа</span>
           </div>
         </div>
       </section>
@@ -392,8 +412,8 @@ export default function SourcesPage() {
       {/* ─── КАТЕГОРИИ ─── */}
       <section className="pb-24 px-6">
         <div className="max-w-4xl mx-auto space-y-14">
-          {filteredCategories.map((cat, catIdx) => (
-            <div key={cat.id}>
+          {filteredCategories.map((cat) => (
+            <div key={cat.id} id={cat.id} className="scroll-mt-28">
               {/* Category header */}
               <div className="flex items-start gap-4 mb-6 pb-6 border-b border-white/10">
                 <div className="w-10 h-10 flex items-center justify-center flex-shrink-0 border border-white/10 rounded-sm">
@@ -401,10 +421,10 @@ export default function SourcesPage() {
                 </div>
                 <div>
                   <span className="text-xs tracking-[0.25em] text-white/25 uppercase font-medium block mb-1">
-                    {String(catIdx + 1).padStart(2, '0')} — {cat.label}
+                    {String(cat.noteNumber).padStart(2, '0')} — {cat.label}
                   </span>
                   {degreeMap[cat.id] && (
-                    <span className="inline-block text-[11px] text-white/40 border border-white/10 rounded-sm px-2 py-0.5 mb-2 whitespace-nowrap">
+                    <span className="inline-block text-[11px] text-white/40 border border-white/10 rounded-sm px-2 py-0.5 mb-2 leading-relaxed">
                       {degreeMap[cat.id]}
                     </span>
                   )}
@@ -430,7 +450,7 @@ export default function SourcesPage() {
                     <span className="text-xs text-white/20 font-mono flex-shrink-0 w-4">
                       {String(linkIdx + 1).padStart(2, '0')}
                     </span>
-                    <span className="text-xs text-white/40 group-hover:text-white/70 transition-colors font-mono break-all leading-relaxed">
+                    <span className="text-sm text-white/60 group-hover:text-white/90 transition-colors break-words leading-relaxed">
                       {sourceReferences[link] ?? truncateUrl(link)}
                     </span>
                     <span className="ml-auto w-4 h-4 flex items-center justify-center flex-shrink-0">
@@ -458,17 +478,14 @@ export default function SourcesPage() {
             </div>
 
             <p className="text-base md:text-lg text-white/55 leading-relaxed mb-6 max-w-2xl">
-              Тези източници не „доказват" книгата като отделна научна теория. Те показват, че моделът
-              стъпва върху реални, изследвани механизми:{' '}
-              <strong className="text-white/75 font-medium">
-                навици, мотивация, допаминова система, когнитивно претоварване, социално сравнение,
-                невропластичност и платформена регулация.
-              </strong>
+              Чети източника заедно с метода, извадката и ограниченията му. Различавай връзка
+              между явления от установена причина, описание на функция от оценка на ефекта ѝ,
+              обвинение от съдебно установен факт. Законите и настройките могат да се променят.
             </p>
 
             <div className="border-t border-white/[0.08] pt-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
               <p className="text-sm text-white/40 leading-relaxed max-w-md">
-                Книгата показва как тези механизми се преживяват в реалния живот — и как могат да бъдат прекъснати.
+                Книгата предлага въпроси и упражнения за ежедневието. Практическите предложения са отделени от резултатите на изследванията.
               </p>
               <Link
                 to="/order"
@@ -498,10 +515,10 @@ export default function SourcesPage() {
                 <div>
                   <div className="text-xs text-white/30 mb-0.5">Степен 1</div>
                   <div className="text-sm text-white/70 group-hover:text-white transition-colors font-medium leading-snug">
-                    Биологичният автоматизъм
+                    Да забележиш навика
                   </div>
                   <div className="text-xs text-white/30 mt-1 leading-relaxed">
-                    Допамин, навици, автоматично поведение
+                    Наблюдение на навика и неговия контекст
                   </div>
                 </div>
                 <span className="ml-auto w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -517,10 +534,10 @@ export default function SourcesPage() {
                 <div>
                   <div className="text-xs text-white/30 mb-0.5">Степен 2</div>
                   <div className="text-sm text-white/70 group-hover:text-white transition-colors font-medium leading-snug">
-                    Алгоритмичният прицел
+                    Да разбереш средата
                   </div>
                   <div className="text-xs text-white/30 mt-1 leading-relaxed">
-                    Внимание, прекъсвания, когнитивен поток
+                    Препоръки, информация и проверка
                   </div>
                 </div>
                 <span className="ml-auto w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -536,10 +553,10 @@ export default function SourcesPage() {
                 <div>
                   <div className="text-xs text-white/30 mb-0.5">Степен 3</div>
                   <div className="text-sm text-white/70 group-hover:text-white transition-colors font-medium leading-snug">
-                    Когнитивна свобода
+                    Да опиташ промяна
                   </div>
                   <div className="text-xs text-white/30 mt-1 leading-relaxed">
-                    Воля, ego depletion, поведенчески дизайн
+                    Изпълним опит и преглед на резултата
                   </div>
                 </div>
                 <span className="ml-auto w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -555,10 +572,10 @@ export default function SourcesPage() {
                 <div>
                   <div className="text-xs text-white/30 mb-0.5">Степен 4</div>
                   <div className="text-sm text-white/70 group-hover:text-white transition-colors font-medium leading-snug">
-                    Завръщане и реинтеграция
+                    Да върнеш място за живота
                   </div>
                   <div className="text-xs text-white/30 mt-1 leading-relaxed">
-                    Невропластичност, навици, контекст
+                    Общуване, занимания и почивка
                   </div>
                 </div>
                 <span className="ml-auto w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -574,10 +591,10 @@ export default function SourcesPage() {
                 <div>
                   <div className="text-xs text-white/30 mb-0.5">Степен 5</div>
                   <div className="text-sm text-white/70 group-hover:text-white transition-colors font-medium leading-snug">
-                    Съзнателна свобода
+                    Да поддържаш свободата си
                   </div>
                   <div className="text-xs text-white/30 mt-1 leading-relaxed">
-                    Дигитална свобода, дългосрочна промяна
+                    Гъвкави граници и лични данни
                   </div>
                 </div>
                 <span className="ml-auto w-4 h-4 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -616,8 +633,8 @@ export default function SourcesPage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
             <div>
               <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed max-w-lg">
-                Тази страница показва какво стои зад модела.{' '}
-                <strong className="text-white font-medium">Книгата показва как да го приложиш.</strong>
+                Провери източниците и техните ограничения.{' '}
+                <strong className="text-white font-medium">Избери въпрос, който има смисъл за теб.</strong>
               </p>
             </div>
             <div className="flex-shrink-0">
@@ -637,3 +654,4 @@ export default function SourcesPage() {
     </div>
   );
 }
+

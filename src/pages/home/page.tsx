@@ -8,71 +8,71 @@ import Icon from '@/components/base/Icon';
 
 const faqs = [
   {
-    q: 'Какво точно е Център БУДИМ СЕ?',
-    a: 'Независима гражданска и образователна инициатива, създадена от малък екип с обща мисия: да помагаме на повече хора да разбират дигиталната среда и да използват технологиите по-осъзнато. Създаваме образователни материали, инструменти и програми за медийна и дигитална грамотност.',
+    "q": "Какво е Център БУДИМ СЕ?",
+    "a": "Независима гражданска и образователна инициатива за медийна и дигитална грамотност. Подготвяме материали, инструменти и пилотни формати за училища, семейства и екипи."
   },
   {
-    q: 'Рамката „Петте степени" — за кого е подходяща?',
-    a: 'За всеки, който забелязва, че вниманието му се разпилява — трудно чете дълги текстове, проверява телефона по навик, не може да се концентрира дълго. Подходяща е от 12-годишни ученици до корпоративни мениджъри.',
+    "q": "За кого е книгата „Петте степени“?",
+    "a": "За читатели, които искат да разгледат дигиталните си навици и да опитат промяна. Петте степени са задачи, към които можеш да се връщаш. При работа с деца примерите и правилата трябва да се съобразят с възрастта и нуждите им."
   },
   {
-    q: 'Дигиталният детокс означава ли да спра да ползвам телефона?',
-    a: 'Не. Целта не е да захвърлиш устройствата, а да решаваш кога и защо ги използваш. Разликата е между това ти да контролираш телефона и телефонът да контролира теб.',
+    "q": "Трябва ли да спра да използвам телефона?",
+    "a": "Можеш да запазиш онова, което ти е полезно, и да промениш конкретна употреба, която ти пречи. Понякога има смисъл от ограничение, понякога от друга настройка или по-ясна уговорка."
   },
   {
-    q: 'Как работи аналитичната среда?',
-    a: 'Поставяш текст — новина, публикация или имейл — и инструментът открива езикови и структурни похвати, свързани с емоционален заряд, внушение за спешност и социален натиск. Резултатът е ориентировъчна оценка, която не определя истинността или намерението на автора.',
+    "q": "Как работи анализаторът?",
+    "a": "Инструментът предлага възможни езикови сигнали за емоционален натиск, спешност, социален натиск, поляризация и подтик към реакция. Посочва откъси и обяснения, които трябва да прецениш в контекст. Може да греши; не проверява фактите и не установява намерението на автора."
   },
   {
-    q: 'Как да организираме програма за нашето училище или компания?',
-    a: 'Свържете се с нас чрез формата за партньорство на страницата „Центърът" или директно на budimseonline@gmail.com. Всяко партньорство е индивидуално — няма готови пакети. Обсъждаме вашата ситуация и изграждаме програма спрямо вашите нужди.',
+    "q": "Как да обсъдим програма за училище или екип?",
+    "a": "Използвайте формата на страницата „Центърът“ или пишете на budimseonline@gmail.com. Първо уточняваме нуждите, възрастта на участниците и възможния формат. Не обещаваме предварително измерен ефект."
   },
   {
-    q: 'Книгата „Петте степени" — каква е?',
-    a: 'Авторски приложен труд за вниманието и дигиталните навици. Това не е учебник и не е книга за мотивация — а авторска рамка с метафори, опростени модели и практически подходи. Има образователна цел и не предоставя медицински или терапевтични съвети.',
+    "q": "Научно изпитана методика ли е „Будим се“?",
+    "a": "„Петте степени“ и практиката „Будим се“ са авторска образователна рамка. Източниците подкрепят отделни твърдения и показват ограниченията им. Те не са клинично изпитване на рамката. Книгата може да се чете самостоятелно, без регистрация в сайта."
   },
   {
-    q: 'Как Центърът обработва личните данни?',
-    a: 'Описваме кои данни събираме, за каква цел, колко дълго ги съхраняваме и как можете да поискате достъп или изтриване — в нашата Политика за поверителност. Данните се съхраняват чрез Supabase (сървъри в ЕС). При въпроси: budimseonline@gmail.com.',
-  },
+    "q": "Как се обработват личните данни?",
+    "a": "Политиката за поверителност описва данните, целите и услугите, които сайтът използва. Рекламните бисквитки се включват след съгласие. Можеш да откажеш или да промениш избора си от връзката „Настройки на бисквитките“ в края на страницата. За въпроси: budimseonline@gmail.com."
+  }
 ];
 
 const steps = [
   {
-    number: '01',
-    title: 'Биологичният автоматизъм',
-    description: 'Разпознаване на Автопилота и автоматичните реакции — защо посягаме към екрана, без да сме решили.',
-    link: '/step-1',
-    tag: 'Разпознаване',
+    "number": "01",
+    "title": "Да забележиш навика",
+    "description": "Забележи кога посягаш към телефона и какво търсиш в този момент.",
+    "link": "/step-1",
+    "tag": "Наблюдение"
   },
   {
-    number: '02',
-    title: 'Алгоритмичният прицел',
-    description: 'Емоционалната възбуда, препоръките и икономиката на вниманието — как работят стимулите.',
-    link: '/step-2',
-    tag: 'Разбиране',
+    "number": "02",
+    "title": "Да разбереш средата",
+    "description": "Разгледай препоръките, известията и източниците на информация.",
+    "link": "/step-2",
+    "tag": "Разбиране"
   },
   {
-    number: '03',
-    title: 'Когнитивна свобода',
-    description: 'Прекъсване на автоматичните цикли и изграждане на структурно триене — пауза преди реакция.',
-    link: '/step-3',
-    tag: 'Прекъсване',
+    "number": "03",
+    "title": "Да опиташ промяна",
+    "description": "Избери една малка промяна и провери дали ти помага.",
+    "link": "/step-3",
+    "tag": "Опит"
   },
   {
-    number: '04',
-    title: 'Завръщане и реинтеграция',
-    description: 'Възстановяване на линейния фокус, сетивното присъствие и живия контакт.',
-    link: '/step-4',
-    tag: 'Възстановяване',
+    "number": "04",
+    "title": "Да върнеш място за живота",
+    "description": "Остави място за важните ти занимания, общуването и почивката.",
+    "link": "/step-4",
+    "tag": "Място"
   },
   {
-    number: '05',
-    title: 'Съзнателна свобода',
-    description: 'От реактивно към осъзнато използване на технологиите — те служат на целите ти, а не обратното.',
-    link: '/step-5',
-    tag: 'Свобода',
-  },
+    "number": "05",
+    "title": "Да поддържаш свободата си",
+    "description": "Преглеждай границите си и ги променяй според живота си.",
+    "link": "/step-5",
+    "tag": "Поддържане"
+  }
 ];
 
 const operations = [
@@ -89,7 +89,7 @@ const operations = [
     title: 'Програма за семейства',
     target: 'Семейства',
     description:
-      'Работа с динамиката на дигиталното потребление в семейна среда. Не забрани — а изграждане на осъзнати навици и споделени правила, основани на разбиране на механизмите.',
+      'Разговор за нуждите на децата и родителите, полезната употреба и трудните моменти около екраните. Подготвяме пилотни формати за ясни правила и разумни граници, съобразени с възрастта.',
     metrics: ['Индивидуален подход', 'Родители + деца', 'Подготвяме пилотни групи'],
   },
   {
@@ -110,12 +110,13 @@ export default function Home() {
     title: 'Медийна грамотност и критично мислене | Център БУДИМ СЕ',
     description: 'Медийна грамотност за ученици, семейства и екипи. Разпознаване на дезинформация, критично мислене и дигитални навици — авторската рамка „Петте степени".',
     canonical: '/',
-    keywords: 'медийна грамотност, дигитална грамотност, дигитален суверенитет, когнитивна свобода, дигитална хигиена, поведенчески дизайн, БУДИМ СЕ, медийна грамотност България, образователен детокс',
+    keywords: 'медийна грамотност, дигитална грамотност, дигитални навици, проверка на информация, Петте степени, БУДИМ СЕ',
     schemaType: 'WebPage',
     breadcrumbs: [
       { name: 'Начало', url: 'https://budimse.online' },
     ],
     schemaExtra: {
+      dateModified: '2026-10-07',
       speakable: {
         '@type': 'SpeakableSpecification',
         cssSelector: ['h1', 'h2', 'blockquote'],
@@ -124,7 +125,7 @@ export default function Home() {
         { '@type': 'Thing', name: 'Медийна грамотност', sameAs: 'https://budimse.online/digitalna-gramotnost' },
         { '@type': 'Thing', name: 'Дигитална грамотност', sameAs: 'https://budimse.online/digitalna-gramotnost' },
         { '@type': 'Thing', name: 'Дигитален суверенитет', sameAs: 'https://budimse.online/step-5' },
-        { '@type': 'Thing', name: 'Когнитивна свобода', sameAs: 'https://budimse.online/step-5' },
+        { '@type': 'Thing', name: 'Дигитални навици', sameAs: 'https://budimse.online/step-5' },
         { '@type': 'Thing', name: 'Поведенчески дизайн', sameAs: 'https://budimse.online/sources' },
         { '@type': 'Thing', name: 'Attention Economy', sameAs: 'https://budimse.online/sources' },
         { '@type': 'Person', name: 'Владимир Атанасов', url: 'https://budimse.online/author' },
@@ -132,7 +133,7 @@ export default function Home() {
       about: [
         { '@type': 'Thing', name: 'Медийна грамотност' },
         { '@type': 'Thing', name: 'Дигитална грамотност' },
-        { '@type': 'Thing', name: 'Когнитивна свобода' },
+        { '@type': 'Thing', name: 'Дигитални навици' },
         { '@type': 'Thing', name: 'Поведенчески дизайн' },
       ],
       mainEntity: {
@@ -243,24 +244,20 @@ export default function Home() {
       </section>
 
       {/* ─── РАМКАТА — ПЕТТЕ СТЕПЕНИ ─── */}
-      <section className="py-12 md:py-24 px-4 md:px-6 bg-gray-950 text-white">
+      <section id="steps" className="py-12 md:py-24 px-4 md:px-6 bg-gray-950 text-white scroll-mt-24">
         <div className="max-w-6xl mx-auto">
           <div className="mb-16">
             <span className="text-xs tracking-[0.25em] text-white/40 uppercase font-medium">
-              Секция 02 — Пътят навън
+              Секция 02 — Петте степени
             </span>
             <h2 className="text-2xl md:text-4xl lg:text-5xl font-light text-white mt-4 mb-5 md:mb-6 leading-tight">
               Петте степени —<br />
-              <span className="font-medium">рамка с конкретни стъпки, не общи съвети.</span>
+              <span className="font-medium">пет задачи за твоето ежедневие.</span>
             </h2>
-            <p className="text-lg text-white/60 max-w-2xl leading-relaxed">
-              Авторска образователна рамка, която започва от разпознаването на Автопилота и стига до
-              по-осъзнато използване на технологиите. Вдъхновена е от медийната грамотност, когнитивната
-              психология и поведенческия дизайн.
-            </p>
+            <p className="text-lg text-white/60 max-w-2xl leading-relaxed">Да забележиш навика, да разбереш средата, да опиташ промяна и да оставиш място за важните неща. Степените не са диагнози или класация на хората. Можеш да започнеш от въпроса, който те засяга, и да се връщаш към него.</p>
           </div>
 
-          <div className="grid md:grid-cols-5 gap-px bg-white/10 rounded-sm overflow-hidden">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-px bg-white/10 rounded-sm overflow-hidden">
             {steps.map((step, index) => (
               <Link
                 key={index}
@@ -293,6 +290,35 @@ export default function Home() {
               Започни от степен 01
               <Icon name="ri-arrow-right-line" size={16} className="ml-2" />
             </Link>
+          </div>
+        </div>
+      </section>
+
+      <section id="methodology" className="py-12 md:py-24 px-4 md:px-6 bg-gray-50 scroll-mt-24">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-10 max-w-2xl">
+            <span className="text-xs tracking-[0.25em] text-gray-400 uppercase font-medium">Практиката „Будим се“</span>
+            <h2 className="text-3xl md:text-5xl font-light text-gray-900 mt-4 mb-6 leading-tight">Една промяна, която можеш да провериш.</h2>
+            <p className="text-gray-600 leading-relaxed">Това е авторският начин на работа от книгата: наблюдение, проверка, избор, опит и преглед. Можеш да се върнеш към всяка стъпка. Целта е да разбереш кое ти помага в конкретната ситуация.</p>
+          </div>
+          <ol className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {[
+              { title: 'Наблюдение', text: 'Какво правя, кога и какво ми носи? Опиши случката без оценка на себе си.' },
+              { title: 'Проверка', text: 'Какво знам и какво предполагам? Провери източника и другите възможни обяснения.' },
+              { title: 'Избор', text: 'Кое искам да променя? Запази полезните функции и избери изпълнима граница.' },
+              { title: 'Опит', text: 'Изпробвай промяната за уговорен период. Предвиди нужните изключения.' },
+              { title: 'Преглед', text: 'Какво се промени? Запази, коригирай или прекрати опита според резултата.' },
+            ].map((item, i) => (
+              <li key={item.title} className="border border-gray-200 bg-white rounded-sm p-5">
+                <span className="text-xs font-mono text-gray-400">0{i + 1}</span>
+                <h3 className="text-base font-medium text-gray-900 mt-3 mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">{item.text}</p>
+              </li>
+            ))}
+          </ol>
+          <div className="mt-8 max-w-3xl border-l-2 border-gray-400 pl-5 space-y-3 text-sm text-gray-600 leading-relaxed">
+            <p><strong className="text-gray-900 font-medium">Условен пример.</strong> Ако Ива забележи, че видеата изместват четенето вечер, първо може да провери дали причината е навик, умора или липса на спокойно време. После да опита една седмица без видеоизвестия след вечеря, като остави важните обаждания.</p>
+            <p>Накрая въпросът е дали има повече място за избраното занимание. Ако няма, тя може да промени плана. Примерът не описва проведена сесия или доказан резултат.</p>
           </div>
         </div>
       </section>
@@ -366,11 +392,7 @@ export default function Home() {
                 <span className="font-medium">какви похвати използва текстът.</span>
               </h2>
               <div className="space-y-4 text-gray-600 leading-relaxed mb-8">
-                <p>
-                  Анализаторът открива езикови и структурни сигнали, които могат да бъдат свързани
-                  с емоционален натиск, внушение за спешност, поляризация, социален натиск и подтик
-                  към автоматична реакция.
-                </p>
+                <p>Анализаторът предлага възможни езикови сигнали за натиск и бърза реакция. Посочва конкретни откъси и обяснява защо ги отбелязва. Преценката остава твоя: една и съща дума може да има различна роля в различен текст.</p>
                 <p>
                   Резултатът е ориентировъчен и има образователна функция. Той не определя дали
                   съдържанието е вярно или невярно и не доказва намеренията на автора.
@@ -395,65 +417,13 @@ export default function Home() {
                   <div className="w-2 h-2 rounded-full bg-green-500/70"></div>
                   <span className="text-white/30 ml-2">Анализатор на съдържание</span>
                 </div>
-                <div className="space-y-3 text-white/60">
-                  <div className="flex justify-between">
-                    <span>Емоционален натиск</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-red-400/70 rounded-full" style={{ width: '78%' }}></div>
-                      </div>
-                      <span className="text-red-400/90">78%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Внушение за спешност</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-orange-400/70 rounded-full" style={{ width: '62%' }}></div>
-                      </div>
-                      <span className="text-orange-400/90">62%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Социален натиск</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-yellow-400/70 rounded-full" style={{ width: '45%' }}></div>
-                      </div>
-                      <span className="text-yellow-400/90">45%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Поляризиращ език</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-amber-400/70 rounded-full" style={{ width: '55%' }}></div>
-                      </div>
-                      <span className="text-amber-400/90">55%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Подтик към автоматична реакция</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-emerald-400/70 rounded-full" style={{ width: '40%' }}></div>
-                      </div>
-                      <span className="text-emerald-300/90">40%</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Общ сигнал за въздействие</span>
-                    <div className="flex items-center gap-2">
-                      <div className="w-24 h-1.5 bg-white/10 rounded-full overflow-hidden">
-                        <div className="h-full bg-red-500/80 rounded-full" style={{ width: '71%' }}></div>
-                      </div>
-                      <span className="text-red-400 font-medium">71 / 100</span>
-                    </div>
-                  </div>
+                <div className="space-y-5 text-white/70 leading-relaxed">
+                  <p className="text-white/40 uppercase tracking-widest">Учебен пример</p>
+                  <blockquote className="text-base text-white border-l border-white/30 pl-4">„Сподели веднага, преди да е късно.“</blockquote>
+                  <div><p className="text-white font-medium mb-1">Възможен сигнал за спешност</p><p>„Веднага“ и „преди да е късно“ приканват към бързо действие. Липсва обяснение какво налага този срок.</p></div>
+                  <div><p className="text-white font-medium mb-1">Какво да провериш</p><p>Кой е източникът? Има ли реална спешност и проверими основания? При предупреждение за опасност този език може да е уместен.</p></div>
                 </div>
-                <div className="mt-5 pt-4 border-t border-white/10 text-white/30 text-xs">
-                  Анализиран текст: 847 символа · ориентировъчна оценка · повишено наличие на сигнали
-                </div>
+                <p className="mt-5 pt-4 border-t border-white/10 text-white/40 leading-relaxed">Илюстрация за четене на текст. Не е резултат от изпълнен анализ и не дава оценка за истинност.</p>
               </div>
             </div>
           </div>
@@ -464,14 +434,8 @@ export default function Home() {
       <section className="py-12 md:py-24 px-4 md:px-6 bg-white">
         <div className="max-w-4xl mx-auto">
           <div className="border-l-2 border-gray-900 pl-8">
-            <blockquote className="text-2xl md:text-3xl font-light text-gray-900 leading-relaxed mb-6">
-              "Технологиите могат да свързват, информират и образоват. Същевременно начинът,
-              по който са проектирани, може да влияе върху вниманието ни. Разбирането на този
-              механизъм е първата стъпка към осъзнат избор."
-            </blockquote>
-            <cite className="text-sm text-gray-500 not-italic">
-              — Владимир Атанасов, автор
-            </cite>
+            <blockquote className="text-2xl md:text-3xl font-light text-gray-900 leading-relaxed mb-6">„Свободата, която ме интересува, трябва да издържа среща с умората, лошото настроение и непредвидения ден.“</blockquote>
+            <cite className="text-sm text-gray-500 not-italic">— Владимир Атанасов, „Петте степени“</cite>
           </div>
         </div>
       </section>
@@ -556,10 +520,7 @@ export default function Home() {
               <h3 className="text-xl font-medium text-gray-900 mb-2">
                 "Петте степени"
               </h3>
-              <p className="text-sm text-gray-600 leading-relaxed max-w-xl">
-                Авторски приложен труд за вниманието, дигиталните навици и петстепенния път от
-                автоматична реакция към по-осъзнато използване на технологиите.
-              </p>
+              <p className="text-sm text-gray-600 leading-relaxed max-w-xl">Книга за дигиталните навици, личната преценка и мястото на технологиите в ежедневието. С лични разкази, условни примери и упражнения, които можеш да приспособиш към себе си.</p>
             </div>
             <div className="flex-shrink-0 flex flex-col items-center gap-3">
               <div className="text-xl font-medium text-gray-900">€14,99</div>
@@ -579,3 +540,4 @@ export default function Home() {
     </div>
   );
 }
+

@@ -3,11 +3,11 @@ import Icon from '@/components/base/Icon';
 import { openPrivacySettings } from '@/lib/privacy';
 
 const steps = [
-  { path: '/step-1', title: 'Биологичният автоматизъм' },
-  { path: '/step-2', title: 'Алгоритмичният прицел' },
-  { path: '/step-3', title: 'Когнитивна свобода' },
-  { path: '/step-4', title: 'Завръщане и реинтеграция' },
-  { path: '/step-5', title: 'Съзнателна свобода' },
+  { path: '/step-1', title: 'Да забележиш навика' },
+  { path: '/step-2', title: 'Да разбереш средата' },
+  { path: '/step-3', title: 'Да опиташ промяна' },
+  { path: '/step-4', title: 'Да върнеш място за живота' },
+  { path: '/step-5', title: 'Да поддържаш свободата си' },
 ];
 
 export default function Footer() {
@@ -28,11 +28,7 @@ export default function Footer() {
                 <div className="text-xs mt-0.5">budimse.online</div>
               </div>
             </div>
-            <p className="text-xs leading-relaxed mb-4">
-              Център БУДИМ СЕ е независима гражданска и образователна инициатива за медийна и
-              дигитална грамотност. Не сме срещу технологиите. Работим за по-добро разбиране,
-              критично мислене и осъзнат избор.
-            </p>
+            <p className="text-xs leading-relaxed mb-4">БУДИМ СЕ е гражданска и образователна инициатива за медийна и дигитална грамотност. Проверяваме информацията, разглеждаме дигиталните навици и избираме разумни граници.</p>
             <div className="space-y-2 text-xs">
               <a
                 href="mailto:budimseonline@gmail.com"
@@ -98,3 +94,4 @@ export default function Footer() {
     </footer>
   );
 }
+

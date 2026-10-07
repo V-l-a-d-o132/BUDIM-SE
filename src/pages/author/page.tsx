@@ -9,13 +9,14 @@ export default function Author() {
     title: 'Владимир Атанасов — автор и създател на инициативата БУДИМ СЕ',
     description: 'Владимир Атанасов е автор и създател на инициативата БУДИМ СЕ. „Петте степени" е негова авторска образователна и интерпретативна рамка за вниманието и дигиталните навици.',
     canonical: '/author',
-    keywords: 'Владимир Атанасов, медийна грамотност, дигитална грамотност, БУДИМ СЕ, когнитивна свобода, дигитален суверенитет',
+    keywords: 'медийна грамотност, дигитална грамотност, дигитални навици, проверка на информация, Петте степени, БУДИМ СЕ',
     schemaType: 'AboutPage',
     breadcrumbs: [
       { name: 'Начало', url: 'https://budimse.online' },
       { name: 'Авторът — Владимир Атанасов', url: 'https://budimse.online/author' },
     ],
     schemaExtra: {
+      dateModified: '2026-10-07',
       about: {
         '@type': 'Person',
         name: 'Владимир Атанасов',
@@ -31,10 +32,8 @@ export default function Author() {
           'Медийна грамотност',
           'Дигитална грамотност',
           'Дигитален суверенитет',
-          'Когнитивна свобода',
+          'Дигитални навици',
           'Поведенчески дизайн',
-          'Инхибиторен контрол',
-          'Невропластичност',
         ],
         sameAs: ['https://budimse.online/author'],
         description: 'Практик и създател на инициативата БУДИМ СЕ. Автор на „Петте степени".',
@@ -129,11 +128,7 @@ export default function Author() {
                     дигитална автономност. „Петте степени" е негова авторска образователна и
                     интерпретативна рамка.
                   </p>
-                  <p className="text-gray-700 leading-relaxed mb-6">
-                    Рамката използва идеи, метафори и практически подходи, вдъхновени от медийната
-                    грамотност, когнитивната психология, поведенческия дизайн и невронауката. Тя не
-                    представлява медицинска, психологическа или терапевтична методика.
-                  </p>
+                  <p className="text-gray-700 leading-relaxed mb-6">Книгата съчетава лични разкази, условни примери, въпроси и упражнения. Източниците са посочени с обхвата и ограниченията им. Петте степени и практиката „Будим се“ са авторска образователна рамка.</p>
                   <p className="text-gray-700 leading-relaxed">
                     Проверима информация за биографията, опита и публикациите на автора ще бъде добавена
                     тук, когато е готова за публично споделяне.
@@ -173,47 +168,28 @@ export default function Author() {
                 <h3 className="text-base font-semibold text-gray-900 mb-3">
                   Намерение преди действие
                 </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Технологиите не са нито добри, нито лоши — качеството им се определя от намерението 
-                  зад употребата. На терен това е първото нещо, което се работи: разграничаване на 
-                  рефлекторното от волевото действие.
-                </p>
+                <p className="text-sm text-gray-600 leading-relaxed">Питаме какво търсим в този момент и какво получаваме. От значение са и дизайнът на услугата, съдържанието и условията около нас. Личното намерение е само част от картината.</p>
               </div>
               <div className="bg-white p-8 rounded-lg border border-gray-100">
                 <div className="w-8 h-8 flex items-center justify-center mb-4">
                   <Icon name="ri-tools-line" size={20} className="text-gray-900" />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-3">
-                  Само това, което работи
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Всяка концепция трябва да намери израз в конкретно действие. Ако не може да се 
-                  приложи в реална ситуация — не влиза в рамката. Без теория заради теорията.
-                </p>
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Проверка преди извод</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">Различаваме факт, предположение и личен опит. Четем източника и ограниченията му. Ако нови данни променят обяснението, трябва да променим и текста.</p>
               </div>
               <div className="bg-white p-8 rounded-lg border border-gray-100">
                 <div className="w-8 h-8 flex items-center justify-center mb-4">
                   <Icon name="ri-user-line" size={20} className="text-gray-900" />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-3">
-                  Работа с хора, не с аудитория
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Рамката е насочена към реални хора — ученици, родители и екипи. Фокусът е върху
-                  разбиране на механизмите и практически подходи, а не върху абстрактни категории.
-                </p>
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Внимание към човека</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">Един и същ съвет може да е полезен в една ситуация и неудобен в друга. Възрастта, работата, здравето, грижите и нуждата от подкрепа имат значение.</p>
               </div>
               <div className="bg-white p-8 rounded-lg border border-gray-100">
                 <div className="w-8 h-8 flex items-center justify-center mb-4">
                   <Icon name="ri-repeat-line" size={20} className="text-gray-900" />
                 </div>
-                <h3 className="text-base font-semibold text-gray-900 mb-3">
-                  Малки стъпки, трайна промяна
-                </h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Трайната промяна не идва от радикални решения. Идва от последователни, малки 
-                  поведенчески корекции — изградени върху разбиране на механизмите, не върху воля.
-                </p>
+                <h3 className="text-base font-semibold text-gray-900 mb-3">Малък опит и преглед</h3>
+                <p className="text-sm text-gray-600 leading-relaxed">Избираме изпълнима промяна, опитваме я и гледаме резултата. Можем да я запазим, да я коригираме или да се откажем от нея. Няма обещан срок за нов навик.</p>
               </div>
             </div>
           </div>
@@ -222,12 +198,8 @@ export default function Author() {
         {/* Quote Section */}
         <section className="py-12 px-4 md:py-20 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <blockquote className="text-2xl md:text-3xl font-light text-gray-900 leading-relaxed mb-8">
-              "Когнитивната свобода не означава да се откажем от технологиите. 
-              Тя означава да разберем достатъчно добре собственото си мислене, 
-              за да ги използваме по начин, който служи на живота ни — а не го формира."
-            </blockquote>
-            <cite className="text-gray-600">— Владимир Атанасов</cite>
+            <blockquote className="text-2xl md:text-3xl font-light text-gray-900 leading-relaxed mb-8">„Свободата, която ме интересува, трябва да издържа среща с умората, лошото настроение и непредвидения ден.“</blockquote>
+            <cite className="text-gray-600">— Владимир Атанасов, „Петте степени“</cite>
           </div>
         </section>
 
@@ -265,9 +237,7 @@ export default function Author() {
         {/* CTA Section */}
         <section className="py-10 md:py-16 px-4 md:px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-6">
-              Започнете пътя към когнитивна свобода
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-light text-gray-900 mb-6">Разгледайте въпросите от книгата</h2>
             <p className="text-lg text-gray-700 mb-8">
               Открийте петте степени от авторската рамка
             </p>
@@ -295,3 +265,4 @@ export default function Author() {
     </>
   );
 }
+
