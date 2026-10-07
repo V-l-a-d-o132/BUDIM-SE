@@ -1,4 +1,4 @@
-export const sourceReferences: Record<string,string> = {
+export const sourceReferences: Record<string, string> = {
   "https://pubmed.ncbi.nlm.nih.gov/18832647/": "Whitson & Galinsky (2008) — Lacking control increases illusory pattern perception",
   "https://pmc.ncbi.nlm.nih.gov/articles/PMC6650473/": "Rocher et al. (2019) — Re-identification in incomplete datasets",
   "https://ics.uci.edu/~gmark/chi08-mark.pdf": "Mark et al. (2008) — The Cost of Interrupted Work: More Speed and Stress",
@@ -31,5 +31,27 @@ export const sourceReferences: Record<string,string> = {
   "https://pmc.ncbi.nlm.nih.gov/articles/PMC10524518/": "Menon V (2023) — 20 years of the default mode network: A review and synthesis",
   "https://pmc.ncbi.nlm.nih.gov/articles/PMC4410786/": "Beaty RE (2014) — Creativity and the default network: A functional connectivity analysis of the creative brain at rest",
   "https://pmc.ncbi.nlm.nih.gov/articles/PMC5490683/": "Poerio GL (2017) — The role of the default mode network in component processes underlying the wandering mind",
-  "https://pmc.ncbi.nlm.nih.gov/articles/PMC6149296/": "Mangot AG (2018) — Prevalence and Pattern of Phantom Ringing and Phantom Vibration among Medical Interns and their Relationship with Smartphone Use and Perceived"
+  "https://pmc.ncbi.nlm.nih.gov/articles/PMC6149296/": "Mangot AG (2018) — Prevalence and Pattern of Phantom Ringing and Phantom Vibration among Medical Interns and their Relationship with Smartphone Use and Perceived",
+  "https://doi.org/10.1002/ejsp.674": "Lally et al. (2010) — How are habits formed: Modelling habit formation in the real world",
+  "https://doi.org/10.1037/amp0000059": "Berridge & Robinson (2016) — Liking, Wanting, and the Incentive-Sensitization Theory of Addiction",
+  "https://doi.org/10.1177/1745691616652873": "Hagger et al. (2016) — A Multilab Preregistered Replication of the Ego-Depletion Effect",
+  "https://doi.org/10.1080/15213269.2023.2286647": "Parry (2024) — Does the Mere Presence of a Smartphone Impact Cognitive Performance? A Meta-Analysis",
+  "https://www.gsb.stanford.edu/faculty-research/publications/how-do-social-media-feed-algorithms-affect-attitudes-behavior": "Guess et al. (2023) — How Do Social Media Feed Algorithms Affect Attitudes and Behavior in an Election Campaign?",
+  "https://doi.org/10.1126/science.aap9559": "Vosoughi, Roy & Aral (2018) — The spread of true and false news online",
+  "https://coag.gov/press-releases/weiser-announces-historic-settlement-with-meta/": "Colorado Attorney General: Historic settlement with Meta",
+  "https://oag.ca.gov/news/press-releases/attorney-general-bonta-secures-transformative-17-billion-settlement-meta": "California Attorney General: $17 billion settlement",
+  "https://oag.maryland.gov/News/pages/Attorney-General-Brown-Announces-Settlement-with-Big-Tech-Giant-Meta.aspx": "Maryland Attorney General: Settlement with Meta",
+  "https://coag.gov/app/uploads/2026/08/01-Exhibit-1-MDL-Consent-Judgment-FINAL-Settlment-Agreement-Fully-Executed.pdf": "Подписано споразумение и приложения, публикувани от Колорадо",
+  "https://ncdoj.gov/attorney-general-jeff-jacksons-landmark-meta-settlement-goes-into-effect/": "Attorney General Jeff Jackson’s Landmark Meta Settlement Goes into Effect",
+  "https://ncdoj.gov/meta-pays-more-than-45-million-in-first-payment-to-nc-from-attorney-general-jacksons-landmark-settlement/": "Meta Pays More Than $45 Million in First Payment to NC",
+  "https://doi.org/10.17226/27396": "National Academies (2024) — Social Media and Adolescent Health",
+  "https://www.judiciary.uk/prevention-of-future-death-reports/molly-russell-prevention-of-future-deaths-report/": "Официален доклад на коронера",
+  "https://mollyrosefoundation.org/mollys-inquest/": "Molly Rose Foundation: Molly’s Inquest",
+  "https://eur-lex.europa.eu/eli/reg/2022/2065": "EUR-Lex — Регламент (ЕС) 2022/2065, Акт за цифровите услуги",
+  "https://www.esafety.gov.au/about-us/industry-regulation/social-media-age-restrictions": "eSafety Commissioner — Social media age restrictions",
+  "https://about.fb.com/news/2024/11/introducing-recommendations-reset-instagram/": "Meta (2024) — Introducing Recommendations Reset on Instagram",
+  "https://support.google.com/chrome/answer/95464?hl=en-GB": "Google Chrome Help — Browse in Incognito mode",
+  "https://doi.org/10.1093/pnasnexus/pgaf017": "Castelo et al. (2025) — Blocking mobile internet on smartphones improves sustained attention, mental health, and subjective well-being",
+  "https://doi.org/10.1126/science.1250830": "Wilson et al. (2014) — Just think: The challenges of the disengaged mind",
+  "https://doi.org/10.1073/pnas.98.2.676": "Raichle et al. (2001) — A default mode of brain function"
 };

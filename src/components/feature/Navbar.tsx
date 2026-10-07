@@ -3,11 +3,11 @@ import { Link, useLocation } from 'react-router-dom';
 import Icon from '@/components/base/Icon';
 
 const steps = [
-  { path: '/step-1', number: '01', title: 'Биологичният автоматизъм', subtitle: 'Автопилотът и автоматичните реакции' },
-  { path: '/step-2', number: '02', title: 'Алгоритмичният прицел', subtitle: 'Емоции и икономика на вниманието' },
-  { path: '/step-3', number: '03', title: 'Когнитивна свобода', subtitle: 'Прекъсване на автоматичните цикли' },
-  { path: '/step-4', number: '04', title: 'Завръщане и реинтеграция', subtitle: 'Линеен фокус и живо присъствие' },
-  { path: '/step-5', number: '05', title: 'Съзнателна свобода', subtitle: 'Осъзнато използване' },
+  { path: '/step-1', number: '01', title: 'Да забележиш навика', subtitle: 'Кога и защо посягаме към телефона' },
+  { path: '/step-2', number: '02', title: 'Да разбереш средата', subtitle: 'Препоръки, известия и източници' },
+  { path: '/step-3', number: '03', title: 'Да опиташ промяна', subtitle: 'Една изпълнима промяна' },
+  { path: '/step-4', number: '04', title: 'Да върнеш място за живота', subtitle: 'Важните занимания и почивката' },
+  { path: '/step-5', number: '05', title: 'Да поддържаш свободата си', subtitle: 'Граници, които можем да преглеждаме' },
 ];
 
 export default function Navbar() {
