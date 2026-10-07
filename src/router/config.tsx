@@ -29,6 +29,7 @@ const AdminOrdersPage = lazy(() => import('../pages/admin/orders/page'));
 const AdminNewsPage = lazy(() => import('../pages/admin/news/page'));
 const AdminSocialPostsPage = lazy(() => import('../pages/admin/social-posts/page'));
 const AdminCommentsPage = lazy(() => import('../pages/admin/comments/page'));
+const AdminClassroomsPage = lazy(() => import('../pages/admin/classrooms/page'));
 
 const routes: RouteObject[] = [
   { path: '/', element: <HomePage /> },
@@ -59,7 +60,9 @@ const routes: RouteObject[] = [
   { path: '/admin/news', element: <AdminNewsPage /> },
   { path: '/admin/social-posts', element: <AdminSocialPostsPage /> },
   { path: '/admin/comments', element: <AdminCommentsPage /> },
+  { path: '/admin/classrooms', element: <AdminClassroomsPage /> },
   { path: '*', element: <NotFoundPage /> },
 ];
 
 export default routes;
+

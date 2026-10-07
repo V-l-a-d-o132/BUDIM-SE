@@ -29,6 +29,8 @@ const fillPart = async value => { for (const fieldset of container.querySelector
 const completeQuiz = async (value = '0') => { await click(button('Започни')); for (let part = 0; part < 5; part++) { await fillPart(value); await click(button(part < 4 ? 'Напред' : 'Виж резултата')); } };
 
 before(async () => {
+  // Node's BroadcastChannel would keep the DOM fixture process alive.
+  globalThis.BroadcastChannel = undefined;
   dom = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://fixture.test/analizator' });
   for (const key of ['window', 'document', 'HTMLElement', 'HTMLInputElement', 'HTMLTextAreaElement', 'Event', 'MouseEvent', 'Node', 'Storage']) globalThis[key] = dom.window[key];
   Object.defineProperty(globalThis, 'navigator', { configurable: true, value: dom.window.navigator });
@@ -153,3 +155,4 @@ test('an incomplete analysis is a retryable error, never an invented reassuring 
   assert.match(container.querySelector('[role="alert"]').textContent, /не може да бъде проверен/);
   assert.equal(container.querySelectorAll('section').length, 0); assert.equal(button('Анализирай').disabled, false);
 });
+

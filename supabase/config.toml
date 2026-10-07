@@ -1,5 +1,9 @@
 project_id = "plcmsgbsetpqwjkfmjzk"
 
+# Every operation checks a private 256-bit capability and current room grants.
+[functions.classroom]
+verify_jwt = false
+
 # These existing public functions validate requests in their bodies.
 # Admin functions additionally validate the user and current DB permission + MFA.
 [functions.admin-news]
@@ -42,3 +46,4 @@ verify_jwt = true
 verify_jwt = true
 [functions.ping]
 verify_jwt = true
+

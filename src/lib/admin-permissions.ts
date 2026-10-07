@@ -5,10 +5,11 @@ export function requiredAdminPermission(path: string): AdminPermission {
   if (path.startsWith('/admin/orders')) return 'orders';
   if (path.startsWith('/admin/inquiries')) return 'inquiries';
   if (path.startsWith('/admin/news')) return 'news';
-  if (path.startsWith('/admin/social-posts') || path.startsWith('/admin/comments')) return 'moderate';
+  if (path.startsWith('/admin/social-posts') || path.startsWith('/admin/comments') || path.startsWith('/admin/classrooms')) return 'moderate';
   return 'access';
 }
 
 export function validAdminRole(role: unknown): role is AdminRole {
   return role === 'super_admin' || role === 'editor' || role === 'moderator';
 }
+

@@ -8,6 +8,7 @@ const navItems = [
   { path: '/admin/inquiries', label: 'Запитвания', icon: 'ri-mail-line' },
   { path: '/admin/orders', label: 'Поръчки', icon: 'ri-shopping-bag-line' },
   { path: '/admin/news', label: 'Новини', icon: 'ri-newspaper-line' },
+  { path: '/admin/classrooms', label: 'Учебни занимания', icon: 'ri-team-line' },
   { path: '/admin/social-posts', label: 'Игрови постове', icon: 'ri-gamepad-line' },
   { path: '/admin/comments', label: 'Коментари', icon: 'ri-chat-1-line' },
 ];
@@ -116,3 +117,4 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
     </div>
   );
 }
+

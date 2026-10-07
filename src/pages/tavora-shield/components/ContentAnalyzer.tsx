@@ -4,6 +4,7 @@ import ReCAPTCHA from 'react-google-recaptcha';
 import Icon from '@/components/base/Icon';
 import { RECAPTCHA_SITE_KEY } from '@/components/base/RecaptchaBadge';
 import { checkedLanguageAnalysis, highlightedExcerpt, type LanguageAnalysis } from '@/lib/content-analysis-result';
+import { existingLabToken } from '@/lib/classroom';
 
 const SUPABASE_URL = import.meta.env.VITE_PUBLIC_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_PUBLIC_SUPABASE_ANON_KEY;
@@ -57,7 +58,7 @@ export default function ContentAnalyzer() {
       const response = await fetch(`${SUPABASE_URL}/functions/v1/tavora-content-analyzer`, {
         method: 'POST', signal: AbortSignal.any([controller.current.signal, AbortSignal.timeout(45000)]),
         headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
-        body: JSON.stringify({ text: excerpt, recaptcha_token: recaptchaToken }),
+        body: JSON.stringify({ text: excerpt, recaptcha_token: recaptchaToken, access_token: existingLabToken() }),
       });
       const data: unknown = await response.json();
       if (!response.ok) {
@@ -111,3 +112,4 @@ export default function ContentAnalyzer() {
     </div>
   </div>;
 }
+
