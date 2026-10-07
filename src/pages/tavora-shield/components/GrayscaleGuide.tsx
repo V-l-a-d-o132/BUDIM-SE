@@ -5,6 +5,7 @@ import { AppLogo } from './focus/Visuals';
 import { demoApps, settingDefinitions, initialFocusSettings, appIsPaused, visibleDemoBadge,
   type AppId, type FocusSettings, type Platform, type SettingKey } from './focus/model';
 import './focus/focus.css';
+import { useClassroom } from './classroom/ClassroomContext';
 
 type Instructions = { title: string; steps: string[]; note: string; url: string; source: string };
 const guides: Record<Platform, Record<SettingKey, Instructions>> = {
@@ -23,22 +24,23 @@ const guides: Record<Platform, Record<SettingKey, Instructions>> = {
       url: 'https://support.apple.com/guide/iphone/set-schedules-and-time-allowances-iphb0c7313c9/27/ios/27', source: 'Apple: Screen Time' },
   },
   android: {
-    grayscale: { title: 'Сиви цветове в Android',
-      steps: ['Отвори Settings → Digital Wellbeing & parental controls → Bedtime mode, ако тези настройки са налични.', 'На Pixel с Android 13+ отвори Customize → Screen options at bedtime → Grayscale.', 'Избери кога да се включва режимът. При друг производител използвай търсенето в Settings за „Grayscale“ или „Color correction“.'],
-      note: 'Това е примерен път за Pixel. Имената и наличните опции се различават според версията на Android и производителя.',
-      url: 'https://support.google.com/pixelphone/answer/7169926?hl=en', source: 'Google: цветове на екрана' },
+    grayscale: { title: 'Сиви цветове на Samsung Galaxy',
+      steps: ['Отвори Settings → Modes and Routines → Sleep.', 'В настройките на режима добави Grayscale и избери кога да се включва.', 'Активирай режима и провери цветовете. Do not disturb се настройва отделно в Stay focused.'],
+      note: 'Пътят е за Samsung Galaxy. Опциите и преводът на менютата зависят от модела и версията на One UI.',
+      url: 'https://www.samsung.com/us/support/answer/ANS10001357/', source: 'Samsung: Digital Wellbeing и Sleep' },
     quietNotifications: { title: 'Известия и режими в Android',
       steps: ['В Settings потърси Modes, Do Not Disturb или „Не безпокойте“.', 'Избери кои хора, приложения и типове известия да се допускат.', 'Провери графика, визуалните известия и значките. Те може да имат отделни настройки в Notifications или в стартовия екран.'],
       note: 'Focus mode в Digital Wellbeing поставя избрани приложения на пауза. Do Not Disturb управлява известията; двата режима имат различна функция.',
       url: 'https://support.google.com/android/answer/9346420', source: 'Google: Digital Wellbeing' },
     pauseSocial: { title: 'Пауза на приложения в Android',
-      steps: ['Отвори Settings → Digital Wellbeing & parental controls → Focus mode.', 'Избери приложенията за пауза и активирай режима или графика.', 'За дневна продължителност използвай App timers. Провери кои приложения са ти нужни по време на паузата.'],
+      steps: ['Отвори Settings → Digital Wellbeing → App timers.', 'Избери приложенията и добави график или времеви лимит.', 'В Modes and Routines можеш да създадеш отделен режим. Провери ограниченията и нужните ти изключения.'],
       note: 'Наличността и имената зависят от устройството. Пауза, дневен лимит и заглушаване на известия са отделни настройки.',
-      url: 'https://support.google.com/android/answer/9346420', source: 'Google: Focus mode и таймери' },
+      url: 'https://www.samsung.com/us/support/answer/ANS10001357/', source: 'Samsung: таймери за приложения' },
   },
 };
 
 export default function GrayscaleGuide() {
+  const lab = useClassroom();
   const [platform, setPlatform] = useState<Platform>('ios');
   const [settings, setSettings] = useState<FocusSettings>({ ...initialFocusSettings });
   const [openApp, setOpenApp] = useState<AppId | null>(null);
@@ -46,7 +48,7 @@ export default function GrayscaleGuide() {
   const [guideKey, setGuideKey] = useState<SettingKey>('grayscale');
   const [notificationShown, setNotificationShown] = useState(false);
   const guide = guides[platform][guideKey];
-  const platformName = platform === 'ios' ? 'iOS' : 'Android';
+  const platformName = platform === 'ios' ? 'iPhone · iOS' : 'Samsung Galaxy · Android';
   const paused = openApp !== null && appIsPaused(openApp, settings);
   const toggle = (key: SettingKey) => {
     setSettings(previous => ({ ...previous, [key]: !previous[key] }));
@@ -58,7 +60,7 @@ export default function GrayscaleGuide() {
       <p className="text-xs tracking-widest uppercase text-gray-500 mb-3">Интерактивен учебен прототип</p>
       <h3 className="text-2xl font-medium text-gray-900 mb-3">Режим на фокус</h3>
       <p className="text-sm text-gray-600 leading-relaxed">Изпробвай как изглеждат три отделни настройки: сиви цветове, тихи известия и пауза на приложения. Отвори приложение и сравни същия екран, като променяш по една настройка.</p>
-      <p className="text-xs text-gray-500 leading-relaxed mt-3">Прототипите са локални имитации с примерни данни. Подредбите са опростени и може да се различават от реалните приложения според версия, регион и устройство. Нито един бутон тук не променя настройките на телефона ти.</p>
+      <p className="text-xs text-gray-500 leading-relaxed mt-3">{lab ? 'Публикуването, реакциите и разговорите са между участниците в заниманието. Изгледите следват познатите приложения на iPhone и Samsung; отделни менюта може да се различават по версия. Настройките за фокус променят само учебния телефон.' : 'Прототипите са локални имитации с примерни данни. Подредбите са опростени и може да се различават от реалните приложения според версия, регион и устройство. Нито един бутон тук не променя настройките на телефона ти.'}</p>
     </div>
     <div className="grid lg:grid-cols-[minmax(0,390px)_minmax(0,1fr)] gap-8 lg:gap-12 items-start">
       <div className="min-w-0">
@@ -83,7 +85,7 @@ export default function GrayscaleGuide() {
               {openApp ? paused ? <div className="demo-paused"><AppLogo id={openApp} /><h4>Приложението е на пауза</h4><p>Пауза само в тази демонстрация. Цветният и сивият режим не променят това ограничение.</p><button type="button" className="demo-text-button" onClick={() => toggle('pauseSocial')}>Разреши приложенията в демото</button><button type="button" className="demo-text-button secondary" onClick={() => setOpenApp(null)}>Към началния екран</button></div> : <AppDemo key={openApp} appId={openApp} platform={platform} settings={settings} onSettingChange={toggle} onDarkChange={setAppDark} /> : <div className="demo-home">
                 <div className="demo-home-widgets"><div className="demo-date-widget"><span>Вторник</span><strong>6</strong><span>Октомври · демо</span></div><div className="demo-weather-widget"><span className="demo-weather-sun" aria-hidden="true" /><strong>21°</strong><span>Примерна прогноза</span></div></div>
                 <div className="demo-app-grid">{demoApps.map(app => {
-                  const badge = visibleDemoBadge(app.id, settings);
+                  const badge = lab ? (settings.quietNotifications ? 0 : lab.state.notifications.filter(item => item.app_id === app.id && !item.read).length) : visibleDemoBadge(app.id, settings);
                   return <button type="button" key={app.id} aria-label={`Отвори демото на ${app.name}`} onClick={() => setOpenApp(app.id)} className={appIsPaused(app.id, settings) ? 'app-paused' : ''}><span className="demo-home-icon"><AppLogo id={app.id} platform={platform} />{badge > 0 && <span className="demo-badge" aria-hidden="true">{badge}</span>}{appIsPaused(app.id, settings) && <span className="demo-paused-badge" aria-hidden="true"><Icon name="ri-time-line" size={12} /></span>}</span><span>{app.name}</span></button>;
                 })}</div>
                 <span className="demo-home-search"><Icon name="ri-search-line" size={12} aria-hidden="true" />{platform === 'ios' ? 'Начален екран' : 'Учебен прототип'}</span>
@@ -100,6 +102,7 @@ export default function GrayscaleGuide() {
         <h4 className="text-base font-medium text-gray-900 mb-4">Промени една настройка</h4>
         <div className="space-y-3">{settingDefinitions.map(setting => <button type="button" key={setting.id} role="switch" aria-checked={settings[setting.id]} aria-label={setting.title} onClick={() => toggle(setting.id)} className="w-full flex items-start gap-3 p-4 text-left bg-white border border-gray-200 rounded-xl hover:border-gray-400"><span className="p-2 bg-gray-100 rounded-lg text-gray-700"><Icon name={setting.icon} size={19} aria-hidden="true" /></span><span className="flex-1"><span className="block text-sm font-medium text-gray-900">{setting.title}</span><span className="block text-xs text-gray-500 leading-relaxed mt-1">{setting.description}</span></span><span className={`demo-switch ${settings[setting.id] ? 'on' : ''}`} aria-hidden="true" /></button>)}</div>
         <div className="flex flex-wrap gap-2 my-4"><button type="button" onClick={() => setNotificationShown(true)} className="text-xs px-4 py-3 border border-gray-200 rounded-full text-gray-700 hover:bg-gray-50">Покажи пример за известие</button><button type="button" onClick={() => { setSettings({ ...initialFocusSettings }); setNotificationShown(false); }} className="text-xs px-4 py-3 text-gray-600 underline underline-offset-4">Нулирай настройките</button></div>
+        {lab && <div className="bg-white border border-gray-200 rounded-xl p-5 mb-4"><h4 className="text-sm font-medium mb-2">{lab.state.access?.room.name}</h4><p className="text-xs text-gray-600 leading-relaxed">Лентите са подредени {lab.state.access?.room.sort_mode === 'reactions' ? 'по общ брой реакции, коментари и споделяния' : 'по време на публикуване'}. Това е видимо учебно правило. Броячите показват действията в заниманието; показването на екрана не доказва, че текстът е прочетен.</p><button type="button" onClick={() => { void lab.refresh(); }} className="mt-3 text-xs underline">Обнови заниманието</button></div>}
         <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6"><h4 className="text-sm font-medium text-gray-900 mb-2">Какво показва сравнението</h4><p className="text-sm text-gray-600 leading-relaxed">Сивият филтър променя цветовете, но запазва текста, подредбата и съдържанието. Ефектът върху вниманието и използването е индивидуален. Можеш да наблюдаваш времето и прекъсванията си при една промяна, без да очакваш гарантиран резултат.</p></div>
         <section className="border border-gray-200 rounded-xl p-5">
           <h4 className="text-sm font-medium text-gray-900 mb-4">На истинското устройство</h4>
@@ -113,3 +116,4 @@ export default function GrayscaleGuide() {
     </div>
   </div>;
 }
+

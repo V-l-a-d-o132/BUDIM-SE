@@ -8,6 +8,8 @@ import Footer from '@/components/feature/Footer';
 import { usePageSeo } from '@/hooks/usePageSeo';
 import Icon from '@/components/base/Icon';
 import RecaptchaBadge from '@/components/base/RecaptchaBadge';
+import { ClassroomProvider } from './components/classroom/ClassroomContext';
+import { ClassroomAccess, ClassroomGate } from './components/classroom/ClassroomAccess';
 
 type Module = 'analyzer' | 'grayscale' | 'assessment';
 
@@ -33,8 +35,8 @@ const modules: { id: Module; label: string; icon: string; description: string }[
 ];
 
 export default function TavoraShield() {
-  const [activeModule, setActiveModule] = useState<Module>('analyzer');
-  const [visitedModules, setVisitedModules] = useState<Module[]>(['analyzer']);
+  const [activeModule, setActiveModule] = useState<Module>('grayscale');
+  const [visitedModules, setVisitedModules] = useState<Module[]>(['grayscale']);
   const selectModule = (module: Module) => {
     setActiveModule(module);
     setVisitedModules(previous => previous.includes(module) ? previous : [...previous, module]);
@@ -70,7 +72,7 @@ export default function TavoraShield() {
   });
 
   return (
-    <div className="min-h-screen bg-white">
+    <ClassroomProvider><div className="min-h-screen bg-white">
       <Navbar />
 
       {/* Hero */}
@@ -122,8 +124,9 @@ export default function TavoraShield() {
       {/* Active module */}
       <section className="pb-12 px-4 md:pb-20 md:px-6">
         <div className="max-w-6xl mx-auto">
-          {visitedModules.includes('analyzer') && <div id="module-analyzer" hidden={activeModule !== 'analyzer'}><ContentAnalyzer /></div>}
-          {visitedModules.includes('grayscale') && <div id="module-grayscale" hidden={activeModule !== 'grayscale'}><GrayscaleGuide /></div>}
+          <ClassroomAccess />
+          {visitedModules.includes('analyzer') && <div id="module-analyzer" hidden={activeModule !== 'analyzer'}><ClassroomGate scope="analyzer"><ContentAnalyzer /></ClassroomGate></div>}
+          {visitedModules.includes('grayscale') && <div id="module-grayscale" hidden={activeModule !== 'grayscale'}><ClassroomGate scope="simulators"><GrayscaleGuide /></ClassroomGate></div>}
           {visitedModules.includes('assessment') && <div id="module-assessment" hidden={activeModule !== 'assessment'}><SelfAssessment /></div>}
         </div>
       </section>
@@ -169,6 +172,7 @@ export default function TavoraShield() {
       </section>
 
       <Footer />
-    </div>
+    </div></ClassroomProvider>
   );
 }
+

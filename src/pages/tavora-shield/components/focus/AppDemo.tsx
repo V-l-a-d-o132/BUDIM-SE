@@ -2,6 +2,10 @@ import { useEffect, useRef, useState, type ReactNode } from 'react';
 import Icon from '@/components/base/Icon';
 import { AppLogo, Avatar, Scene } from './Visuals';
 import { demoApps, settingDefinitions, type AppId, type FocusSettings, type Platform, type SettingKey } from './model';
+import { useClassroom } from '../classroom/ClassroomContext';
+import NativeApp from '../classroom/NativeApp';
+import NativeUtilities from '../classroom/NativeUtilities';
+import type { LabApp } from '@/lib/classroom';
 
 type Tab = { id: string; label: string; icon: string };
 const tabs: Partial<Record<AppId, Tab[]>> = {
@@ -47,7 +51,15 @@ function PhotoGrid({ onSelect, count = 9 }: { onSelect: (index: number) => void;
   return <div className="demo-photo-grid">{Array.from({ length: count }, (_, index) => <button type="button" key={index} onClick={() => onSelect(index)} aria-label={`Отвори примерна снимка ${index + 1}`}><Scene variant={index} /></button>)}</div>;
 }
 
-export default function AppDemo({ appId, platform, settings, onSettingChange, onDarkChange }: { appId: AppId; platform: Platform; settings: FocusSettings; onSettingChange: (key: SettingKey) => void; onDarkChange: (dark: boolean) => void }) {
+type AppProps = { appId: AppId; platform: Platform; settings: FocusSettings; onSettingChange: (key: SettingKey) => void; onDarkChange: (dark: boolean) => void };
+export default function AppDemo(props: AppProps) {
+  const lab=useClassroom();
+  if(lab) return ['instagram','tiktok','facebook','youtube','x','snapchat','whatsapp','gmail'].includes(props.appId)
+    ? <NativeApp {...props} appId={props.appId as LabApp}/>
+    : <NativeUtilities {...props}/>;
+  return <LocalAppDemo {...props}/>;
+}
+function LocalAppDemo({ appId, platform, settings, onSettingChange, onDarkChange }: AppProps) {
   const [selectedTab, setActiveTab] = useState(appId === 'snapchat' ? 'camera' : 'home');
   const [liked, setLiked] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -152,3 +164,4 @@ export default function AppDemo({ appId, platform, settings, onSettingChange, on
     {notice && <div ref={noticeRef} tabIndex={-1} onKeyDown={event => { if (event.key === 'Escape') setNotice(null); }} className="demo-modal" role="dialog" aria-modal="false" aria-label={notice.title}><div className="demo-modal-header"><strong>{notice.title}</strong><SmallButton label="Затвори примерния екран" icon="ri-close-line" onClick={() => setNotice(null)} /></div><div className="demo-modal-body">{notice.content}</div><button type="button" onClick={() => setNotice(null)} className="demo-text-button">Назад към приложението</button></div>}
   </div>;
 }
+

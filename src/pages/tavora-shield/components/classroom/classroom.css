@@ -1,0 +1,121 @@
+.lab-native button:focus-visible,.lab-native textarea:focus-visible,.lab-native input:focus-visible { outline:2px solid #408aff; outline-offset:2px; }
+.lab-native { min-width:0; }
+.lab-native .demo-app-header { padding:3px 7px; min-height:54px; }
+.lab-native .demo-app-header .demo-avatar { width:25px; height:25px; font-size:11px; }
+.lab-native .demo-app-header strong { font-size:15px; }
+.lab-native .demo-app-header .demo-icon-button { min-width:31px; }
+.lab-native .demo-instagram-heading { font-size:20px; }
+.lab-native .demo-facebook-heading { font-size:21px; }
+.lab-primary { display:block; background:#1877f2; color:#fff; border:0; border-radius:9px; padding:10px 16px; font-size:12px; font-weight:650; margin:10px auto; min-height:40px; }
+.lab-primary:disabled,.lab-native button:disabled { opacity:.45; cursor:default; }
+.lab-empty { padding:30px 18px; text-align:center; color:#727781; font-size:12px; line-height:1.6; }
+.lab-muted { color:#737882; font-size:11px; line-height:1.55; padding:10px 14px; }
+.lab-error { color:#b91c1c; background:#fff1f2; font-size:11px; line-height:1.5; padding:9px 12px; }
+.lab-post-card { border-bottom:1px solid #e7e8ec; position:relative; padding-bottom:8px; background:#fff; }
+.lab-post-copy { padding:8px 13px; font-size:13px; line-height:1.55; overflow-wrap:anywhere; white-space:pre-wrap; }
+.lab-post-media { width:100%; max-height:440px; object-fit:contain; display:block; background:#f2f3f5; }
+.demo-app-instagram .lab-post-media { aspect-ratio:1; object-fit:cover; }
+.demo-app-youtube .lab-post-media { aspect-ratio:16/9; }
+.lab-actions { display:flex; align-items:center; padding:3px 7px; gap:3px; }
+.lab-actions .demo-icon-button { gap:4px; font-size:11px; min-width:45px; min-height:40px; }
+.lab-actions .demo-icon-button:last-child { margin-left:auto; }
+.lab-views { display:block; padding:0 14px; font-size:9px; color:#767b86; }
+.lab-facebook-reactions { padding:2px 12px 4px; color:#6b7280; font-size:10px; }
+.lab-facebook-reactions>div { display:flex; gap:8px; border-radius:30px; box-shadow:0 3px 15px #0002; background:white; padding:8px; }
+.lab-facebook-reactions>div>button { font-size:22px; min-width:32px; }
+.lab-sheet { position:absolute; inset:0; z-index:20; display:flex; flex-direction:column; background:#fff; color:#171717; overflow:hidden; }
+.lab-sheet>header { display:flex; align-items:center; min-height:53px; gap:10px; padding:5px 12px; border-bottom:1px solid #e7e8ec; flex-shrink:0; }
+.lab-sheet>header>button { width:38px; min-height:40px; }
+.lab-sheet-body { flex:1; overflow-y:auto; min-height:0; overscroll-behavior:contain; }
+.lab-compose-form { padding:15px; }
+.lab-compose-form>label { display:block; font-size:12px; }
+.lab-compose-form textarea { display:block; width:100%; min-height:145px; padding:12px 0; resize:vertical; outline:none; line-height:1.6; font-size:13px; color:#171717; }
+.lab-compose-form>small { display:block; text-align:right; font-size:10px; color:#757b84; }
+.lab-file-label { border:1px solid #e6e8ec; padding:10px; border-radius:8px; margin:13px 0; }
+.lab-file-label input { display:block; width:100%; font-size:10px; margin-top:8px; }
+.lab-compose-form .lab-muted { padding:6px 0; }
+.lab-compose-form .lab-primary { width:100%; }
+.lab-media-preview { border:1px solid #e7e8ec; border-radius:10px; overflow:hidden; }
+.lab-media-preview img,.lab-media-preview video { width:100%; max-height:230px; object-fit:contain; }
+.lab-media-preview button { font-size:11px; padding:10px; color:#7d2626; }
+.lab-comments { display:flex; flex-direction:column; min-height:100%; }
+.lab-comments>div { flex:1; }
+.lab-comments article { display:flex; gap:10px; padding:14px 12px; font-size:12px; }
+.lab-comments article>div { flex:1; min-width:0; }
+.lab-comments p { line-height:1.5; white-space:pre-wrap; overflow-wrap:anywhere; }
+.lab-comments small { color:#a07825; font-size:10px; }
+.lab-comments form { position:sticky; bottom:0; display:flex; gap:7px; padding:10px; border-top:1px solid #e7e8ec; background:#fff; }
+.lab-comments textarea { flex:1; min-width:0; min-height:42px; max-height:100px; font-size:12px; border:1px solid #ddd; border-radius:15px; padding:9px 11px; }
+.lab-comments form button { color:#1877f2; font-size:11px; padding:5px; }
+.lab-feed-composer { display:flex; align-items:center; gap:10px; padding:10px; width:100%; font-size:12px; border-bottom:5px solid #edeef0; }
+.lab-feed-composer>span { flex:1; border:1px solid #d9dde3; border-radius:25px; padding:10px; text-align:left; color:#727781; }
+.lab-people>div { display:flex; align-items:center; border-bottom:1px solid #edf0f3; padding-right:10px; gap:4px; }
+.lab-contact { display:flex; align-items:center; gap:12px; width:100%; padding:13px 12px; text-align:left; min-width:0; }
+.lab-contact>span { flex:1; min-width:0; }
+.lab-contact strong { display:block; font-size:13px; }
+.lab-contact small { display:block; font-size:11px; color:#787e87; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-top:4px; max-width:230px; }
+.lab-follow { background:#1877f2; color:white; border-radius:7px; padding:8px 10px; font-size:10px; flex-shrink:0; }
+.lab-follow[aria-pressed=true] { background:#edf0f3; color:#333; }
+.lab-notification { display:flex; align-items:center; gap:10px; padding:13px; font-size:12px; border-bottom:1px solid #eee; }
+.lab-notification small { display:block; color:#767b86; font-size:10px; margin-top:5px; }
+.lab-notification-button { position:relative; }
+.lab-notification-button>span { position:absolute; top:0; right:0; background:#e23d59; color:#fff; border-radius:15px; min-width:15px; font-size:9px; line-height:15px; }
+.lab-floating-create { position:absolute; bottom:80px; right:15px; width:50px; height:50px; border-radius:50%; background:#1d9bf0; color:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 5px 15px #0002; }
+.lab-reel { height:100%; min-height:0; position:relative; background:#07080c; overflow:hidden; }
+.lab-reel-top { position:absolute; z-index:2; top:6px; left:0; right:0; display:flex; justify-content:center; align-items:center; gap:16px; min-height:40px; font-size:12px; color:#ddd; }
+.lab-reel-top>button[aria-pressed=true] { color:white; font-weight:700; border-bottom:2px solid white; }
+.lab-clip-card { height:100%; width:100%; background:linear-gradient(145deg,#1f2937,#111827); color:#fff; padding:0; border:0; }
+.lab-clip-card .lab-post-media { width:100%; height:100%; max-height:none; object-fit:contain; background:#08080b; }
+.lab-clip-caption { position:absolute; left:12px; right:65px; bottom:40px; white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; line-height:1.5; text-shadow:0 1px 4px #000; background:linear-gradient(transparent,#0007); padding:10px 0; }
+.lab-clip-caption p { margin-top:7px; max-height:160px; overflow:auto; }
+.lab-clip-caption small { display:block; font-size:10px; margin-top:6px; opacity:.7; }
+.lab-clip-actions { position:absolute; right:8px; bottom:65px; display:flex; flex-direction:column; gap:7px; }
+.lab-clip-actions .demo-icon-button { display:flex; flex-direction:column; min-width:39px; font-size:10px; color:#fff; gap:5px; background:#0002; }
+.lab-clip-actions .demo-icon-button[aria-pressed=true] { color:#ff4f79; }
+.lab-reel-pagination { position:absolute; bottom:4px; right:7px; display:flex; align-items:center; gap:5px; color:#ddd; font-size:9px; }
+.lab-reel-pagination button { padding:7px; }
+.lab-conversation { display:flex; flex-direction:column; min-height:100%; font-size:12px; }
+.lab-conversation>header { display:flex; align-items:center; gap:10px; padding:10px; position:sticky; top:0; background:#fff; z-index:1; }
+.lab-conversation>header>button { padding:6px; }
+.lab-chat-scroll { flex:1; padding:15px 10px; }
+.lab-chat-scroll>article { width:85%; max-width:270px; padding:9px 11px; background:#f0f2f5; border-radius:12px; margin-bottom:10px; }
+.lab-chat-scroll>article.own { margin-left:auto; background:#daf1ff; }
+.lab-chat-scroll strong { font-size:10px; }
+.lab-chat-scroll p { line-height:1.5; margin-top:5px; white-space:pre-wrap; overflow-wrap:anywhere; }
+.lab-chat-scroll small { display:block; text-align:right; color:#737882; font-size:9px; margin-top:4px; }
+.whatsapp-chat .lab-chat-scroll { background:radial-gradient(circle at 20% 30%,#c4bfb322 0,transparent 40%),#eee7de; }
+.whatsapp-chat .lab-chat-scroll>article.own { background:#d9fdd3; }
+.lab-conversation form { position:sticky; bottom:0; background:#fff; padding:10px; }
+.lab-conversation form>div { display:flex; align-items:center; gap:8px; }
+.lab-conversation textarea { flex:1; min-width:0; padding:10px 13px; min-height:42px; max-height:100px; border-radius:23px; background:#f0f2f5; font-size:12px; }
+.lab-conversation form button { min-width:38px; min-height:38px; color:#1877f2; }
+.lab-conversation form>input { width:100%; border-bottom:1px solid #e0e0e0; padding:10px; margin-bottom:9px; }
+.lab-camera-screen { height:100%; background:#08090c; color:#fff; display:flex; align-items:center; flex-direction:column; padding:15px; position:relative; }
+.lab-camera-screen>div:first-child { flex:1; display:flex; align-items:center; flex-direction:column; justify-content:center; gap:20px; text-align:center; font-size:12px; line-height:1.6; color:#adb5c3; }
+.lab-camera-screen>.demo-shutter { flex-shrink:0; margin:10px 0 20px; }
+.lab-camera-screen .lab-sheet { color:#171717; }
+.lab-system-settings { padding:12px 14px 30px; background:#f2f2f7; min-height:100%; }
+.lab-system-settings h2 { font-size:27px; font-weight:700; padding:16px 0; }
+.lab-system-settings>button { width:100%; display:flex; align-items:center; text-align:left; gap:10px; background:#fff; padding:16px 12px; border-bottom:1px solid #eee; font-size:12px; }
+.lab-system-settings>button strong { flex:1; }
+.lab-system-settings>button:first-of-type { border-radius:13px 13px 0 0; }
+.lab-system-settings>button:last-of-type { border-radius:0 0 13px 13px; }
+.lab-system-settings .lab-back { background:transparent; color:#1877f2; padding:5px 0; border:0; }
+.lab-settings-account { display:flex; align-items:center; gap:13px; border-radius:13px; background:#fff; padding:17px 13px; font-weight:600; margin-bottom:25px; }
+.lab-settings-account small { display:block; margin-top:5px; font-weight:400; font-size:10px; color:#747982; }
+.android .lab-system-settings h2 { font-size:32px; font-weight:500; padding-top:30px; }
+.android .lab-system-settings { background:#f6f6f6; }
+.android .demo-home-icon .demo-logo { border-radius:17px; }
+.android .demo-app-nav { min-height:62px; }
+.lab-browser-bar { display:flex; align-items:center; gap:13px; padding:12px; background:#f1f3f4; }
+.lab-browser-bar span { display:flex; align-items:center; gap:7px; font-size:10px; color:#6b7280; }
+.lab-browser .demo-google-word { font-size:34px; padding:30px 8px 15px; }
+.lab-search-result { display:block; width:100%; padding:14px; border-bottom:1px solid #eee; text-align:left; font-size:12px; }
+.lab-search-result strong { display:block; font-weight:500; color:#2253aa; margin:6px 0; }
+.lab-search-result small { font-size:10px; color:#787e86; }
+.lab-search-result p { line-height:1.5; overflow-wrap:anywhere; }
+.lab-destination { display:flex; align-items:center; gap:10px; padding:12px 15px 0; font-size:12px; }
+.lab-destination select { border:1px solid #ddd; padding:9px; border-radius:8px; flex:1; }
+.lab-native .demo-photo-grid button { aspect-ratio:1; overflow:hidden; }
+.lab-native .demo-photo-grid .lab-post-media { width:100%; height:100%; object-fit:cover; }
+@media(prefers-reduced-motion:reduce) { .lab-native * { scroll-behavior:auto; } }
