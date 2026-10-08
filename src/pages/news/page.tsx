@@ -88,7 +88,7 @@ export function NewsDetailPage() {
     {loading ? <div className="site-container site-section"><p role="status">Зареждане на материала…</p></div> : loadError ? <div role="alert" className="site-container site-section"><h1>Материалът временно не се зарежда.</h1><p className="mt-5">Провери връзката или опитай отново след малко.</p><button className="button-secondary mt-5" onClick={() => setRetry(n => n + 1)}>Опитай отново</button></div> : current ? <>
       <PageIntro eyebrow="Материали" title={current.title}><p className="!text-sm"><Link to="/author" className="underline">Владимир Атанасов</Link> · Публикувано: <time dateTime={current.created_at}>{date(current.created_at)}</time>{current.updated_at && <> · Обновено: <time dateTime={current.updated_at}>{date(current.updated_at)}</time></>}</p></PageIntro>
       <div className="site-container reading-layout"><article className="prose-content">
-        {current.image_url && <img src={current.image_url} alt="" width={800} height={420} decoding="async" className="w-full max-h-80 object-cover rounded-lg mb-8" />}
+        {current.image_url && <img src={current.image_url} alt="" width={800} height={420} decoding="async" className="w-full max-h-80 object-cover rounded-sm mb-8" />}
         {current.body.split(/\n+/).filter(line => line.trim()).map((line, index) => {
           const heading = line.match(/^## (.*)$|^<strong>([^<>]+)<\/strong>$/);
           return heading ? <h2 key={index}>{heading[1] || heading[2]}</h2> : <p key={index} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(line, { ALLOWED_TAGS: ['a', 'b', 'strong', 'i', 'em', 'br'], ALLOWED_ATTR: ['href', 'title'] }) }} />;

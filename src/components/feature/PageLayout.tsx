@@ -10,6 +10,6 @@ export default function PageLayout({ children, className = '' }: { children: Rea
 export function PageIntro({ eyebrow, title, children }: { eyebrow: string; title: string; children: ReactNode }) {
   return <header className="page-intro site-container">
     <nav aria-label="Път до страницата" className="page-breadcrumb"><Link to="/">Начало</Link><span aria-hidden="true">/</span><span>{eyebrow}</span></nav>
-    <p className="eyebrow">{eyebrow}</p><h1>{title}</h1><div className="lead">{children}</div>
+    <p className="eyebrow">{eyebrow}</p><h1>{title}</h1><div className="intro-rule" aria-hidden="true" /><div className="lead">{children}</div>
   </header>;
 }

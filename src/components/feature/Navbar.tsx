@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
+import { BRAND_LOGO } from '@/content/brand';
 
 const links = [
   { to: '/digitalna-gramotnost', label: 'Грамотност' },
@@ -39,8 +40,9 @@ export default function Navbar() {
       <nav className="site-container" aria-label="Основна навигация" ref={nav}>
         <div className="nav-row">
           <Link to="/" className="brand" aria-label="БУДИМ СЕ — начало">
-            <img src="https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5" width={40} height={40} alt="" className="brand-logo" />
-            <span>БУДИМ СЕ<span className="brand-caption">Медийна и дигитална грамотност</span></span>
+            <img src={BRAND_LOGO} width={44} height={44} alt="" className="brand-logo" />
+            <span className="brand-full">Център за медийна и дигитална грамотност БУДИМ СЕ</span>
+            <span className="brand-short">БУДИМ СЕ</span>
           </Link>
           <div className="desktop-nav">
             {links.map(link => <NavLink key={link.to} to={link.to}>{link.label}</NavLink>)}

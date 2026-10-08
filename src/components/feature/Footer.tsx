@@ -1,12 +1,13 @@
 import { Link } from 'react-router-dom';
 import { openPrivacySettings } from '@/lib/privacy';
+import { BRAND_LOGO } from '@/content/brand';
 
 export default function Footer() {
   return <footer className="site-footer">
     <div className="site-container">
       <div className="footer-grid">
         <div>
-          <Link to="/" className="footer-brand">БУДИМ СЕ</Link>
+          <Link to="/" className="footer-brand"><img src={BRAND_LOGO} width={40} height={40} alt="" loading="lazy" />БУДИМ СЕ</Link>
           <p>Гражданска и образователна инициатива за медийна и дигитална грамотност в България.</p>
           <a className="footer-email" href="mailto:budimseonline@gmail.com">budimseonline@gmail.com</a>
         </div>
