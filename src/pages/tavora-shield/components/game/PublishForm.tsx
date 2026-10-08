@@ -222,7 +222,7 @@ export default function PublishForm({ platform, onPublish, onClose, challenge, r
             <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 text-left">
               <p className="text-[9px] text-amber-700 leading-relaxed">
                 <Icon name="ri-lightbulb-line" size={10} className="inline mr-1" />
-                <strong>Реалността:</strong> В истинските социални мрежи алгоритъмът ограничава reach-а на акаунти, които публикуват твърде много. Качеството винаги побеждава количеството.
+                <strong>Реалността:</strong> Тук ограничението е правило на учебния модел. В реална платформа разпространението зависи от много условия; броят публикации сам по себе си не определя резултата.
               </p>
             </div>
           </div>

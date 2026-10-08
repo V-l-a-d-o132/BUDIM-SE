@@ -15,6 +15,7 @@ export default function TestimonialsPage() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
+      <main id="main-content" tabIndex={-1} className="editorial-page">
 
       {/* Hero */}
       <section className="pt-28 pb-12 px-4 md:pt-32 md:pb-16 md:px-6 border-b border-gray-100">
@@ -82,6 +83,7 @@ export default function TestimonialsPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

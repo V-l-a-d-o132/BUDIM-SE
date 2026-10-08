@@ -74,12 +74,13 @@ export default function TavoraShield() {
   return (
     <ClassroomProvider><div className="min-h-screen bg-white">
       <Navbar />
+      <main id="main-content" tabIndex={-1}>
 
       {/* Hero */}
-      <section className="pt-28 pb-12 px-4 md:pt-32 md:pb-16 md:px-6">
+      <section className="pt-24 pb-8 px-4 md:pt-28 md:pb-10 md:px-6">
         <div className="max-w-3xl mx-auto">
           <p className="text-sm text-gray-400 uppercase tracking-widest mb-4 font-medium">Анализатор на съдържание — Образователен инструмент</p>
-          <h1 className="text-4xl md:text-5xl font-light text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-semibold text-gray-900 mb-5 leading-tight">
             Разпознай похватите<br />
             <span className="font-medium">в дигиталното съдържание.</span>
           </h1>
@@ -171,6 +172,7 @@ export default function TavoraShield() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div></ClassroomProvider>
   );

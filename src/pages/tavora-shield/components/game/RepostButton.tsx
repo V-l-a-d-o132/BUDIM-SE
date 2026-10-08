@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useState, useRef } from 'react';
 import ReCAPTCHA from 'react-google-recaptcha';
 import { RECAPTCHA_SITE_KEY } from '@/components/base/RecaptchaBadge';
@@ -48,7 +49,7 @@ export default function RepostButton({ post, targetPlatform, onReposted, iconSiz
         title="Достигна лимита от 3 поста"
         className="cursor-not-allowed opacity-40 flex items-center gap-0.5"
       >
-        <i className={`ri-repeat-line text-gray-400 ${iconSize}`}></i>
+        <LegacyIcon className={`ri-repeat-line text-gray-400 ${iconSize}`}></LegacyIcon>
       </button>
     );
   }
@@ -61,11 +62,11 @@ export default function RepostButton({ post, targetPlatform, onReposted, iconSiz
       className="cursor-pointer flex items-center gap-0.5 disabled:opacity-60 transition-all"
     >
       {loading ? (
-        <i className={`ri-loader-4-line animate-spin text-gray-500 ${iconSize}`}></i>
+        <LegacyIcon className={`ri-loader-4-line animate-spin text-gray-500 ${iconSize}`}></LegacyIcon>
       ) : done ? (
-        <i className={`ri-repeat-fill text-green-500 ${iconSize}`}></i>
+        <LegacyIcon className={`ri-repeat-fill text-green-500 ${iconSize}`}></LegacyIcon>
       ) : (
-        <i className={`ri-repeat-line text-gray-800 ${iconSize}`}></i>
+        <LegacyIcon className={`ri-repeat-line text-gray-800 ${iconSize}`}></LegacyIcon>
       )}
     </button>{error && <span role="alert" className="text-xs text-red-700">{error}</span>}</>
   );

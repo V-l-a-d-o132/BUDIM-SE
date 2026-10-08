@@ -1,6 +1,9 @@
 import { lazy } from 'react';
 import { type RouteObject, Navigate } from 'react-router-dom';
-import { NewsListPage, NewsDetailPage } from '../pages/news/page';
+const NewsListPage = lazy(() => import('../pages/news/page').then(m => ({ default: m.NewsListPage })));
+const NewsDetailPage = lazy(() => import('../pages/news/page').then(m => ({ default: m.NewsDetailPage })));
+const StudentsPage = lazy(() => import('../pages/mediyna-gramotnost-uchenici/page'));
+const SchoolsPage = lazy(() => import('../pages/obucheniya-za-uchilishta/page'));
 
 const HomePage = lazy(() => import('../pages/home/page'));
 const Step1Page = lazy(() => import('../pages/step1/page'));
@@ -51,6 +54,8 @@ const routes: RouteObject[] = [
   { path: '/testimonials', element: <TestimonialsPage /> },
   { path: '/sources', element: <SourcesPage /> },
   { path: '/digitalna-gramotnost', element: <DigitalnaGramotnostPage /> },
+  { path: '/mediyna-gramotnost-uchenici', element: <StudentsPage /> },
+  { path: '/obucheniya-za-uchilishta', element: <SchoolsPage /> },
   // Admin
   { path: '/admin/mfa', element: <AdminMfaPage /> },
   { path: '/admin/login', element: <AdminLoginPage /> },

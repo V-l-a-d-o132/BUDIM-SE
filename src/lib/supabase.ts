@@ -55,13 +55,13 @@ function cacheSet<T>(key: string, data: T): void {
 }
 
 export async function fetchNewsListCached() {
-  const cacheKey = 'news_list';
+  const cacheKey = 'news_v2_list';
   const cached = cacheGet<unknown[]>(cacheKey);
   if (cached) return cached;
 
   const { data, error } = await supabase
     .from('news')
-    .select('id, title, slug, image_url, created_at, body')
+    .select('id, title, slug, image_url, created_at, updated_at, body')
     .eq('published', true)
     .order('created_at', { ascending: false })
     .abortSignal(AbortSignal.timeout(15000));
@@ -73,7 +73,7 @@ export async function fetchNewsListCached() {
 }
 
 export async function fetchNewsDetailCached(slug: string) {
-  const cacheKey = `news_detail_${slug}`;
+  const cacheKey = `news_v2_detail_${slug}`;
   const cached = cacheGet<unknown>(cacheKey);
   if (cached) return cached;
 

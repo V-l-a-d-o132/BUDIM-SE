@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useEffect, useState, useCallback } from 'react';
 import AdminGuard from '@/pages/admin/components/AdminGuard';
 import AdminLayout from '@/pages/admin/components/AdminLayout';
@@ -136,7 +137,7 @@ export default function AdminNews() {
                   onClick={() => { setForm(emptyForm); setEditing(true); setStatusMsg(''); }}
                   className="flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors cursor-pointer whitespace-nowrap"
                 >
-                  <i className="ri-add-line"></i>
+                  <LegacyIcon className="ri-add-line"></LegacyIcon>
                   Нова новина
                 </button>
               </div>
@@ -147,11 +148,11 @@ export default function AdminNews() {
 
               {loading ? (
                 <div className="flex items-center justify-center py-20">
-                  <i className="ri-loader-4-line animate-spin text-gray-300 text-3xl"></i>
+                  <LegacyIcon className="ri-loader-4-line animate-spin text-gray-300 text-3xl"></LegacyIcon>
                 </div>
               ) : newsList.length === 0 ? (
                 <div className="text-center py-20 text-gray-400">
-                  <i className="ri-newspaper-line text-4xl mb-3 block"></i>
+                  <LegacyIcon className="ri-newspaper-line text-4xl mb-3 block"></LegacyIcon>
                   <p className="text-sm">Няма новини. Създай първата.</p>
                 </div>
               ) : (
@@ -182,7 +183,7 @@ export default function AdminNews() {
                           onClick={() => handleEdit(item)}
                           className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors cursor-pointer"
                         >
-                          <i className="ri-edit-line text-sm"></i>
+                          <LegacyIcon className="ri-edit-line text-sm"></LegacyIcon>
                         </button>
                         <button
                           onClick={() => handleDelete(item.id)}
@@ -190,8 +191,8 @@ export default function AdminNews() {
                           className="w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer disabled:opacity-50"
                         >
                           {deleting === item.id
-                            ? <i className="ri-loader-4-line animate-spin text-sm"></i>
-                            : <i className="ri-delete-bin-line text-sm"></i>
+                            ? <LegacyIcon className="ri-loader-4-line animate-spin text-sm"></LegacyIcon>
+                            : <LegacyIcon className="ri-delete-bin-line text-sm"></LegacyIcon>
                           }
                         </button>
                       </div>
@@ -208,7 +209,7 @@ export default function AdminNews() {
                   onClick={() => { setEditing(false); setForm(emptyForm); setStatusMsg(''); }}
                   className="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                 >
-                  <i className="ri-arrow-left-line"></i>
+                  <LegacyIcon className="ri-arrow-left-line"></LegacyIcon>
                 </button>
                 <h2 className="text-base font-medium text-gray-900">
                   {form.id ? 'Редактирай новина' : 'Нова новина'}
@@ -278,7 +279,7 @@ export default function AdminNews() {
                     disabled={saving}
                     className="flex items-center gap-2 px-5 py-2.5 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors cursor-pointer disabled:opacity-50 whitespace-nowrap"
                   >
-                    {saving ? <><i className="ri-loader-4-line animate-spin"></i> Запазване...</> : <><i className="ri-save-line"></i> Запази</>}
+                    {saving ? <><LegacyIcon className="ri-loader-4-line animate-spin"></LegacyIcon> Запазване...</> : <><LegacyIcon className="ri-save-line"></LegacyIcon> Запази</>}
                   </button>
                   <button
                     onClick={() => { setEditing(false); setForm(emptyForm); setStatusMsg(''); }}

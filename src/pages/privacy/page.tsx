@@ -18,6 +18,7 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
+      <main id="main-content" tabIndex={-1} className="editorial-page">
 
       <section className="pt-32 pb-8 px-6">
         <div className="max-w-3xl mx-auto">
@@ -201,6 +202,7 @@ export default function PrivacyPage() {
         </div>
       </section>
 
+      </main>
       <Footer />
     </div>
   );

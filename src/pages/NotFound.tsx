@@ -1,9 +1,7 @@
+import { Link } from 'react-router-dom';
+import PageLayout from '@/components/feature/PageLayout';
+import { usePageSeo } from '@/hooks/usePageSeo';
 export default function NotFound() {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen text-center px-4">
-        <h1 className="text-5xl md:text-5xl font-semibold text-gray-100">404</h1>
-        <h1 className="text-2xl md:text-3xl font-semibold mt-6">Тази страница не съществува</h1>
-        <p className="mt-4 text-xl md:text-2xl text-gray-500">Кажете ми какво бихте искали тук</p>
-      </div>
-    );
-  }
+  usePageSeo({ title: 'Страницата не е намерена', description: 'Този адрес не води до страница на БУДИМ СЕ.', noIndex: true });
+  return <PageLayout><div className="site-container site-section"><p className="eyebrow">404</p><h1>Тази страница не е намерена.</h1><p className="lead mt-6">Адресът може да е променен или изписан неточно. Можеш да продължиш от началото или да разгледаш материалите.</p><div className="button-row"><Link to="/" className="button-primary">Към началото</Link><Link to="/news" className="button-secondary">Към материалите</Link></div></div></PageLayout>;
+}

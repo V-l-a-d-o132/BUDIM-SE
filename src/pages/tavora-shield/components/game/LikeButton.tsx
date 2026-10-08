@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useState, useCallback } from 'react';
 import { gameCommand } from './gameApi';
 import { type GamePost } from './types';
@@ -60,7 +61,7 @@ export default function LikeButton({ post, className = '', iconSize = 'text-base
           transition: 'transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1)',
         }}
       >
-        <i className={`${liked ? 'ri-heart-fill text-red-500' : 'ri-heart-line text-gray-800'} ${iconSize}`}></i>
+        <LegacyIcon className={`${liked ? 'ri-heart-fill text-red-500' : 'ri-heart-line text-gray-800'} ${iconSize}`}></LegacyIcon>
       </span>
       {showCount && count > 0 && (
         <span className="text-[7px] text-gray-500 tabular-nums">{count.toLocaleString()}</span>

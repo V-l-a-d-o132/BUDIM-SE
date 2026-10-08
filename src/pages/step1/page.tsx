@@ -51,99 +51,13 @@ export default function Step1() {
   return (
     <>
       {/* Enhanced Minimalist Background Elements - Fixed Position */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Primary angular geometric shapes */}
-        <div className="absolute top-20 left-10 w-1 h-32 bg-gray-200 rotate-12 opacity-40"></div>
-        <div className="absolute top-40 right-20 w-24 h-1 bg-gray-200 opacity-30"></div>
-        <div className="absolute bottom-40 left-1/4 w-1 h-20 bg-gray-200 -rotate-45 opacity-35"></div>
-        <div className="absolute top-1/3 right-1/3 w-16 h-1 bg-gray-200 rotate-45 opacity-25"></div>
 
-        {/* Additional angular lines */}
-        <div className="absolute top-60 left-1/3 w-1 h-16 bg-gray-200 rotate-30 opacity-30"></div>
-        <div className="absolute bottom-60 right-1/4 w-20 h-1 bg-gray-200 -rotate-30 opacity-25"></div>
-        <div className="absolute top-1/4 left-2/3 w-1 h-12 bg-gray-200 rotate-60 opacity-35"></div>
-        <div className="absolute bottom-1/3 left-1/6 w-14 h-1 bg-gray-200 rotate-15 opacity-30"></div>
-
-        {/* Corner elements */}
-        <div className="absolute top-16 right-16 w-8 h-8 border-l border-t border-gray-200 opacity-25"></div>
-        <div className="absolute bottom-16 left-16 w-6 h-6 border-r border-b border-gray-200 opacity-30"></div>
-        <div className="absolute top-1/2 left-8 w-4 h-4 border-t border-r border-gray-200 opacity-35 rotate-45"></div>
-        <div className="absolute top-3/4 right-8 w-5 h-5 border-l border-b border-gray-200 opacity-25 -rotate-12"></div>
-
-        {/* Subtle triangular shapes */}
-        <div className="absolute top-32 left-1/2 w-0 h-0 border-l-4 border-r-4 border-b-6 border-transparent border-b-gray-200 opacity-20"></div>
-        <div className="absolute bottom-32 right-1/3 w-0 h-0 border-l-3 border-r-3 border-t-5 border-transparent border-t-gray-200 opacity-25"></div>
-
-        {/* Subtle circles */}
-        <div className="absolute top-32 right-10 w-2 h-2 rounded-full bg-gray-200 opacity-30"></div>
-        <div className="absolute bottom-32 left-16 w-1 h-1 rounded-full bg-gray-200 opacity-40"></div>
-        <div className="absolute top-2/3 left-1/2 w-1.5 h-1.5 rounded-full bg-gray-200 opacity-25"></div>
-
-        {/* Diagonal corner accents */}
-        <div className="absolute top-0 left-0 w-16 h-16">
-          <div className="absolute top-4 left-4 w-8 h-1 bg-gray-200 opacity-20 rotate-45"></div>
-          <div className="absolute top-6 left-2 w-1 h-8 bg-gray-200 opacity-20 rotate-45"></div>
-        </div>
-        <div className="absolute bottom-0 right-0 w-16 h-16">
-          <div className="absolute bottom-4 right-4 w-8 h-1 bg-gray-200 opacity-20 -rotate-45"></div>
-          <div className="absolute bottom-6 right-2 w-1 h-8 bg-gray-200 opacity-20 -rotate-45"></div>
-        </div>
-
-        {/* Minimal grid pattern */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-8">
-          <div className="grid grid-cols-12 h-full">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="border-r border-gray-200 last:border-r-0"></div>
-            ))}
-          </div>
-        </div>
-
-        {/* Additional geometric accents */}
-        <div className="absolute top-1/5 right-1/5 w-3 h-3 border border-gray-200 opacity-25 rotate-45"></div>
-        <div className="absolute bottom-1/5 left-1/5 w-2 h-2 border border-gray-200 opacity-30 rotate-12"></div>
-        <div className="absolute top-3/5 left-3/4 w-4 h-1 bg-gray-200 opacity-20 rotate-75"></div>
-        <div className="absolute bottom-2/5 right-2/3 w-1 h-6 bg-gray-200 opacity-25 -rotate-20"></div>
-
-        {/* New enhanced angular elements */}
-        <div className="absolute top-10 left-1/2 w-12 h-1 bg-gray-200 opacity-30 rotate-30"></div>
-        <div className="absolute bottom-10 right-1/2 w-1 h-12 bg-gray-200 opacity-25 -rotate-30"></div>
-        <div className="absolute top-1/6 left-1/4 w-8 h-8 border-l-2 border-t-2 border-gray-200 opacity-20 rotate-45"></div>
-        <div className="absolute bottom-1/6 right-1/4 w-6 h-6 border-r-2 border-b-2 border-gray-200 opacity-25 -rotate-45"></div>
-
-        {/* Intersecting lines */}
-        <div className="absolute top-1/4 right-10 w-16 h-1 bg-gray-200 opacity-15 rotate-60"></div>
-        <div className="absolute top-1/4 right-10 w-1 h-16 bg-gray-200 opacity-15 rotate-30"></div>
-        <div className="absolute bottom-1/4 left-10 w-12 h-1 bg-gray-200 opacity-20 -rotate-60"></div>
-        <div className="absolute bottom-1/4 left-10 w-1 h-12 bg-gray-200 opacity-20 -rotate-30"></div>
-
-        {/* Scattered geometric dots */}
-        <div className="absolute top-1/8 left-3/4 w-1 h-1 bg-gray-200 opacity-40 rotate-45"></div>
-        <div className="absolute top-3/8 right-1/8 w-1 h-1 bg-gray-200 opacity-35 rotate-45"></div>
-        <div className="absolute bottom-1/8 right-3/4 w-1 h-1 bg-gray-200 opacity-30 rotate-45"></div>
-        <div className="absolute bottom-3/8 left-1/8 w-1 h-1 bg-gray-200 opacity-35 rotate-45"></div>
-
-        {/* Angular brackets */}
-        <div className="absolute top-1/3 left-1/8 w-4 h-4">
-          <div className="absolute top-0 left-0 w-2 h-1 bg-gray-200 opacity-25"></div>
-          <div className="absolute top-0 left-0 w-1 h-2 bg-gray-200 opacity-25"></div>
-        </div>
-        <div className="absolute bottom-1/3 right-1/8 w-4 h-4">
-          <div className="absolute bottom-0 right-0 w-2 h-1 bg-gray-200 opacity-25"></div>
-          <div className="absolute bottom-0 right-0 w-1 h-2 bg-gray-200 opacity-25"></div>
-        </div>
-
-        {/* Subtle cross patterns */}
-        <div className="absolute top-2/5 left-1/5 w-3 h-1 bg-gray-200 opacity-20 rotate-45"></div>
-        <div className="absolute top-2/5 left-1/5 w-1 h-3 bg-gray-200 opacity-20 rotate-45"></div>
-        <div className="absolute bottom-2/5 right-1/5 w-3 h-1 bg-gray-200 opacity-20 -rotate-45"></div>
-        <div className="absolute bottom-2/5 right-1/5 w-1 h-3 bg-gray-200 opacity-20 -rotate-45"></div>
-      </div>
 
       <div className="min-h-screen bg-white relative z-10">
         <Navbar />
 
         {/* Content */}
-        <main className="pt-24 pb-16 px-6">
+        <main id="main-content" tabIndex={-1} className="editorial-page pt-24 pb-16 px-6">
           <div className="max-w-4xl mx-auto">
             {/* Breadcrumb */}
             <Breadcrumb

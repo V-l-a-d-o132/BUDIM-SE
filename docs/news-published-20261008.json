@@ -1,0 +1,166 @@
+{
+  "project": "plcmsgbsetpqwjkfmjzk",
+  "operation": "Objective article edits; existing URLs only until the redesign is published",
+  "articles": [
+    {
+      "id": "2789b681-1d5a-4abc-8ed3-61c0a8a81383",
+      "slug": "ako-ai-ne-znae",
+      "title": "Когато AI не споменава нещо, това не доказва, че то не съществува",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "134f75ce433efbc3ce65bd9201e1180a",
+      "title_hash": "a605bb2dd43e3acdc5fe37eeeceb5f9b"
+    },
+    {
+      "id": "b2497328-77b0-47e8-9ed5-14d7add7c856",
+      "slug": "algoritmi-i-eho-kameri",
+      "title": "Алгоритми и сходни гледни точки: какво виждаме в лентата",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "fd6dedc1ae3b56ed36de179771ab9167",
+      "title_hash": "3a0467d8bf5bafd2bb8962648f86b3e2"
+    },
+    {
+      "id": "34febb2a-7e5c-4482-87bb-941575541f72",
+      "slug": "digitalen-detoks",
+      "title": "Дигитална пауза: какво точно искаш да промениш?",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "9795b8cd4ece2e66bdb095edbcd9e68b",
+      "title_hash": "34432c05dadafe277679ecc9e1913417"
+    },
+    {
+      "id": "5b8d4030-e60e-4756-a290-e88361706fef",
+      "slug": "digitalen-suverenitet",
+      "title": "Повече избор в дигиталното ежедневие",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "1b7421802250286f7aa1134efd32d82a",
+      "title_hash": "7b67297320d7dd12a7de79c04ffb687c"
+    },
+    {
+      "id": "beb589d1-c11c-43b6-8452-113c2dcccffd",
+      "slug": "digitalno-blagosastoyanie",
+      "title": "Какво прави дигиталното ежедневие по-полезно",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "a1a39892a7321d9217b6cb56d5d31630",
+      "title_hash": "11c6d2f4c16f9b210597eca872346fab"
+    },
+    {
+      "id": "51d5faa5-cb06-4b25-a577-5bffda1067cf",
+      "slug": "dobriat-biznes-ne-e-dostachen",
+      "title": "Как да преценим организация по нейния сайт",
+      "updated_at": "2026-10-08 10:21:00.445791+00",
+      "body_hash": "2677c4f8735d1048488c8e067f7eda48",
+      "title_hash": "06429e820c7f98d3de94c22cfe154d04"
+    },
+    {
+      "id": "db4c6929-5754-4913-8475-631cb5687766",
+      "slug": "email-apnea",
+      "title": "Пауза при работа с имейл: наблюдение без самодиагноза",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "51386ebe08dcd6ca938880d3e4f63945",
+      "title_hash": "7dae31ae743604d3fddd70801e4b361c"
+    },
+    {
+      "id": "d8ae62b5-c2d0-4a66-abd7-b2769dec7ad2",
+      "slug": "es-ne-atakuva-skrola",
+      "title": "Как да четем новините за регулация на платформите",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "98ed6add20207c0f44462b373c3a8674",
+      "title_hash": "e93359bac9562fea78625b19bf166c66"
+    },
+    {
+      "id": "2f145c70-840b-42fa-ab3d-2b823626756e",
+      "slug": "falshivi-novini",
+      "title": "Невярно, подвеждащо или мнение: има разлика",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "65e1834a2f5ff9b3857aa110a611199e",
+      "title_hash": "751ccb2f34e219134ccc29644d69f16f"
+    },
+    {
+      "id": "fa55e657-7195-489e-861c-504b4e303788",
+      "slug": "kiberhigiena",
+      "title": "Киберхигиена: четири практични стъпки",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "47c701837a87bb13c99cde5ec45025e6",
+      "title_hash": "c28e298291787b999e0a1e8d7bf30073"
+    },
+    {
+      "id": "bd5a1b18-68af-4225-8d08-3f98c218a8be",
+      "slug": "korporativna-higiena-odit",
+      "title": "По-ясни дигитални уговорки в един екип",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "ea7dbc56da28abb7ddcc3b0708a2469e",
+      "title_hash": "72fb82f44f4583c24d014d68a332d0d3"
+    },
+    {
+      "id": "dbd63500-43f0-4143-a49e-b86cb928e9ce",
+      "slug": "kritichno-mislene-online",
+      "title": "Критично мислене онлайн: как стигаме до извод",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "91dc053706e093f2416ace4121b67386",
+      "title_hash": "9a7611c43414e900f039150f9e5e7281"
+    },
+    {
+      "id": "75d7c922-bbc4-4fd0-bad0-758dcb885e19",
+      "slug": "manipulativni-tehniki-v-mediite",
+      "title": "Емоционален език: повод да проверим, не присъда",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "eb7f08d7f042c654b8abad0c1404b049",
+      "title_hash": "fe5455adb64bb84cd56f170eca7cdf10"
+    },
+    {
+      "id": "7583f266-09dd-4edd-806f-9d935c3e12b0",
+      "slug": "obraten-efekt-flin",
+      "title": "„Обратният ефект на Флин“: какво можем да заключим от едно изследване",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "50f648ab58f75498d820b319c05fd1f8",
+      "title_hash": "b081babbd7aaaf18ce5821689f37d705"
+    },
+    {
+      "id": "5f5aac14-b322-48fc-b1a9-4d33904ac425",
+      "slug": "obrazovanie-za-medii",
+      "title": "Медийна грамотност в клас: да покажем как проверяваме",
+      "updated_at": "2026-10-08 10:21:00.445791+00",
+      "body_hash": "ebd9fad9104e83c15beb04b7ce063f62",
+      "title_hash": "ea8fc9d0a7681c25438c6407d0ca3ff0"
+    },
+    {
+      "id": "7b33e030-a774-46f4-bf69-a4c9a4a6a24a",
+      "slug": "povedencheski-dizain-platformi",
+      "title": "Как дизайнът на приложението насочва избора ни",
+      "updated_at": "2026-10-08 10:13:59.333099+00",
+      "body_hash": "aaacab211199637adbcfb1df670925eb",
+      "title_hash": "60379dccafc0e9aa686b09338b82259b"
+    },
+    {
+      "id": "341a18f0-1308-48b5-be8f-daaa0380df4a",
+      "slug": "proverka-na-fakti",
+      "title": "Проверка на факти: откъде да започнеш",
+      "updated_at": "2026-10-08 10:21:00.445791+00",
+      "body_hash": "9cc590f4a18b76806ce2b13ed11d781a",
+      "title_hash": "52cb4907563240e0f4e8b174b560c8cf"
+    },
+    {
+      "id": "54b18408-8707-487b-bfe3-492f00f0b037",
+      "slug": "razpoznavane-na-dezinformatsiya",
+      "title": "Когато едно твърдение се повтаря: как да го проверим",
+      "updated_at": "2026-10-08 10:21:00.445791+00",
+      "body_hash": "bd69f8e732b3cf58bead864a5c776ec2",
+      "title_hash": "5cd49bdad49c19589c7efc6771541241"
+    },
+    {
+      "id": "fee4addc-cff5-40b7-8937-cfb1c01cd0e1",
+      "slug": "skiming-nov-standart",
+      "title": "Бърз преглед или внимателно четене: избери според задачата",
+      "updated_at": "2026-10-08 10:21:00.445791+00",
+      "body_hash": "955d66c5e1a26be416cd0b18f468469b",
+      "title_hash": "bcaf5ebb1eabe9f48990c1400fa2e9b0"
+    },
+    {
+      "id": "322e9e51-ba70-48b5-a49b-f69958dc5c49",
+      "slug": "vnimanie-novata-valuta",
+      "title": "Внимание онлайн: какво показват реакциите",
+      "updated_at": "2026-10-08 10:21:00.445791+00",
+      "body_hash": "f38ad230b63e5c861146a7d640639feb",
+      "title_hash": "12af07af74cbd7ba5640b772db94f0da"
+    }
+  ]
+}

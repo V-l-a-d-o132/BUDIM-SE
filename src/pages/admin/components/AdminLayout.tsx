@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { requiredAdminPermission } from '@/lib/admin-permissions';
@@ -60,7 +61,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
               }`}
             >
               <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
-                <i className={`${item.icon} text-base`}></i>
+                <LegacyIcon className={`${item.icon} text-base`}></LegacyIcon>
               </div>
               {item.label}
             </Link>
@@ -71,7 +72,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
         <div className="px-4 py-4 border-t border-gray-100">
           <div className="flex items-center gap-3 mb-3">
             <div className="w-8 h-8 flex items-center justify-center bg-gray-100 rounded-full flex-shrink-0">
-              <i className="ri-user-line text-gray-500 text-sm"></i>
+              <LegacyIcon className="ri-user-line text-gray-500 text-sm"></LegacyIcon>
             </div>
             <div className="min-w-0">
               <p className="text-xs font-medium text-gray-900 truncate">{admin?.user.email}</p>
@@ -82,7 +83,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             onClick={handleSignOut}
             className="w-full flex items-center gap-2 px-3 py-2 text-xs text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
           >
-            <i className="ri-logout-box-line"></i>
+            <LegacyIcon className="ri-logout-box-line"></LegacyIcon>
             Изход
           </button>
         </div>
@@ -104,7 +105,7 @@ export default function AdminLayout({ children, title }: AdminLayoutProps) {
             className="lg:hidden w-8 h-8 flex items-center justify-center cursor-pointer text-gray-600"
             onClick={() => setSidebarOpen(true)}
           >
-            <i className="ri-menu-line text-xl"></i>
+            <LegacyIcon className="ri-menu-line text-xl"></LegacyIcon>
           </button>
           <h1 className="text-base font-medium text-gray-900">{title}</h1>
         </header>

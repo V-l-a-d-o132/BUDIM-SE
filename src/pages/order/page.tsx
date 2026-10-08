@@ -231,7 +231,7 @@ export default function Order() {
       <div className="min-h-screen bg-white relative z-10">
         <Navbar />
 
-        <main className="pb-12 md:pb-20 pt-20 md:pt-24">
+        <main id="main-content" tabIndex={-1} className="editorial-page pb-12 md:pb-20 pt-20 md:pt-24">
 
           {/* ── Hero + Purchase Panel ── */}
           <section className="px-4 md:px-6">

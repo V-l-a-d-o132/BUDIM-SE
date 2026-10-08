@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useState, useEffect, useCallback } from 'react';
 import AdminGuard from '../components/AdminGuard';
 import AdminLayout from '../components/AdminLayout';
@@ -14,7 +15,7 @@ function ResetModal({ onConfirm, onCancel, loading }: {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4">
         <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-4">
-          <i className="ri-alarm-warning-line text-red-600 text-xl"></i>
+          <LegacyIcon className="ri-alarm-warning-line text-red-600 text-xl"></LegacyIcon>
         </div>
         <h3 className="text-base font-semibold text-gray-900 text-center mb-2">Нулиране на всички постове</h3>
         <p className="text-sm text-gray-500 text-center leading-relaxed mb-1">
@@ -37,9 +38,9 @@ function ResetModal({ onConfirm, onCancel, loading }: {
             className="flex-1 py-2.5 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2 whitespace-nowrap"
           >
             {loading ? (
-              <><i className="ri-loader-4-line animate-spin"></i>Нулиране...</>
+              <><LegacyIcon className="ri-loader-4-line animate-spin"></LegacyIcon>Нулиране...</>
             ) : (
-              <><i className="ri-delete-bin-2-line"></i>Нулирай всичко</>
+              <><LegacyIcon className="ri-delete-bin-2-line"></LegacyIcon>Нулирай всичко</>
             )}
           </button>
         </div>
@@ -248,7 +249,7 @@ export default function SocialPostsAdmin() {
           {resetSuccess && (
             <div className="bg-green-50 border border-green-200 rounded-xl px-4 py-3 flex items-center gap-3">
               <div className="w-5 h-5 flex items-center justify-center flex-shrink-0">
-                <i className="ri-checkbox-circle-fill text-green-600 text-lg"></i>
+                <LegacyIcon className="ri-checkbox-circle-fill text-green-600 text-lg"></LegacyIcon>
               </div>
               <div>
                 <p className="text-sm font-medium text-green-800">Нулирането е успешно!</p>
@@ -271,7 +272,7 @@ export default function SocialPostsAdmin() {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-gray-900 text-white hover:bg-gray-700 transition-colors cursor-pointer whitespace-nowrap disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 <div className="w-4 h-4 flex items-center justify-center">
-                  <i className="ri-download-2-line text-sm"></i>
+                  <LegacyIcon className="ri-download-2-line text-sm"></LegacyIcon>
                 </div>
                 Експорт CSV
               </button>
@@ -281,7 +282,7 @@ export default function SocialPostsAdmin() {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium bg-red-600 text-white hover:bg-red-700 transition-colors cursor-pointer whitespace-nowrap"
               >
                 <div className="w-4 h-4 flex items-center justify-center">
-                  <i className="ri-refresh-line text-sm"></i>
+                  <LegacyIcon className="ri-refresh-line text-sm"></LegacyIcon>
                 </div>
                 Нулирай за нов урок
               </button>
@@ -298,7 +299,7 @@ export default function SocialPostsAdmin() {
             ].map((s, i) => (
               <div key={i} className="bg-white border border-gray-100 rounded-xl p-4 flex items-center gap-3">
                 <div className={`w-10 h-10 flex items-center justify-center rounded-xl ${s.bg} flex-shrink-0`}>
-                  <i className={`${s.icon} ${s.color} text-lg`}></i>
+                  <LegacyIcon className={`${s.icon} ${s.color} text-lg`}></LegacyIcon>
                 </div>
                 <div>
                   <p className="text-xl font-semibold text-gray-900">{s.value}</p>
@@ -397,7 +398,7 @@ export default function SocialPostsAdmin() {
                   onClick={() => exportToCSV(posts)}
                   className="text-xs text-gray-400 hover:text-gray-700 cursor-pointer flex items-center gap-1 transition-colors whitespace-nowrap"
                 >
-                  <i className="ri-download-2-line"></i>
+                  <LegacyIcon className="ri-download-2-line"></LegacyIcon>
                   Свали CSV
                 </button>
               )}
@@ -405,12 +406,12 @@ export default function SocialPostsAdmin() {
 
             {loading ? (
               <div className="flex items-center justify-center py-16">
-                <i className="ri-loader-4-line animate-spin text-gray-400 text-2xl"></i>
+                <LegacyIcon className="ri-loader-4-line animate-spin text-gray-400 text-2xl"></LegacyIcon>
               </div>
             ) : posts.length === 0 ? (
               <div className="text-center py-16">
                 <div className="w-12 h-12 flex items-center justify-center mx-auto mb-3">
-                  <i className="ri-inbox-line text-gray-300 text-4xl"></i>
+                  <LegacyIcon className="ri-inbox-line text-gray-300 text-4xl"></LegacyIcon>
                 </div>
                 <p className="text-sm text-gray-400">Няма постове за избрания период</p>
                 {dateFilter !== 'all' && (
@@ -431,7 +432,7 @@ export default function SocialPostsAdmin() {
                       <div className="flex items-start gap-3">
                         {/* Avatar */}
                         <div className={`w-9 h-9 rounded-full bg-gradient-to-br ${post.avatar_color || 'from-gray-400 to-gray-600'} flex items-center justify-center flex-shrink-0`}>
-                          <i className="ri-user-fill text-white text-sm"></i>
+                          <LegacyIcon className="ri-user-fill text-white text-sm"></LegacyIcon>
                         </div>
 
                         {/* Content */}
@@ -439,7 +440,7 @@ export default function SocialPostsAdmin() {
                           <div className="flex items-center gap-2 flex-wrap mb-1.5">
                             <span className="text-sm font-semibold text-gray-900">{post.username}</span>
                             <span className={`text-[10px] font-medium px-2 py-0.5 rounded-full flex items-center gap-1 ${plt.color}`}>
-                              <i className={plt.icon}></i>{plt.label}
+                              <LegacyIcon className={plt.icon}></LegacyIcon>{plt.label}
                             </span>
                             {post.is_viral && (
                               <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-600">🔥 ВИРАЛЕН</span>
@@ -475,13 +476,13 @@ export default function SocialPostsAdmin() {
                           {/* Engagement */}
                           <div className="flex items-center gap-4 text-[10px] text-gray-400">
                             <span className="flex items-center gap-1">
-                              <i className="ri-heart-line"></i>{post.likes.toLocaleString()}
+                              <LegacyIcon className="ri-heart-line"></LegacyIcon>{post.likes.toLocaleString()}
                             </span>
                             <span className="flex items-center gap-1">
-                              <i className="ri-chat-1-line"></i>{post.comments}
+                              <LegacyIcon className="ri-chat-1-line"></LegacyIcon>{post.comments}
                             </span>
                             <span className="flex items-center gap-1">
-                              <i className="ri-share-forward-line"></i>{post.shares}
+                              <LegacyIcon className="ri-share-forward-line"></LegacyIcon>{post.shares}
                             </span>
                           </div>
                         </div>
@@ -498,7 +499,7 @@ export default function SocialPostsAdmin() {
                             }`}
                           >
                             {actionLoading === post.id
-                              ? <i className="ri-loader-4-line animate-spin"></i>
+                              ? <LegacyIcon className="ri-loader-4-line animate-spin"></LegacyIcon>
                               : post.approved ? 'Скрий' : 'Одобри'}
                           </button>
                           <button
