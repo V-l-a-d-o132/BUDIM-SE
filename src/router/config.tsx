@@ -4,6 +4,7 @@ const NewsListPage = lazy(() => import('../pages/news/page').then(m => ({ defaul
 const NewsDetailPage = lazy(() => import('../pages/news/page').then(m => ({ default: m.NewsDetailPage })));
 const StudentsPage = lazy(() => import('../pages/mediyna-gramotnost-uchenici/page'));
 const SchoolsPage = lazy(() => import('../pages/obucheniya-za-uchilishta/page'));
+const ResourcesPage = lazy(() => import('../pages/resursi/page'));
 
 const HomePage = lazy(() => import('../pages/home/page'));
 const Step1Page = lazy(() => import('../pages/step1/page'));
@@ -46,6 +47,7 @@ const routes: RouteObject[] = [
   { path: '/analizator', element: <TavoraShieldPage /> },
   { path: '/tavora-shield', element: <Navigate to="/analizator" replace /> },
   { path: '/center', element: <CenterPage /> },
+  { path: '/resursi', element: <ResourcesPage /> },
   { path: '/news', element: <NewsListPage /> },
   { path: '/news/:slug', element: <NewsDetailPage /> },
   { path: '/privacy', element: <PrivacyPage /> },

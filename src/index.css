@@ -132,6 +132,11 @@
   .prose-content strong { font-weight: 600; color: var(--ink); }
   .callout { margin-block: 24px; padding: 24px; background: #f6f6f7; border: 1px solid var(--line); border-left: 2px solid #424751; }
   .callout > :first-child { margin-top: 0; }
+  .methodology-download { border: 1px solid var(--line); border-top: 2px solid var(--ink); padding: clamp(22px, 4vw, 36px); background: #f8f8f8; }
+  .methodology-download h2 { margin-top: 14px; }
+  .methodology-download .resource-file-meta { font-size: 14px; line-height: 1.8; margin-top: 22px; }
+  .methodology-download .button-row { gap: 12px; margin-top: 24px; }
+  .methodology-download .resource-access-note { font-size: 14px; line-height: 1.65; margin-top: 20px; }
   .page-aside { border-top: 1px solid #a5a8af; padding-top: 20px; }
   .page-aside h2 { font-size: 16px; font-weight: 500; margin-bottom: 12px; }
   .page-aside a { display: block; padding-block: 10px; min-height: 44px; font-size: 14px; color: #4a505b; text-decoration: underline; text-underline-offset: 4px; }

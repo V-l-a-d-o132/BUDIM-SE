@@ -6,7 +6,7 @@ import { BRAND_LOGO } from '@/content/brand';
 const links = [
   { to: '/digitalna-gramotnost', label: 'Грамотност' },
   { to: '/obucheniya-za-uchilishta', label: 'За училища' },
-  { to: '/news', label: 'Материали' },
+  { to: '/resursi', label: 'Ресурси' },
   { to: '/analizator', label: 'Инструменти' },
   { to: '/center', label: 'За центъра' },
 ];

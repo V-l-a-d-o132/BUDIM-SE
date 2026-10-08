@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { JSDOM } from 'jsdom';
 const base = 'https://budimse.online';
-const routes = ['/', '/center', '/digitalna-gramotnost', '/mediyna-gramotnost-uchenici', '/obucheniya-za-uchilishta', '/news/proverka-na-fakti'];
+const routes = ['/', '/center', '/resursi', '/digitalna-gramotnost', '/mediyna-gramotnost-uchenici', '/obucheniya-za-uchilishta', '/news/proverka-na-fakti'];
 const failures = [];
 for (const route of routes) {
   try {
