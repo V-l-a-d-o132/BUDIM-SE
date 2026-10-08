@@ -1,0 +1,4 @@
+// Existing brand assets, kept at their original URLs.
+export const BRAND_LOGO = 'https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5';
+export const BRAND_HERO = 'https://readdy.ai/api/search-image?query=abstract%20dark%20architectural%20concrete%20brutalist%20structure%20with%20geometric%20shadows%20and%20sharp%20lines%20minimal%20monochrome%20atmosphere%20cold%20light%20from%20above%20high%20contrast%20black%20and%20white%20photography%20style%20no%20people%20no%20text%20pure%20form%20and%20shadow&width=1440&height=900&seq=hero-budimse-01&orientation=landscape';
+export const BOOK_COVER = 'https://static.readdy.ai/image/658b459fcf05a7723f8029c45615de2f/7fd715118976d07fe2b11b1e6367a1e7.jpeg';

@@ -243,7 +243,7 @@ export default function SourcesPage() {
       <div className="grid sm:grid-cols-2 gap-5 max-w-3xl"><div className="form-field"><label htmlFor="source-search">Търси в бележките</label><input id="source-search" type="search" value={query} onChange={event => setQuery(event.target.value)} placeholder="Например: внимание" /></div><div className="form-field"><label htmlFor="source-filter">Тема</label><select id="source-filter" value={filter} onChange={event => setFilter(event.target.value)}><option value="">Всички теми</option>{allLabels.map(label => <option key={label}>{label}</option>)}</select></div></div>
       <p role="status" className="!text-sm my-4">{shown.length} от {categories.length} бележки</p>
       <div className="faq-list max-w-4xl">{shown.map(cat => <details id={cat.id} key={cat.id} open={Boolean(query) || hash === '#' + cat.id}>
-        <summary><span className="text-green-800 mr-3">{String(cat.noteNumber).padStart(2, '0')}</span>{cat.title}</summary>
+        <summary><span className="text-gray-500 mr-3">{String(cat.noteNumber).padStart(2, '0')}</span>{cat.title}</summary>
         <div className="prose-content pl-4"><p>{cat.description}</p><p className="!text-sm">{degreeMap[cat.id]}</p><ul>{cat.links.map(url => <li key={url}><a href={url} target="_blank" rel="noopener noreferrer" className="break-words">{sourceReferences[url] || url}</a></li>)}</ul></div>
       </details>)}</div>
       <div className="callout max-w-4xl"><h2 className="!text-xl mb-3">Забеляза неточност?</h2><p>Посочи бележката и изпрати документ или публикация, с които я сравняваш. Публичните правила и функциите на платформите могат да се променят.</p><Link className="text-link mt-3" to="/contact">Изпрати предложение за корекция</Link></div>

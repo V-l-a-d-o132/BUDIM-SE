@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Users, SlidersHorizontal } from 'lucide-react';
 import PageLayout from '@/components/feature/PageLayout';
 import { usePageSeo } from '@/hooks/usePageSeo';
+import { BRAND_HERO, BOOK_COVER } from '@/content/brand';
 
 const paths = [
   { icon: BookOpen, label: 'Разбери', title: 'Преди да повярваш и споделиш', text: 'Източник, доказателства, контекст. Ясно начало за проверка на информация и по-сигурно общуване онлайн.', to: '/digitalna-gramotnost', link: 'Започни с основите' },
@@ -15,25 +16,28 @@ export default function HomePage() {
     description: 'БУДИМ СЕ: практически материали за дигитална и медийна грамотност, упражнения за ученици и пилотни обучения за училища. Проверявай, разбирай и избирай.',
     canonical: '/',
   });
-  return <PageLayout>
-    <section className="home-hero site-container">
-      <div>
+  return <PageLayout className="home-page">
+    <section className="home-hero">
+      <img className="home-hero-image" src={BRAND_HERO} alt="" width={1440} height={900} fetchPriority="high" decoding="async" />
+      <div className="hero-grid" aria-hidden="true" />
+      <div className="site-container home-hero-content">
         <p className="eyebrow">Център БУДИМ СЕ · България</p>
-        <h1>Повече разбиране.<br /><span>По-осъзнат избор.</span></h1>
+        <h1>Повече разбиране.<br /><strong>По-осъзнат избор.</strong></h1>
         <p className="lead">Дигитална и медийна грамотност за всекидневието. Учим се да проверяваме информацията, да разбираме социалните мрежи и да използваме технологиите с ясна цел.</p>
         <div className="button-row"><Link className="button-primary" to="/digitalna-gramotnost">Започни оттук <ArrowRight size={18} aria-hidden="true" /></Link><Link className="button-secondary" to="/obucheniya-za-uchilishta">За училища и учители</Link></div>
       </div>
+    </section>
+    <section className="site-container home-check">
       <aside className="hero-note" aria-labelledby="before-sharing">
-        <p className="eyebrow">Една полезна пауза</p><h2 id="before-sharing">Преди да споделиш</h2>
+        <div className="hero-note-heading"><p className="eyebrow">Една полезна пауза</p><h2 id="before-sharing">Преди да споделиш</h2><Link to="/news/proverka-na-fakti" className="text-link">Виж пример за проверка <ArrowRight size={16} aria-hidden="true" /></Link></div>
         <ol>
           <li><span>01</span><div><strong>Кой го казва?</strong><p>Потърси първоизточника, автора и датата.</p></div></li>
           <li><span>02</span><div><strong>На какво се основава?</strong><p>Провери доказателствата и липсващия контекст.</p></div></li>
           <li><span>03</span><div><strong>Какво още не знам?</strong><p>Сравни с независим източник. Можеш и да изчакаш.</p></div></li>
         </ol>
-        <Link to="/news/proverka-na-fakti" className="text-link">Виж пример за проверка <ArrowRight size={16} aria-hidden="true" /></Link>
       </aside>
     </section>
-    <section className="site-section section-tint">
+    <section className="site-section resource-section">
       <div className="site-container"><div className="section-heading"><p className="eyebrow">Полезно още днес</p><h2>Избери откъде да започнеш</h2></div>
         <div className="resource-grid">{paths.map(({ icon: Icon, ...path }) => <article className="resource-card" key={path.to}>
           <div className="card-kicker"><Icon size={22} aria-hidden="true" /><span>{path.label}</span></div><h3>{path.title}</h3><p>{path.text}</p><Link className="text-link" to={path.to}>{path.link}<ArrowRight size={17} aria-hidden="true" /></Link>
@@ -45,6 +49,6 @@ export default function HomePage() {
       <div className="example-box"><p className="eyebrow">Условен пример</p><h3>Два поста, една училищна кауза</h3><p>Единият обвинява: „На никого не му пука за двора.“ Другият кани: „В петък засаждаме три дървета. Кой ще помогне?“</p><p>Кой ще стигне до повече хора? Зависи от аудиторията, момента, връзките между участниците и начина на показване. Сравняваме при ясни условия, без да приемаме победител предварително.</p><Link to="/mediyna-gramotnost-uchenici#socialni-mrezhi" className="text-link">Опитай задачата в клас <ArrowRight size={17} aria-hidden="true" /></Link></div>
     </section>
     <section className="site-container"><div className="school-callout"><div><p className="eyebrow">За училища и групи</p><h2>Да превърнем въпросите в урок.</h2><p>Подготвяме пилотни занимания по медийна грамотност и социални мрежи. Форматът се уточнява според възрастта, времето и нуждите на групата.</p></div><Link to="/obucheniya-za-uchilishta" className="button-primary">Разгледай формата <ArrowRight size={18} aria-hidden="true" /></Link></div></section>
-    <section className="site-section site-container book-strip" id="steps"><div><p className="eyebrow">Книгата „Петте степени“</p><h2>Място за собственото ти темпо.</h2><p>Авторска рамка за наблюдение на дигиталните навици и разумни промени. Степените са въпроси и задачи, към които можеш да се връщаш.</p></div><div className="book-links"><Link className="text-link" to="/order">За книгата <ArrowRight size={17} aria-hidden="true" /></Link><Link className="text-link" to="/step-1">Прочети първата степен <ArrowRight size={17} aria-hidden="true" /></Link></div></section>
+    <section className="site-section site-container book-strip" id="steps"><img className="book-cover" src={BOOK_COVER} alt="Корица на „Петте степени“" width={104} height={156} loading="lazy" decoding="async" /><div><p className="eyebrow">Книгата „Петте степени“</p><h2>Място за собственото ти темпо.</h2><p>Авторска рамка за наблюдение на дигиталните навици и разумни промени. Степените са въпроси и задачи, към които можеш да се връщаш.</p></div><div className="book-links"><Link className="text-link" to="/order">За книгата <ArrowRight size={17} aria-hidden="true" /></Link><Link className="text-link" to="/step-1">Прочети първата степен <ArrowRight size={17} aria-hidden="true" /></Link></div></section>
   </PageLayout>;
 }
