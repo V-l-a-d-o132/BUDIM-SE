@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useState, useEffect, useCallback } from 'react';
 import AdminGuard from '../components/AdminGuard';
 import AdminLayout from '../components/AdminLayout';
@@ -149,7 +150,7 @@ export default function CommentsAdmin() {
             ].map((s, i) => (
               <div key={i} className="bg-white border border-gray-100 rounded-xl p-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <i className={`${s.icon} ${s.color} text-lg`}></i>
+                  <LegacyIcon className={`${s.icon} ${s.color} text-lg`}></LegacyIcon>
                 </div>
                 <p className="text-2xl font-light text-gray-900">{s.value}</p>
                 <p className="text-xs text-gray-500 mt-0.5">{s.label}</p>
@@ -179,7 +180,7 @@ export default function CommentsAdmin() {
               onClick={loadComments}
               className="px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors whitespace-nowrap flex items-center gap-1"
             >
-              <i className="ri-refresh-line text-xs"></i>
+              <LegacyIcon className="ri-refresh-line text-xs"></LegacyIcon>
               Обнови
             </button>
           </div>
@@ -188,11 +189,11 @@ export default function CommentsAdmin() {
           <div className="bg-white border border-gray-100 rounded-xl overflow-hidden">
             {loading ? (
               <div className="flex items-center justify-center py-16">
-                <i className="ri-loader-4-line animate-spin text-gray-400 text-2xl"></i>
+                <LegacyIcon className="ri-loader-4-line animate-spin text-gray-400 text-2xl"></LegacyIcon>
               </div>
             ) : comments.length === 0 ? (
               <div className="text-center py-16">
-                <i className="ri-chat-1-line text-gray-300 text-4xl mb-3 block"></i>
+                <LegacyIcon className="ri-chat-1-line text-gray-300 text-4xl mb-3 block"></LegacyIcon>
                 <p className="text-sm text-gray-400">Няма коментари</p>
               </div>
             ) : (
@@ -207,7 +208,7 @@ export default function CommentsAdmin() {
                       <div className="flex items-start gap-3">
                         {/* Avatar */}
                         <div className={`w-8 h-8 rounded-full bg-gradient-to-br ${comment.avatar_color} flex items-center justify-center flex-shrink-0`}>
-                          <i className="ri-user-fill text-white text-xs"></i>
+                          <LegacyIcon className="ri-user-fill text-white text-xs"></LegacyIcon>
                         </div>
 
                         {/* Content */}
@@ -229,7 +230,7 @@ export default function CommentsAdmin() {
                           {/* Post context */}
                           {post && (
                             <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-3 py-2 mb-2">
-                              <i className={`${platformIcon[post.platform] || 'ri-global-line'} text-gray-400 text-xs flex-shrink-0`}></i>
+                              <LegacyIcon className={`${platformIcon[post.platform] || 'ri-global-line'} text-gray-400 text-xs flex-shrink-0`}></LegacyIcon>
                               <div className="min-w-0">
                                 <span className="text-[10px] text-gray-500 font-medium">Пост от </span>
                                 <span className="text-[10px] text-gray-700 font-semibold">{post.username}</span>
@@ -247,14 +248,14 @@ export default function CommentsAdmin() {
                             disabled={actionLoading === comment.id}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors whitespace-nowrap disabled:opacity-50 ${comment.approved ? 'bg-gray-100 text-gray-600 hover:bg-gray-200' : 'bg-green-100 text-green-700 hover:bg-green-200'}`}
                           >
-                            {actionLoading === comment.id ? <i className="ri-loader-4-line animate-spin"></i> : comment.approved ? 'Скрий' : 'Одобри'}
+                            {actionLoading === comment.id ? <LegacyIcon className="ri-loader-4-line animate-spin"></LegacyIcon> : comment.approved ? 'Скрий' : 'Одобри'}
                           </button>
                           <button
                             onClick={() => toggleFlag(comment)}
                             disabled={actionLoading === comment.id + '-flag'}
                             className={`px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer transition-colors whitespace-nowrap disabled:opacity-50 ${comment.flagged ? 'bg-orange-100 text-orange-700 hover:bg-orange-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}
                           >
-                            {actionLoading === comment.id + '-flag' ? <i className="ri-loader-4-line animate-spin"></i> : comment.flagged ? 'Размаркирай' : '🚩 Маркирай'}
+                            {actionLoading === comment.id + '-flag' ? <LegacyIcon className="ri-loader-4-line animate-spin"></LegacyIcon> : comment.flagged ? 'Размаркирай' : '🚩 Маркирай'}
                           </button>
                           <button
                             onClick={() => deleteComment(comment.id)}

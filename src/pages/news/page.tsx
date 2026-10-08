@@ -1,362 +1,100 @@
 import DOMPurify from 'dompurify';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { fetchNewsListCached, fetchNewsDetailCached } from '@/lib/supabase';
-import Navbar from '@/components/feature/Navbar';
-import Footer from '@/components/feature/Footer';
-import Breadcrumb from '@/components/feature/Breadcrumb';
-import { mockNews } from '@/mocks/news';
+import PageLayout, { PageIntro } from '@/components/feature/PageLayout';
 import { usePageSeo } from '@/hooks/usePageSeo';
-import Icon from '@/components/base/Icon';
 
 interface NewsItem {
-  id: string;
-  title: string;
-  slug: string;
-  body: string;
-  image_url: string | null;
-  created_at: string;
-  published: boolean;
+  id: string; title: string; slug: string; body: string; image_url: string | null;
+  created_at: string; updated_at?: string; published: boolean;
 }
+const plain = (text: string) => text.replace(/<[^>]*>/g, '').replace(/^##?\s+/gm, '').replace(/\s+/g, ' ').trim();
+const date = (value: string) => new Date(value).toLocaleDateString('bg-BG', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]*>/g, '');
-}
-
-function NewsListPage() {
+export function NewsListPage() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(false);
   const [retry, setRetry] = useState(0);
-
+  const [params, setParams] = useSearchParams();
+  const query = params.get('q') || '';
+  const filtered = news.filter(item => (item.title + ' ' + plain(item.body)).toLocaleLowerCase('bg').includes(query.toLocaleLowerCase('bg')));
+  const totalPages = Math.max(1, Math.ceil(filtered.length / 6));
+  const page = Math.min(totalPages, Math.max(1, Number.parseInt(params.get('page') || '1', 10) || 1));
   usePageSeo({
-    title: 'Материали и новини — БУДИМ СЕ',
-    description: 'Материали за проверка на информация, дигитални навици и авторската рамка „Петте степени“. Условните примери са отделени от реалните събития и резултати.',
-    canonical: '/news',
-    schemaType: 'CollectionPage',
-    schemaExtra: {
-      keywords: 'медийна грамотност, дигитални навици, проверка на информация, новини, БУДИМ СЕ',
-      breadcrumb: {
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: 'БУДИМ СЕ', item: 'https://budimse.online' },
-          { '@type': 'ListItem', position: 2, name: 'Новини', item: 'https://budimse.online/news' },
-        ],
-      },
-    },
+    title: 'Материали за медийна и дигитална грамотност',
+    description: 'Кратки обяснения, практически въпроси и примери за проверка на информация, социални мрежи, лични данни и дигитални навици.',
+    canonical: '/news', schemaType: 'CollectionPage', noIndex: Boolean(query),
+    breadcrumbs: [{ name: 'Начало', url: '/' }, { name: 'Материали', url: '/news' }],
   });
-
   useEffect(() => {
     let active = true;
     setLoading(true); setLoadError(false);
-    fetchNewsListCached().then((data) => {
-      if (!active) return;
-      const items = (data as NewsItem[]) ?? [];
-      setNews(items.length > 0 ? items : (mockNews as NewsItem[]));
-    }).catch(() => { if (active) setLoadError(true); })
-      .finally(() => { if (active) setLoading(false); });
+    fetchNewsListCached().then(data => { if (active) setNews((data as NewsItem[]) ?? []); })
+      .catch(() => { if (active) setLoadError(true); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [retry]);
-
-  return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <Navbar />
-      <main className="flex-1 pt-28 pb-20 px-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-14">
-            <p className="text-xs text-gray-400 uppercase tracking-widest mb-3 font-medium">Новини</p>
-            <h1 className="text-4xl md:text-5xl font-light text-gray-900 leading-tight mb-4">
-              Актуално от<br />
-              <span className="font-medium">Центъра</span>
-            </h1>
-            <p className="text-gray-500 max-w-xl leading-relaxed">
-              Материали за медийна грамотност, въпроси за ежедневието и новини от инициативата. Примерите не са отчет за проведени програми.
-            </p>
-          </div>
-
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <Icon name="ri-loader-4-line" size={24} className="text-gray-300 animate-spin" />
-            </div>
-          ) : loadError ? (
-            <div role="alert" className="py-12 text-gray-600">
-              <p>Новините временно не могат да бъдат заредени.</p>
-              <button onClick={() => setRetry(n => n + 1)} className="mt-4 underline text-gray-900">Опитай отново</button>
-            </div>
-          ) : (
-            <div className="space-y-0">
-              {news.map((item, idx) => (
-                <Link
-                  key={item.id}
-                  to={`/news/${item.slug}`}
-                  className="group flex flex-col sm:flex-row gap-6 py-10 border-b border-gray-100 hover:border-gray-300 transition-colors"
-                >
-                  {item.image_url && (
-                    <div className="w-full sm:w-48 h-32 flex-shrink-0 rounded-sm overflow-hidden bg-gray-100">
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-3">
-                      <p className="text-xs text-gray-400">
-                        {new Date(item.created_at).toLocaleDateString('bg-BG', {
-                          day: 'numeric',
-                          month: 'long',
-                          year: 'numeric',
-                        })}
-                      </p>
-                      {idx === 0 && (
-                        <span className="text-xs bg-gray-900 text-white px-2 py-0.5 rounded-sm whitespace-nowrap">
-                          Последно
-                        </span>
-                      )}
-                    </div>
-                    <h2 className="text-lg font-medium text-gray-900 mb-2 group-hover:text-gray-600 transition-colors leading-snug">
-                      {item.title}
-                    </h2>
-                    <p className="text-sm text-gray-500 leading-relaxed line-clamp-2">
-                      {stripHtml(item.body).slice(0, 200)}...
-                    </p>
-                    <span className="inline-flex items-center gap-1.5 text-xs text-gray-400 mt-4 group-hover:text-gray-700 transition-colors">
-                      Прочети
-                      <Icon name="ri-arrow-right-line" size={12} />
-                    </span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
+  return <PageLayout>
+    <PageIntro eyebrow="Материали" title="По-малко шум. Повече контекст."><p>Кратки обяснения и практически въпроси за информацията, социалните мрежи и дигиталните навици. Учебните примери са отделени от установените факти.</p></PageIntro>
+    <section className="site-container pb-12">
+      <div className="form-field max-w-xl mb-8"><label htmlFor="news-search">Търси тема или дума</label><input id="news-search" type="search" value={query} placeholder="Например: източници, социални мрежи, пароли" onChange={event => setParams(event.target.value ? { q: event.target.value } : {}, { replace: true })} /></div>
+      {loading ? <p role="status" className="py-12">Зареждане на материалите…</p> : loadError ? <div role="alert" className="py-8"><p>Материалите временно не могат да бъдат заредени.</p><button className="button-secondary mt-4" onClick={() => setRetry(n => n + 1)}>Опитай отново</button></div> : <>
+        <p role="status" className="mb-5">{filtered.length} {filtered.length === 1 ? 'материал' : 'материала'}{query ? ' по това търсене' : ''}</p>
+        {filtered.length === 0 && <p className="py-8">{query ? 'Няма съвпадение. Опитай с по-кратка дума или друга тема.' : 'Все още няма публикувани материали.'}</p>}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+          {filtered.slice((page - 1) * 6, page * 6).map(item => <article className="resource-card !p-0 overflow-hidden" key={item.id}>
+            {item.image_url && <img src={item.image_url} alt="" loading="lazy" decoding="async" width={420} height={210} className="w-full h-40 object-cover" />}
+            <div className="p-6 flex flex-col flex-1"><p className="!text-xs mb-3"><time dateTime={item.updated_at || item.created_at}>{item.updated_at ? 'Обновено: ' : ''}{date(item.updated_at || item.created_at)}</time></p>
+              <h2 className="!text-xl"><Link to={'/news/' + item.slug} className="hover:underline underline-offset-4">{item.title}</Link></h2>
+              <p className="line-clamp-3 !text-sm">{plain(item.body).slice(0, 190)}…</p><Link to={'/news/' + item.slug} className="text-link" aria-label={'Прочети: ' + item.title}>Прочети материала →</Link></div>
+          </article>)}
         </div>
-      </main>
-      <Footer />
-    </div>
-  );
+        {totalPages > 1 && <nav aria-label="Страници с материали" className="button-row justify-center mt-8">
+          {Array.from({ length: totalPages }, (_, index) => <Link className={page === index + 1 ? 'button-primary' : 'button-secondary'} aria-current={page === index + 1 ? 'page' : undefined} key={index} to={'/news?' + new URLSearchParams({ ...(query ? { q: query } : {}), page: String(index + 1) })}>{index + 1}</Link>)}
+        </nav>}
+      </>}
+    </section>
+  </PageLayout>;
 }
 
-function NewsDetailPage() {
+export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const [item, setItem] = useState<NewsItem | null>(null);
   const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [retry, setRetry] = useState(0);
-
-  // Dynamic SEO — updates when item loads
+  // Never show or mark up the previous article while a different slug is loading.
+  const current = item?.slug === slug ? item : null;
+  const missing = !loading && !loadError && !current;
   usePageSeo({
-    title: item ? `${item.title} | Център БУДИМ СЕ` : 'Новина — Център БУДИМ СЕ',
-    description: item
-      ? stripHtml(item.body).replace(/\n/g, ' ').slice(0, 155).trim() + '...'
-      : 'Анализи и наблюдения от терен — Център БУДИМ СЕ, медийна грамотност и дигитален суверенитет.',
-    canonical: slug ? `/news/${slug}` : '/news',
-    ogImage: item?.image_url ?? undefined,
-    ogType: 'article',
+    title: current?.title || (missing ? 'Материалът не е намерен' : 'Материал от БУДИМ СЕ'),
+    description: current ? plain(current.body).slice(0, 155) : 'Материали за медийна и дигитална грамотност от БУДИМ СЕ.',
+    canonical: slug ? '/news/' + slug : '/news', ogImage: current?.image_url || undefined,
+    ogType: current ? 'article' : 'website', schemaType: current ? 'Article' : 'WebPage', noIndex: missing,
+    schemaExtra: current ? { headline: current.title, datePublished: current.created_at,
+      dateModified: current.updated_at || current.created_at,
+      author: { '@type': 'Person', name: 'Владимир Атанасов', url: 'https://budimse.online/author' } } : {},
+    breadcrumbs: [{ name: 'Начало', url: '/' }, { name: 'Материали', url: '/news' }, ...(current ? [{ name: current.title, url: '/news/' + current.slug }] : [])],
   });
-
-  // Schema.org Article structured data
   useEffect(() => {
-    if (!item) return;
-    const existingScript = document.getElementById('schema-article');
-    if (existingScript) existingScript.remove();
-
-    const script = document.createElement('script');
-    script.id = 'schema-article';
-    script.type = 'application/ld+json';
-    script.textContent = JSON.stringify({
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: item.title,
-      description: stripHtml(item.body).replace(/\n/g, ' ').slice(0, 155).trim() + '...',
-      image: item.image_url ? [item.image_url] : [],
-      datePublished: item.created_at,
-      dateModified: item.created_at,
-      author: {
-        '@type': 'Person',
-        name: 'Владимир Атанасов',
-        url: 'https://budimse.online/author',
-      },
-      publisher: {
-        '@type': 'Organization',
-        name: 'Център за медийна и дигитална грамотност БУДИМ СЕ',
-        url: 'https://budimse.online',
-        logo: {
-          '@type': 'ImageObject',
-          url: 'https://budimse.online/site.webmanifest',
-        },
-      },
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': `https://budimse.online/news/${item.slug}`,
-      },
-      url: `https://budimse.online/news/${item.slug}`,
-      inLanguage: 'bg',
-      keywords: 'медийна грамотност, дигитален суверенитет, БУДИМ СЕ, когнитивна свобода',
-    });
-    document.head.appendChild(script);
-
-    return () => {
-      const s = document.getElementById('schema-article');
-      if (s) s.remove();
-    };
-  }, [item]);
-
-  useEffect(() => {
-    if (!slug) return;
     let active = true;
-    setLoading(true); setLoadError(false); setNotFound(false); setItem(null);
-    fetchNewsDetailCached(slug).then((data) => {
-      if (!active) return;
-      if (data) {
-        setItem(data as NewsItem);
-      } else {
-        const mock = mockNews.find((n) => n.slug === slug);
-        if (mock) setItem(mock as NewsItem);
-        else setNotFound(true);
-      }
-    }).catch(() => { if (active) setLoadError(true); })
-      .finally(() => { if (active) setLoading(false); });
+    setLoading(true); setLoadError(false); setItem(null);
+    fetchNewsDetailCached(slug || '').then(data => { if (active) setItem((data as NewsItem | null) ?? null); })
+      .catch(() => { if (active) setLoadError(true); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [slug, retry]);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <div className="flex items-center justify-center pt-40">
-          <Icon name="ri-loader-4-line" size={24} className="animate-spin text-gray-300" />
-        </div>
-      </div>
-    );
-  }
-
-  if (loadError) {
-    return (
-      <div className="min-h-screen bg-white"><Navbar />
-        <main role="alert" className="pt-40 text-center text-gray-600">
-          <p>Новината временно не може да бъде заредена.</p>
-          <button onClick={() => setRetry(n => n + 1)} className="mt-4 underline text-gray-900">Опитай отново</button>
-        </main>
-      </div>
-    );
-  }
-
-  if (notFound || !item) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Navbar />
-        <div className="pt-40 text-center text-gray-400">
-          <p className="text-lg mb-4">Новината не е намерена.</p>
-          <Link to="/news" className="text-sm text-gray-900 underline">
-            Обратно към новините
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-white flex flex-col">
-      <Navbar />
-      <main className="flex-1 pt-28 pb-20 px-6">
-        <div className="max-w-3xl mx-auto">
-          <Breadcrumb
-            className="mb-6"
-            items={[
-              { name: 'БУДИМ СЕ', url: '/' },
-              { name: 'Новини', url: '/news' },
-              { name: item.title.length > 40 ? item.title.slice(0, 40) + '…' : item.title },
-            ]}
-          />
-
-          <p className="text-xs text-gray-400 mb-4">
-            {new Date(item.created_at).toLocaleDateString('bg-BG', {
-              day: 'numeric',
-              month: 'long',
-              year: 'numeric',
-            })}
-          </p>
-
-          <h1 className="text-3xl md:text-4xl font-light text-gray-900 leading-tight mb-10">
-            {item.title}
-          </h1>
-
-          {item.image_url && (
-            <div className="w-full h-64 md:h-80 rounded-sm overflow-hidden bg-gray-100 mb-12">
-              <img
-                src={item.image_url}
-                alt={item.title}
-                loading="eager"
-                decoding="async"
-                className="w-full h-full object-cover object-top"
-              />
-            </div>
-          )}
-
-          <div className="space-y-6">
-            {item.body
-              .split('\n')
-              .filter(Boolean)
-              .map((para, i) => (
-                <p
-                  key={i}
-                  className="text-gray-700 leading-relaxed text-lg [&_a]:text-gray-900 [&_a]:underline [&_a]:underline-offset-4 [&_a:hover]:text-gray-600 [&_a]:transition-colors"
-                  dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(para, { ALLOWED_TAGS: ['a','b','strong','i','em','u','br','span'], ALLOWED_ATTR: ['href','title'] }) }}
-                />
-              ))}
-          </div>
-
-          <div className="mt-14 pt-8 border-t border-gray-100">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
-              <Link
-                to="/news"
-                className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-              >
-                <Icon name="ri-arrow-left-line" size={16} />
-                Обратно към новините
-              </Link>
-              <Link
-                to="/center"
-                className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors"
-              >
-                За Центъра
-                <Icon name="ri-arrow-right-line" size={16} />
-              </Link>
-            </div>
-            <div className="flex flex-wrap gap-4 pt-4 border-t border-gray-50">
-              <Link
-                to="/step-1"
-                className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors"
-              >
-                <Icon name="ri-map-pin-line" size={12} />
-                Рамката — Петте степени
-              </Link>
-              <Link
-                to="/digitalna-gramotnost"
-                className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors"
-              >
-                <Icon name="ri-book-open-line" size={12} />
-                Дигитална грамотност
-              </Link>
-              <Link
-                to="/analizator"
-                className="inline-flex items-center gap-1.5 text-xs text-gray-400 hover:text-gray-700 transition-colors"
-              >
-                <Icon name="ri-shield-line" size={12} />
-                Анализатор на съдържание
-              </Link>
-            </div>
-          </div>
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
+  return <PageLayout>
+    {loading ? <div className="site-container site-section"><p role="status">Зареждане на материала…</p></div> : loadError ? <div role="alert" className="site-container site-section"><h1>Материалът временно не се зарежда.</h1><p className="mt-5">Провери връзката или опитай отново след малко.</p><button className="button-secondary mt-5" onClick={() => setRetry(n => n + 1)}>Опитай отново</button></div> : current ? <>
+      <PageIntro eyebrow="Материали" title={current.title}><p className="!text-sm"><Link to="/author" className="underline">Владимир Атанасов</Link> · Публикувано: <time dateTime={current.created_at}>{date(current.created_at)}</time>{current.updated_at && <> · Обновено: <time dateTime={current.updated_at}>{date(current.updated_at)}</time></>}</p></PageIntro>
+      <div className="site-container reading-layout"><article className="prose-content">
+        {current.image_url && <img src={current.image_url} alt="" width={800} height={420} decoding="async" className="w-full max-h-80 object-cover rounded-lg mb-8" />}
+        {current.body.split(/\n+/).filter(line => line.trim()).map((line, index) => {
+          const heading = line.match(/^## (.*)$|^<strong>([^<>]+)<\/strong>$/);
+          return heading ? <h2 key={index}>{heading[1] || heading[2]}</h2> : <p key={index} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(line, { ALLOWED_TAGS: ['a', 'b', 'strong', 'i', 'em', 'br'], ALLOWED_ATTR: ['href', 'title'] }) }} />;
+        })}
+        <div className="source-note"><p>Имаш въпрос или източник за корекция? <Link to="/contact">Пиши ни</Link> с конкретния откъс и линк.</p></div>
+      </article><aside className="page-aside"><h2>Продължи с</h2><Link to="/digitalna-gramotnost">Основи на грамотността</Link><Link to="/mediyna-gramotnost-uchenici">Упражнения за ученици</Link><Link to="/news">Всички материали</Link></aside></div>
+    </> : <div className="site-container site-section"><h1>Този материал не е наличен.</h1><p className="mt-5">Възможно е адресът да е променен или материалът да е свален.</p><Link to="/news" className="button-primary mt-6">Към материалите</Link></div>}
+  </PageLayout>;
 }
-
-export { NewsListPage, NewsDetailPage };
-

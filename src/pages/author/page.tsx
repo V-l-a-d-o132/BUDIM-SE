@@ -44,62 +44,11 @@ export default function Author() {
   return (
     <>
       {/* Enhanced Minimalist Background Elements - Fixed Position */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        {/* Primary angular geometric shapes */}
-        <div className="absolute top-20 left-10 w-1 h-32 bg-gray-200 rotate-12 opacity-40"></div>
-        <div className="absolute top-40 right-20 w-24 h-1 bg-gray-200 opacity-30"></div>
-        <div className="absolute bottom-40 left-1/4 w-1 h-20 bg-gray-200 -rotate-45 opacity-35"></div>
-        <div className="absolute top-1/3 right-1/3 w-16 h-1 bg-gray-200 rotate-45 opacity-25"></div>
-        
-        {/* Additional angular lines */}
-        <div className="absolute top-60 left-1/3 w-1 h-16 bg-gray-200 rotate-30 opacity-30"></div>
-        <div className="absolute bottom-60 right-1/4 w-20 h-1 bg-gray-200 -rotate-30 opacity-25"></div>
-        <div className="absolute top-1/4 left-2/3 w-1 h-12 bg-gray-200 rotate-60 opacity-35"></div>
-        <div className="absolute bottom-1/3 left-1/6 w-14 h-1 bg-gray-200 rotate-15 opacity-30"></div>
-        
-        {/* Corner elements */}
-        <div className="absolute top-16 right-16 w-8 h-8 border-l border-t border-gray-200 opacity-25"></div>
-        <div className="absolute bottom-16 left-16 w-6 h-6 border-r border-b border-gray-200 opacity-30"></div>
-        <div className="absolute top-1/2 left-8 w-4 h-4 border-t border-r border-gray-200 opacity-35 rotate-45"></div>
-        <div className="absolute top-3/4 right-8 w-5 h-5 border-l border-b border-gray-200 opacity-25 -rotate-12"></div>
-        
-        {/* Subtle triangular shapes */}
-        <div className="absolute top-32 left-1/2 w-0 h-0 border-l-4 border-r-4 border-b-6 border-transparent border-b-gray-200 opacity-20"></div>
-        <div className="absolute bottom-32 right-1/3 w-0 h-0 border-l-3 border-r-3 border-t-5 border-transparent border-t-gray-200 opacity-25"></div>
-        
-        {/* Subtle circles */}
-        <div className="absolute top-32 right-10 w-2 h-2 rounded-full bg-gray-200 opacity-30"></div>
-        <div className="absolute bottom-32 left-16 w-1 h-1 rounded-full bg-gray-200 opacity-40"></div>
-        <div className="absolute top-2/3 left-1/2 w-1.5 h-1.5 rounded-full bg-gray-200 opacity-25"></div>
-        
-        {/* Diagonal corner accents */}
-        <div className="absolute top-0 left-0 w-16 h-16">
-          <div className="absolute top-4 left-4 w-8 h-1 bg-gray-200 opacity-20 rotate-45"></div>
-          <div className="absolute top-6 left-2 w-1 h-8 bg-gray-200 opacity-20 rotate-45"></div>
-        </div>
-        <div className="absolute bottom-0 right-0 w-16 h-16">
-          <div className="absolute bottom-4 right-4 w-8 h-1 bg-gray-200 opacity-20 -rotate-45"></div>
-          <div className="absolute bottom-6 right-2 w-1 h-8 bg-gray-200 opacity-20 -rotate-45"></div>
-        </div>
-        
-        {/* Minimal grid pattern */}
-        <div className="absolute top-0 left-0 w-full h-full opacity-8">
-          <div className="grid grid-cols-12 h-full">
-            {Array.from({ length: 12 }).map((_, i) => (
-              <div key={i} className="border-r border-gray-200 last:border-r-0"></div>
-            ))}
-          </div>
-        </div>
-        
-        {/* Additional geometric accents */}
-        <div className="absolute top-1/5 right-1/5 w-3 h-3 border border-gray-200 opacity-25 rotate-45"></div>
-        <div className="absolute bottom-1/5 left-1/5 w-2 h-2 border border-gray-200 opacity-30 rotate-12"></div>
-        <div className="absolute top-3/5 left-3/4 w-4 h-1 bg-gray-200 opacity-20 rotate-75"></div>
-        <div className="absolute bottom-2/5 right-2/3 w-1 h-6 bg-gray-200 opacity-25 -rotate-20"></div>
-      </div>
+
 
       <div className="min-h-screen bg-white relative z-10">
         <Navbar />
+        <main id="main-content" tabIndex={-1} className="editorial-page">
 
         {/* Author Hero Section */}
         <section className="pt-28 pb-12 px-4 md:pt-32 md:pb-16 md:px-6">
@@ -107,7 +56,7 @@ export default function Author() {
             <div className="grid md:grid-cols-3 gap-12 items-start">
               <div className="md:col-span-1">
                 <div className="w-full aspect-square bg-gray-100 rounded-lg overflow-hidden mb-6">
-                  <img 
+                  <img
                     src="https://static.readdy.ai/image/658b459fcf05a7723f8029c45615de2f/346ce47665cbfed8a19738496609c6ac.jpeg"
                     alt="Владимир Атанасов - автор"
                     className="w-full h-full object-contain"
@@ -210,19 +159,19 @@ export default function Author() {
               Свържете се
             </h2>
             <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-              За въпроси относно книгата, изследванията или възможности за сътрудничество — 
+              За въпроси относно книгата, изследванията или възможности за сътрудничество —
               моля, използвайте следните канали:
             </p>
             <div className="flex flex-wrap justify-center gap-4">
-              <a 
-                href="mailto:budimseonline@gmail.com" 
+              <a
+                href="mailto:budimseonline@gmail.com"
                 className="inline-flex items-center px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap cursor-pointer"
               >
                 <Icon name="ri-mail-line" size={16} className="mr-2" />
                 Имейл
               </a>
-              <a 
-                href="https://linkedin.com" 
+              <a
+                href="https://linkedin.com"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-6 py-3 border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-colors whitespace-nowrap cursor-pointer"
@@ -242,15 +191,15 @@ export default function Author() {
               Открийте петте степени от авторската рамка
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link 
-                to="/step-1" 
+              <Link
+                to="/step-1"
                 className="inline-flex items-center justify-center px-8 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition-colors whitespace-nowrap"
               >
                 Разгледай рамката
                 <Icon name="ri-arrow-right-line" size={16} className="ml-2" />
               </Link>
-              <Link 
-                to="/order" 
+              <Link
+                to="/order"
                 className="inline-flex items-center justify-center px-8 py-3 border-2 border-gray-900 text-gray-900 rounded-full hover:bg-gray-900 hover:text-white transition-colors whitespace-nowrap"
               >
                 <Icon name="ri-book-line" size={16} className="mr-2" />
@@ -260,6 +209,7 @@ export default function Author() {
           </div>
         </section>
 
+        </main>
         <Footer />
       </div>
     </>

@@ -74,9 +74,12 @@ export default defineConfig({
     cssMinify: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
-          'vendor-supabase': ['@supabase/supabase-js'],
+        manualChunks(id) {
+          // Keep the shared preload helper out of the lazy database chunk.
+          // Otherwise importing that helper pulls the entire SDK onto the homepage.
+          if (id.includes('vite/preload-helper')) return 'preload-helper';
+          if (id.includes('/node_modules/@supabase/')) return 'vendor-supabase';
+          if (/\/node_modules\/(react|react-dom|react-router|react-router-dom|scheduler)\//.test(id)) return 'vendor-react';
         },
         chunkFileNames: 'assets/[name]-[hash].js',
         entryFileNames: 'assets/[name]-[hash].js',

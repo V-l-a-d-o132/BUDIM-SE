@@ -53,7 +53,7 @@ export default function Step2() {
       <Navbar />
 
       {/* Content */}
-      <main className="pt-24 pb-16 px-6">
+      <main id="main-content" tabIndex={-1} className="editorial-page pt-24 pb-16 px-6">
         <div className="max-w-4xl mx-auto">
           <Breadcrumb
             className="mb-8"

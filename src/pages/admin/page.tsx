@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useAdminAuth } from '@/hooks/useAdminAuth';
 import { requiredAdminPermission } from '@/lib/admin-permissions';
 import { useEffect, useState } from 'react';
@@ -54,7 +55,7 @@ export default function AdminDashboard() {
               <a key={i} href={s.link} className="bg-white border border-gray-100 rounded-xl p-6 hover:border-gray-300 transition-colors cursor-pointer block">
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-9 h-9 flex items-center justify-center bg-gray-50 rounded-lg">
-                    <i className={`${s.icon} text-gray-500 text-lg`}></i>
+                    <LegacyIcon className={`${s.icon} text-gray-500 text-lg`}></LegacyIcon>
                   </div>
                 </div>
                 <div className="text-3xl font-light text-gray-900 mb-1">
@@ -74,7 +75,7 @@ export default function AdminDashboard() {
                 className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer"
               >
                 <div className="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-lg flex-shrink-0">
-                  <i className="ri-add-line text-gray-500"></i>
+                  <LegacyIcon className="ri-add-line text-gray-500"></LegacyIcon>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">Нова новина</p>
@@ -86,7 +87,7 @@ export default function AdminDashboard() {
                 className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer"
               >
                 <div className="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-lg flex-shrink-0">
-                  <i className="ri-shopping-bag-line text-gray-500"></i>
+                  <LegacyIcon className="ri-shopping-bag-line text-gray-500"></LegacyIcon>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">Поръчки от Stripe</p>
@@ -98,7 +99,7 @@ export default function AdminDashboard() {
                 className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer"
               >
                 <div className="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-lg flex-shrink-0">
-                  <i className="ri-mail-line text-gray-500"></i>
+                  <LegacyIcon className="ri-mail-line text-gray-500"></LegacyIcon>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">Запитвания за партньорство</p>
@@ -112,7 +113,7 @@ export default function AdminDashboard() {
                 className="flex items-center gap-3 px-4 py-3 border border-gray-200 rounded-lg hover:border-gray-400 transition-colors cursor-pointer"
               >
                 <div className="w-8 h-8 flex items-center justify-center bg-gray-50 rounded-lg flex-shrink-0">
-                  <i className="ri-external-link-line text-gray-500"></i>
+                  <LegacyIcon className="ri-external-link-line text-gray-500"></LegacyIcon>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-gray-900">Виж сайта</p>

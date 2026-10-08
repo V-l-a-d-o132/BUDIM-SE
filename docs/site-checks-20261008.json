@@ -1,0 +1,52 @@
+{
+  "date": "2026-10-08",
+  "beforeEntryGzip": 175373,
+  "afterEntryGzip": 97286,
+  "assets": [
+    {
+      "file": "/assets/index-AzQKGivP.js",
+      "bytes": 10208,
+      "gzip": 3522
+    },
+    {
+      "file": "/assets/vendor-react-l7_jCeJD.js",
+      "bytes": 260028,
+      "gzip": 82632
+    },
+    {
+      "file": "/assets/preload-helper-BXl3LOEh.js",
+      "bytes": 1110,
+      "gzip": 650
+    },
+    {
+      "file": "/assets/index-Bs-qgvVG.css",
+      "bytes": 51214,
+      "gzip": 10482
+    }
+  ],
+  "publicRoutes": 19,
+  "publishedArticles": 20,
+  "totalPublicURLs": 39,
+  "htmlBytes": 23637,
+  "testsPassed": 175,
+  "hydrationRoutes": 9,
+  "visualPreview": "not available: cloud browser cannot reach the local server and blocks file URLs",
+  "deployment": {
+    "articles": "published; all 20 hashes verified",
+    "frontend": "pending GitHub checks/merge and Readdy Pull/Publish",
+    "sitemapFunction": "pending frontend publication",
+    "gitHubWriteAccess": "restored; working branch created",
+    "baseMain": "14fceb971bee6aeb504c0a322a0e43475c3c8876"
+  },
+  "latestLiveBrowserCheck": {
+    "status": "passed for the published article in the existing frontend",
+    "url": "https://budimse.online/news/proverka-na-fakti",
+    "verified": [
+      "revised title and body",
+      "corrected link to existing literacy guide",
+      "cookie banner dismissed after rejection"
+    ],
+    "screenshot": "article-published-1791473204419.jpg",
+    "newDesignVisuallyVerified": false
+  }
+}

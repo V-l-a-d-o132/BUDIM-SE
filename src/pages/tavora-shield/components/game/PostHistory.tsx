@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useState, useEffect, useRef } from 'react';
 import { gameCommand } from './gameApi';
 import { type GamePost } from './types';
@@ -86,7 +87,7 @@ export default function PostHistory() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 mb-0.5">
-                      <i className={`${platformIcons[p.platform] || 'ri-global-line'} text-gray-400 text-[10px]`}></i>
+                      <LegacyIcon className={`${platformIcons[p.platform] || 'ri-global-line'} text-gray-400 text-[10px]`}></LegacyIcon>
                       <span className="text-[9px] text-gray-500">{p.platform}</span>
                       {p.is_viral && <span className="text-[8px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full">🔥 ВИРАЛЕН</span>}
                       {p.challenge_id && <span className="text-[8px] text-amber-600 bg-amber-100 px-1.5 py-0.5 rounded-full">🏆 Предизвикателство</span>}
@@ -126,7 +127,7 @@ export default function PostHistory() {
                     {p.ai_reason && (
                       <div className="bg-amber-50 border border-amber-100 rounded-lg p-2">
                         <p className="text-[8px] text-amber-700 leading-relaxed">
-                          <i className="ri-robot-line mr-1"></i>{p.ai_reason}
+                          <LegacyIcon className="ri-robot-line mr-1"></LegacyIcon>{p.ai_reason}
                         </p>
                       </div>
                     )}

@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
@@ -147,7 +148,7 @@ export default function AdminLogin() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="w-6 h-6 flex items-center justify-center">
-          <i className="ri-loader-4-line animate-spin text-gray-400 text-2xl"></i>
+          <LegacyIcon className="ri-loader-4-line animate-spin text-gray-400 text-2xl"></LegacyIcon>
         </div>
       </div>
     );
@@ -206,9 +207,9 @@ export default function AdminLogin() {
               className="w-full bg-gray-900 text-white rounded-lg py-3 text-sm font-medium hover:bg-gray-800 transition-colors disabled:opacity-50 cursor-pointer whitespace-nowrap flex items-center justify-center gap-2"
             >
               {submitting ? (
-                <><i className="ri-loader-4-line animate-spin"></i> Влизане...</>
+                <><LegacyIcon className="ri-loader-4-line animate-spin"></LegacyIcon> Влизане...</>
               ) : lockout.locked ? (
-                <><i className="ri-lock-line"></i> Заключено</>
+                <><LegacyIcon className="ri-lock-line"></LegacyIcon> Заключено</>
               ) : (
                 'Влез в панела'
               )}

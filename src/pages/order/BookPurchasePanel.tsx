@@ -12,10 +12,12 @@ export default function BookPurchasePanel() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [order, setOrder] = useState<BookOrder | null>(null);
-  const [orderId, setOrderId] = useState(() => new URLSearchParams(window.location.search).get('order'));
+  const [orderId, setOrderId] = useState<string | null>(null);
   const [notice, setNotice] = useState('');
   const pollCount = useRef(0);
   const tokenRef = useRef<string | null>(null);
+
+  useEffect(() => { setOrderId(new URLSearchParams(window.location.search).get('order')); }, []);
 
   useEffect(() => {
     let active = true;

@@ -4,7 +4,7 @@
  * Usage: <Icon name="ri-mail-line" className="text-gray-500" size={18} />
  */
 import {
-  Mail, MapPin, ArrowRight, ArrowLeft, ArrowDown,
+  Mail, MapPin, ArrowRight, ArrowLeft, ArrowDown, ArrowUp, Calendar, Barcode, History, BellOff,
   ChevronDown, ChevronRight, ChevronLeft, ChevronUp, Menu, X,
   ShieldCheck, Book, BookOpen, Newspaper, Building, Building2,
   School, Home, Mic, Globe, Clock, RefreshCw, Plus, Save,
@@ -28,6 +28,14 @@ import {
 import { type HTMLAttributes } from 'react';
 
 const iconMap: Record<string, LucideIcon> = {
+  'ri-arrow-up-line': ArrowUp,
+  'ri-barcode-line': Barcode,
+  'ri-calendar-line': Calendar,
+  'ri-chat-1-fill': MessageCircle,
+  'ri-file-text-line': FileText,
+  'ri-history-line': History,
+  'ri-notification-off-line': BellOff,
+  'ri-repeat-fill': Repeat,
   'ri-mail-line': Mail,
   'ri-mail-open-line': Mail,
   'ri-map-pin-line': MapPin,

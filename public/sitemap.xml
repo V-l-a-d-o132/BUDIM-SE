@@ -1,352 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-        xmlns:xhtml="http://www.w3.org/1999/xhtml">
-
-  <!-- Homepage -->
-  <url>
-    <loc>https://budimse.online/</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-
-  <!-- Център за медийна и дигитална грамотност -->
-  <url>
-    <loc>https://budimse.online/center</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/center"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/center"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Дигитална грамотност landing page -->
-  <url>
-    <loc>https://budimse.online/digitalna-gramotnost</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/digitalna-gramotnost"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/digitalna-gramotnost"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.9</priority>
-  </url>
-
-  <!-- Степени -->
-  <url>
-    <loc>https://budimse.online/step-1</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/step-1"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/step-1"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/step-2</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/step-2"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/step-2"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/step-3</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/step-3"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/step-3"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/step-4</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/step-4"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/step-4"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/step-5</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/step-5"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/step-5"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Новини -->
-  <url>
-    <loc>https://budimse.online/news</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Нови статии за медийна грамотност -->
-  <url>
-    <loc>https://budimse.online/news/razpoznavane-na-dezinformatsiya</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/razpoznavane-na-dezinformatsiya"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/razpoznavane-na-dezinformatsiya"/>
-    <lastmod>2026-08-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/digitalen-detoks</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/digitalen-detoks"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/digitalen-detoks"/>
-    <lastmod>2026-08-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/proverka-na-fakti</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/proverka-na-fakti"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/proverka-na-fakti"/>
-    <lastmod>2026-08-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/kritichno-mislene-online</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/kritichno-mislene-online"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/kritichno-mislene-online"/>
-    <lastmod>2026-08-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/manipulativni-tehniki-v-mediite</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/manipulativni-tehniki-v-mediite"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/manipulativni-tehniki-v-mediite"/>
-    <lastmod>2026-08-01</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/povedencheski-dizain-platformi</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/povedencheski-dizain-platformi"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/povedencheski-dizain-platformi"/>
-    <lastmod>2026-07-29</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/digitalno-blagosastoyanie</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/digitalno-blagosastoyanie"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/digitalno-blagosastoyanie"/>
-    <lastmod>2026-07-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/kiberhigiena</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/kiberhigiena"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/kiberhigiena"/>
-    <lastmod>2026-07-21</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/digitalen-suverenitet</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/digitalen-suverenitet"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/digitalen-suverenitet"/>
-    <lastmod>2026-07-18</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/algoritmi-i-eho-kameri</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/algoritmi-i-eho-kameri"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/algoritmi-i-eho-kameri"/>
-    <lastmod>2026-07-14</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/obrazovanie-za-medii</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/obrazovanie-za-medii"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/obrazovanie-za-medii"/>
-    <lastmod>2026-07-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/es-ne-atakuva-skrola</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/es-ne-atakuva-skrola"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/es-ne-atakuva-skrola"/>
-    <lastmod>2026-07-11</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/falshivi-novini</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/falshivi-novini"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/falshivi-novini"/>
-    <lastmod>2026-07-07</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- По-стари статии -->
-  <url>
-    <loc>https://budimse.online/news/vnimanie-novata-valuta</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/vnimanie-novata-valuta"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/vnimanie-novata-valuta"/>
-    <lastmod>2026-05-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/dobriat-biznes-ne-e-dostachen</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/dobriat-biznes-ne-e-dostachen"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/dobriat-biznes-ne-e-dostachen"/>
-    <lastmod>2026-05-26</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/ako-ai-ne-znae</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/ako-ai-ne-znae"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/ako-ai-ne-znae"/>
-    <lastmod>2026-05-24</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/skiming-nov-standart</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/skiming-nov-standart"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/skiming-nov-standart"/>
-    <lastmod>2026-04-10</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/obraten-efekt-flin</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/obraten-efekt-flin"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/obraten-efekt-flin"/>
-    <lastmod>2026-04-05</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/korporativna-higiena-odit</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/korporativna-higiena-odit"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/korporativna-higiena-odit"/>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/news/email-apnea</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/news/email-apnea"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/news/email-apnea"/>
-    <lastmod>2026-03-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- Анализатор -->
-  <url>
-    <loc>https://budimse.online/analizator</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/analizator"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/analizator"/>
-    <lastmod>2026-08-25</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-
-  <!-- Автор -->
-  <url>
-    <loc>https://budimse.online/author</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/author"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/author"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- Отзиви -->
-  <url>
-    <loc>https://budimse.online/testimonials</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/testimonials"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/testimonials"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- Книгата -->
-  <url>
-    <loc>https://budimse.online/order</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/order"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/order"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-
-  <!-- Научни източници -->
-  <url>
-    <loc>https://budimse.online/sources</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/sources"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/sources"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-
-  <!-- Контакти -->
-  <url>
-    <loc>https://budimse.online/contact</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/contact"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/contact"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.5</priority>
-  </url>
-
-  <!-- Правна информация -->
-  <url>
-    <loc>https://budimse.online/privacy</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/privacy"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/privacy"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
-  <url>
-    <loc>https://budimse.online/terms</loc>
-    <xhtml:link rel="alternate" hreflang="bg" href="https://budimse.online/terms"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://budimse.online/terms"/>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>yearly</changefreq>
-    <priority>0.3</priority>
-  </url>
-
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://budimse.online/</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/digitalna-gramotnost</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/mediyna-gramotnost-uchenici</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/obucheniya-za-uchilishta</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/center</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/analizator</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/step-1</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/step-2</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/step-3</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/step-4</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/step-5</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/order</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/author</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/sources</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/testimonials</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/contact</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/privacy</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/terms</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/razpoznavane-na-dezinformatsiya</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/digitalen-detoks</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/proverka-na-fakti</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/kritichno-mislene-online</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/manipulativni-tehniki-v-mediite</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/povedencheski-dizain-platformi</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/digitalno-blagosastoyanie</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/kiberhigiena</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/digitalen-suverenitet</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/algoritmi-i-eho-kameri</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/es-ne-atakuva-skrola</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/obrazovanie-za-medii</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/falshivi-novini</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/vnimanie-novata-valuta</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/dobriat-biznes-ne-e-dostachen</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/ako-ai-ne-znae</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/skiming-nov-standart</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/obraten-efekt-flin</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/korporativna-higiena-odit</loc><lastmod>2026-10-08</lastmod></url>
+  <url><loc>https://budimse.online/news/email-apnea</loc><lastmod>2026-10-08</lastmod></url>
 </urlset>

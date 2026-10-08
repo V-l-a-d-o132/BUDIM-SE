@@ -1,259 +1,64 @@
-import { useState, useRef, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import Icon from '@/components/base/Icon';
+import { useEffect, useRef, useState } from 'react';
+import { Link, NavLink, useLocation } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 
-const steps = [
-  { path: '/step-1', number: '01', title: 'Да забележиш навика', subtitle: 'Кога и защо посягаме към телефона' },
-  { path: '/step-2', number: '02', title: 'Да разбереш средата', subtitle: 'Препоръки, известия и източници' },
-  { path: '/step-3', number: '03', title: 'Да опиташ промяна', subtitle: 'Една изпълнима промяна' },
-  { path: '/step-4', number: '04', title: 'Да върнеш място за живота', subtitle: 'Важните занимания и почивката' },
-  { path: '/step-5', number: '05', title: 'Да поддържаш свободата си', subtitle: 'Граници, които можем да преглеждаме' },
+const links = [
+  { to: '/digitalna-gramotnost', label: 'Грамотност' },
+  { to: '/obucheniya-za-uchilishta', label: 'За училища' },
+  { to: '/news', label: 'Материали' },
+  { to: '/analizator', label: 'Инструменти' },
+  { to: '/center', label: 'За центъра' },
 ];
 
 export default function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isStepsOpen, setIsStepsOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const location = useLocation();
+  const [open, setOpen] = useState(false);
+  const toggle = useRef<HTMLButtonElement>(null);
+  const nav = useRef<HTMLElement>(null);
+  const { pathname, hash } = useLocation();
 
-  const isStepActive = steps.some((s) => location.pathname === s.path);
-
+  useEffect(() => { setOpen(false); }, [pathname, hash]);
   useEffect(() => {
-    function handleClickOutside(e: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setIsStepsOpen(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-    setIsStepsOpen(false);
-  }, [location.pathname]);
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') { setOpen(false); toggle.current?.focus(); }
+    };
+    const onPointer = (event: PointerEvent) => {
+      if (!nav.current?.contains(event.target as Node)) setOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onPointer);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.removeEventListener('pointerdown', onPointer);
+    };
+  }, [open]);
 
   return (
-    <nav className="fixed top-0 w-full bg-white/90 backdrop-blur-sm border-b border-gray-100 z-50 safe-pt">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
-        <div className="flex items-center justify-between gap-4 md:gap-8">
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
-            <img
-              src="https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5"
-              alt="Digital Media Centre лого"
-              className="h-7 md:h-8 w-auto object-contain flex-shrink-0"
-            />
-            <span className="hidden xl:block text-sm font-medium text-gray-900 leading-tight whitespace-nowrap">
-              Център за медийна и дигитална грамотност БУДИМ СЕ
-            </span>
-            <span className="hidden lg:block xl:hidden text-sm font-medium text-gray-900 whitespace-nowrap">БУДИМ СЕ</span>
-            <span className="lg:hidden text-sm font-medium text-gray-900">БУДИМ СЕ</span>
+    <header className="site-header">
+      <a className="skip-link" href="#main-content">Към съдържанието</a>
+      <nav className="site-container" aria-label="Основна навигация" ref={nav}>
+        <div className="nav-row">
+          <Link to="/" className="brand" aria-label="БУДИМ СЕ — начало">
+            <img src="https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5" width={40} height={40} alt="" className="brand-logo" />
+            <span>БУДИМ СЕ<span className="brand-caption">Медийна и дигитална грамотност</span></span>
           </Link>
-
-          {/* Desktop nav */}
-          <div className="hidden md:flex items-center gap-5 lg:gap-6 flex-shrink-0">
-            {/* Steps dropdown */}
-            <div className="relative" ref={dropdownRef}>
-              <button
-                onClick={() => setIsStepsOpen((v) => !v)}
-                className={`flex items-center gap-1.5 text-sm transition-colors cursor-pointer whitespace-nowrap h-9 px-2 ${
-                  isStepActive ? 'text-gray-900 font-medium' : 'text-gray-600 hover:text-gray-900'
-                }`}
-              >
-                Степените
-                <span className={`transition-transform duration-200 ${isStepsOpen ? 'rotate-180' : ''}`}>
-                  <Icon name="ri-arrow-down-s-line" size={16} />
-                </span>
-              </button>
-
-              {isStepsOpen && (
-                <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-72 bg-white border border-gray-100 rounded-xl overflow-hidden shadow-lg">
-                  {steps.map((step) => (
-                    <Link
-                      key={step.path}
-                      to={step.path}
-                      className={`flex items-center gap-4 px-5 py-3.5 hover:bg-gray-50 transition-colors group min-h-[44px] ${
-                        location.pathname === step.path ? 'bg-gray-50' : ''
-                      }`}
-                    >
-                      <span className="text-xl font-light text-gray-200 group-hover:text-gray-400 transition-colors w-8 flex-shrink-0">
-                        {step.number}
-                      </span>
-                      <div>
-                        <p className={`text-sm font-medium leading-tight ${
-                          location.pathname === step.path ? 'text-gray-900' : 'text-gray-700'
-                        }`}>
-                          {step.title}
-                        </p>
-                        <p className="text-xs text-gray-400 mt-0.5">{step.subtitle}</p>
-                      </div>
-                      {location.pathname === step.path && (
-                        <div className="ml-auto w-1.5 h-1.5 rounded-full bg-gray-900 flex-shrink-0"></div>
-                      )}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <Link
-              to="/news"
-              className={`text-sm transition-colors whitespace-nowrap h-9 flex items-center px-2 ${
-                location.pathname.startsWith('/news')
-                  ? 'text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Новини
-            </Link>
-
-            <Link
-              to="/digitalna-gramotnost"
-              className={`text-sm transition-colors whitespace-nowrap h-9 flex items-center px-2 ${
-                location.pathname === '/digitalna-gramotnost'
-                  ? 'text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Грамотност
-            </Link>
-
-            <Link
-              to="/center"
-              className={`text-sm transition-colors whitespace-nowrap h-9 flex items-center px-2 ${
-                location.pathname === '/center'
-                  ? 'text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Центърът
-            </Link>
-
-            <Link
-              to="/analizator"
-              className={`text-sm transition-colors whitespace-nowrap h-9 flex items-center px-2 ${
-                location.pathname === '/analizator'
-                  ? 'text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Анализатор
-            </Link>
-
-            <Link
-              to="/order"
-              className={`text-sm transition-colors whitespace-nowrap h-9 flex items-center px-2 ${
-                location.pathname === '/order'
-                  ? 'text-gray-900 font-medium'
-                  : 'text-gray-600 hover:text-gray-900'
-              }`}
-            >
-              Вземи книгата
-            </Link>
+          <div className="desktop-nav">
+            {links.map(link => <NavLink key={link.to} to={link.to}>{link.label}</NavLink>)}
+            <Link to="/contact" className="nav-contact">Свържи се</Link>
           </div>
-
-          {/* Mobile hamburger */}
-          <button
-            className="md:hidden cursor-pointer w-11 h-11 flex items-center justify-center -mr-1"
-            onClick={() => setIsMobileMenuOpen((v) => !v)}
-            aria-label="Меню"
-          >
-            {isMobileMenuOpen ? (
-              <Icon name="ri-close-line" size={22} />
-            ) : (
-              <Icon name="ri-menu-line" size={22} />
-            )}
+          <button className="menu-toggle" ref={toggle} type="button" aria-expanded={open}
+            aria-controls="mobile-navigation" aria-label={open ? 'Затвори менюто' : 'Отвори менюто'}
+            onClick={() => setOpen(value => !value)}>
+            {open ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
           </button>
         </div>
-
-        {/* Mobile menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden mt-2 pb-4 border-t border-gray-100 max-h-[80vh] overflow-y-auto">
-            <div className="flex flex-col pt-2">
-              {/* Steps group */}
-              <div className="mb-1">
-                <p className="text-xs text-gray-400 uppercase tracking-widest px-3 py-2 mb-1 font-medium">
-                  Степените
-                </p>
-                {steps.map((step) => (
-                  <Link
-                    key={step.path}
-                    to={step.path}
-                    className={`flex items-center gap-3 py-3 px-3 min-h-[44px] transition-colors ${
-                      location.pathname === step.path
-                        ? 'text-gray-900 font-medium'
-                        : 'text-gray-600 hover:text-gray-900'
-                    }`}
-                  >
-                    <span className="text-sm font-light text-gray-300 w-6">{step.number}</span>
-                    <span className="text-sm">{step.title}</span>
-                  </Link>
-                ))}
-              </div>
-
-              <div className="border-t border-gray-100 pt-2 mt-1 flex flex-col">
-                <Link
-                  to="/news"
-                  className={`text-sm py-3 px-3 min-h-[44px] flex items-center transition-colors ${
-                    location.pathname.startsWith('/news') ? 'text-gray-900 font-medium' : 'text-gray-600'
-                  }`}
-                >
-                  Новини
-                </Link>
-                <Link
-                  to="/digitalna-gramotnost"
-                  className={`text-sm py-3 px-3 min-h-[44px] flex items-center transition-colors ${
-                    location.pathname === '/digitalna-gramotnost' ? 'text-gray-900 font-medium' : 'text-gray-600'
-                  }`}
-                >
-                  Дигитална грамотност
-                </Link>
-                <Link
-                  to="/center"
-                  className={`text-sm py-3 px-3 min-h-[44px] flex items-center transition-colors ${
-                    location.pathname === '/center' ? 'text-gray-900 font-medium' : 'text-gray-600'
-                  }`}
-                >
-                  Център за медийна грамотност
-                </Link>
-                <Link
-                  to="/author"
-                  className={`text-sm py-3 px-3 min-h-[44px] flex items-center transition-colors ${
-                    location.pathname === '/author' ? 'text-gray-900 font-medium' : 'text-gray-600'
-                  }`}
-                >
-                  Авторът
-                </Link>
-                <Link
-                  to="/sources"
-                  className={`text-sm py-3 px-3 min-h-[44px] flex items-center transition-colors ${
-                    location.pathname === '/sources' ? 'text-gray-900 font-medium' : 'text-gray-600'
-                  }`}
-                >
-                  Източници
-                </Link>
-                <Link
-                  to="/analizator"
-                  className={`text-sm py-3 px-3 min-h-[44px] flex items-center transition-colors ${
-                    location.pathname === '/analizator' ? 'text-gray-900 font-medium' : 'text-gray-600'
-                  }`}
-                >
-                  Анализатор
-                </Link>
-                <Link
-                  to="/order"
-                  className={`text-sm py-3 px-3 min-h-[44px] flex items-center transition-colors ${
-                    location.pathname === '/order' ? 'text-gray-900 font-medium' : 'text-gray-600'
-                  }`}
-                >
-                  Вземи книгата
-                </Link>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </nav>
+        <div id="mobile-navigation" className="mobile-nav" hidden={!open}>
+          {links.map(link => <NavLink key={link.to} to={link.to}>{link.label}</NavLink>)}
+          <Link to="/mediyna-gramotnost-uchenici">Упражнения за ученици</Link>
+          <Link to="/order">Книгата „Петте степени“</Link>
+          <Link to="/contact">Свържи се</Link>
+        </div>
+      </nav>
+    </header>
   );
 }

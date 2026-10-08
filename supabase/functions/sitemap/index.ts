@@ -5,6 +5,10 @@ const BASE_URL = 'https://budimse.online';
 
 const STATIC_PAGES = [
   { url: '/', priority: '1.0', changefreq: 'weekly' },
+  { url: '/digitalna-gramotnost', priority: '0.9', changefreq: 'monthly' },
+  { url: '/mediyna-gramotnost-uchenici', priority: '0.9', changefreq: 'monthly' },
+  { url: '/obucheniya-za-uchilishta', priority: '0.9', changefreq: 'monthly' },
+  { url: '/sources', priority: '0.7', changefreq: 'monthly' },
   { url: '/center', priority: '0.9', changefreq: 'monthly' },
   { url: '/author', priority: '0.8', changefreq: 'monthly' },
   { url: '/step-1', priority: '0.8', changefreq: 'monthly' },
@@ -45,7 +49,7 @@ Deno.serve(async (req) => {
     const staticEntries = STATIC_PAGES.map(
       (p) => `  <url>
       <loc>${BASE_URL}${p.url}</loc>
-      <lastmod>${now}</lastmod>
+      <lastmod>2026-10-08</lastmod>
       <changefreq>${p.changefreq}</changefreq>
       <priority>${p.priority}</priority>
     </url>`,

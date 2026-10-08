@@ -1,3 +1,4 @@
+import LegacyIcon from '@/components/base/LegacyIcon';
 import { useEffect, useState } from 'react';
 import AdminGuard from '@/pages/admin/components/AdminGuard';
 import AdminLayout from '@/pages/admin/components/AdminLayout';
@@ -49,11 +50,11 @@ export default function AdminInquiries() {
         <div className="max-w-5xl mx-auto">
           {loading ? (
             <div className="flex items-center justify-center py-20">
-              <i className="ri-loader-4-line animate-spin text-gray-300 text-3xl"></i>
+              <LegacyIcon className="ri-loader-4-line animate-spin text-gray-300 text-3xl"></LegacyIcon>
             </div>
           ) : inquiries.length === 0 ? (
             <div className="text-center py-20 text-gray-400">
-              <i className="ri-mail-line text-4xl mb-3 block"></i>
+              <LegacyIcon className="ri-mail-line text-4xl mb-3 block"></LegacyIcon>
               <p className="text-sm">Няма запитвания все още.</p>
             </div>
           ) : (
@@ -126,14 +127,14 @@ export default function AdminInquiries() {
                         href={`mailto:${selected.email}?subject=Re: Запитване от ${selected.organization}`}
                         className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm rounded-lg hover:bg-gray-800 transition-colors cursor-pointer whitespace-nowrap"
                       >
-                        <i className="ri-reply-line"></i>
+                        <LegacyIcon className="ri-reply-line"></LegacyIcon>
                         Отговори по имейл
                       </a>
                     </div>
                   </div>
                 ) : (
                   <div className="bg-white border border-gray-100 rounded-xl p-12 text-center text-gray-400">
-                    <i className="ri-mail-open-line text-3xl mb-2 block"></i>
+                    <LegacyIcon className="ri-mail-open-line text-3xl mb-2 block"></LegacyIcon>
                     <p className="text-sm">Избери запитване от списъка</p>
                   </div>
                 )}
