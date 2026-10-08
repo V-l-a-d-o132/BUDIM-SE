@@ -1,0 +1,304 @@
+[
+  {
+    "path": "/",
+    "url": "https://budimse.online/",
+    "status": 200,
+    "ttfb_ms": 6671,
+    "total_ms": 6673,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Etag": "\"217715fca65138787771a1c5b9e73090\"",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:17 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/center",
+    "url": "https://budimse.online/center",
+    "status": 200,
+    "ttfb_ms": 6510,
+    "total_ms": 6511,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:17 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/center/",
+    "url": "https://budimse.online/center",
+    "status": 200,
+    "ttfb_ms": 12514,
+    "total_ms": 12516,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:23 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/center/index.html",
+    "url": "https://budimse.online/center/index.html",
+    "status": 200,
+    "ttfb_ms": 6677,
+    "total_ms": 6680,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:17 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/mediyna-gramotnost-uchenici",
+    "url": "https://budimse.online/mediyna-gramotnost-uchenici",
+    "status": 200,
+    "ttfb_ms": 5960,
+    "total_ms": 5963,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:23 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/obucheniya-za-uchilishta",
+    "url": "https://budimse.online/obucheniya-za-uchilishta",
+    "status": 200,
+    "ttfb_ms": 5899,
+    "total_ms": 5901,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:23 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/news/proverka-na-fakti",
+    "url": "https://budimse.online/news/proverka-na-fakti",
+    "status": 200,
+    "ttfb_ms": 5774,
+    "total_ms": 5776,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:23 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/robots.txt",
+    "url": "https://budimse.online/robots.txt",
+    "status": 200,
+    "ttfb_ms": 6734,
+    "total_ms": 6737,
+    "bytes": 134,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/plain; charset=utf-8",
+      "Etag": "\"87a2c1569c20fd85839ba1aaba9911b0\"",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:30 GMT",
+      "Content-Length": "134",
+      "Connection": "close"
+    },
+    "title": [],
+    "canonical": [],
+    "headings": [],
+    "schema_count": 0,
+    "body": "User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /order?order=\nDisallow: /order?*order=\n\nSitemap: https://budimse.online/sitemap.xml\n"
+  },
+  {
+    "path": "/sitemap.xml",
+    "url": "https://budimse.online/sitemap.xml",
+    "status": 200,
+    "ttfb_ms": 6792,
+    "total_ms": 6794,
+    "bytes": 4351,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/xml; charset=utf-8",
+      "Etag": "\"59f0c4f78ceb012c139c701da940401a\"",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:30 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [],
+    "canonical": [],
+    "headings": [],
+    "schema_count": 0,
+    "body": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n  <url><loc>https://budimse.online/</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/digitalna-gramotnost</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/mediyna-gramotnost-uchenici</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/obucheniya-za-uchilishta</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/center</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/news</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/analizator</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/step-1</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/step-2</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/step-3</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/step-4</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/step-5</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/order</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/author</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/sources</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/testimonials</loc><lastmod>2026-10-08T16:17:19.573Z</lastmod></url>\n  <url><loc>https://budimse.online/contact</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/privacy</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/terms</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/razpoznavane-na-dezinformatsiya</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/digitalen-detoks</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/proverka-na-fakti</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/kritichno-mislene-online</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/manipulativni-tehniki-v-mediite</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/povedencheski-dizain-platformi</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/digitalno-blagosastoyanie</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/kiberhigiena</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/digitalen-suverenitet</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/algoritmi-i-eho-kameri</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/es-ne-atakuva-skrola</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/obrazovanie-za-medii</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/falshivi-novini</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/vnimanie-novata-valuta</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/dobriat-biznes-ne-e-dostachen</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/ako-ai-ne-znae</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/skiming-nov-standart</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/obraten-efekt-flin</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/korporativna-higiena-odit</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n  <url><loc>https://budimse.online/news/email-apnea</loc><lastmod>2026-10-08T16:17:19.574Z</lastmod></url>\n</urlset>"
+  },
+  {
+    "path": "/llms.txt",
+    "url": "https://budimse.online/llms.txt",
+    "status": 200,
+    "ttfb_ms": 6698,
+    "total_ms": 6700,
+    "bytes": 5553,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/plain; charset=utf-8",
+      "Etag": "\"5b3e1ee3500e26d100aea1a3ae1f42ba\"",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:30 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [],
+    "canonical": [],
+    "headings": [],
+    "schema_count": 0,
+    "body": "# Център БУДИМ СЕ\n\n> Гражданска и образователна инициатива за медийна и дигитална грамотност.\n> Автор на „Петте степени“ и създател на инициативата: Владимир Атанасов.\n\nАктуализация: 8 октомври 2026 г. Език: български.\nСайт: https://budimse.online/\nКонтакт: budimseonline@gmail.com\n\n## Книга и авторска рамка\n\n„Петте степени“ разглежда дигиталните навици, личната преценка и мястото на технологиите в ежедневието. Личните разкази са отделени от условните примери и от научните данни. Петте степени описват задачи, към които човек може да се връща; не са диагнози, категории хора или гарантиран ред на развитие.\n\n- [Да забележиш навика](https://budimse.online/step-1): кога посягаме към телефона и какво търсим.\n- [Да разбереш средата](https://budimse.online/step-2): препоръки, известия, търговски цели и проверка на информация.\n- [Да опиташ промяна](https://budimse.online/step-3): една изпълнима промяна със запазени полезни функции.\n- [Да върнеш място за живота](https://budimse.online/step-4): важни занимания, общуване и почивка, включително полезната онлайн употреба.\n- [Да поддържаш свободата си](https://budimse.online/step-5): гъвкави граници и преглед според обстоятелствата.\n\nПрактиката „Будим се“ включва наблюдение, проверка, избор, опит и преглед на резултата. Това е авторска образователна рамка. Цитираните публикации не представляват нейно клинично изпитване. Книгата може да се използва самостоятелно, без регистрация в сайта.\n\n- [Книгата](https://budimse.online/order)\n- [Авторът](https://budimse.online/author)\n- [17 бележки и източници](https://budimse.online/sources): научни публикации, официални документи и описания на функции; обхват и ограничения за всеки източник. Публичните правила и функции могат да се променят.\n\n## Пилотни формати\n\nПодготвят се направления за училища, семейства и екипи. Възрастта, съдържанието, условията и начинът за обратна връзка се уточняват с организацията. Сценариите в сайта са условни примери, не проведени сесии или доказани резултати.\n\n- [Центърът и партньорствата](https://budimse.online/center)\n- [Медийна и дигитална грамотност](https://budimse.online/digitalna-gramotnost): работа с технологии, информация, общуване, безопасност и лични данни.\n\n## Образователни инструменти\n\n- [Анализатор](https://budimse.online/analizator): предлага възможни езикови сигнали за емоционален натиск, спешност, социален натиск, поляризация и подтик към реакция. Посочва откъси и обяснения; може да греши. Не е проверка на факти и не установява намерението на автора. Няма общ числов индекс на риск.\n- Самооценъчният тест съдържа 35 въпроса; резултатите са ориентир за размисъл и не са диагноза.\n- Симулаторът е образователна демонстрация, не описание на точните алгоритми на конкретна платформа.\n\n## Други страници\n\n- [Новини](https://budimse.online/news)\n- [Отзиви](https://budimse.online/testimonials)\n- [Контакти](https://budimse.online/contact)\n- [Поверителност](https://budimse.online/privacy)\n- [Условия](https://budimse.online/terms)\n\nРекламните бисквитки се включват след съгласие. Отказът запазва достъпа до сайта. Изборът може да се промени от „Настройки на бисквитките“ в края на страницата. Политиката за поверителност съдържа подробностите за услугите и данните.\n\n- [Упражнения за ученици](https://budimse.online/mediyna-gramotnost-uchenici)\n- [Пилотни обучения за училища](https://budimse.online/obucheniya-za-uchilishta)\n"
+  },
+  {
+    "path": "/site.webmanifest",
+    "url": "https://budimse.online/site.webmanifest",
+    "status": 200,
+    "ttfb_ms": 6548,
+    "total_ms": 6549,
+    "bytes": 1451,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "application/manifest+json",
+      "Etag": "\"e35ff574724daf7d21463939a357a53a\"",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:30 GMT",
+      "Content-Length": "1451",
+      "Connection": "close"
+    },
+    "title": [],
+    "canonical": [],
+    "headings": [],
+    "schema_count": 0,
+    "body": "{\n  \"name\": \"Център БУДИМ СЕ\",\n  \"short_name\": \"БУДИМ СЕ\",\n  \"description\": \"Независима организация за медийна грамотност и дигитален суверенитет. Методологията „Петте степени\" за когнитивна свобода.\",\n  \"lang\": \"bg\",\n  \"dir\": \"ltr\",\n  \"icons\": [\n    {\n      \"src\": \"https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5\",\n      \"sizes\": \"192x192\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any maskable\"\n    },\n    {\n      \"src\": \"https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5\",\n      \"sizes\": \"512x512\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any maskable\"\n    }\n  ],\n  \"theme_color\": \"#ffffff\",\n  \"background_color\": \"#ffffff\",\n  \"display\": \"standalone\",\n  \"start_url\": \"/\",\n  \"scope\": \"/\",\n  \"categories\": [\"education\", \"books\", \"lifestyle\"],\n  \"screenshots\": [\n    {\n      \"src\": \"https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5\",\n      \"sizes\": \"512x512\",\n      \"type\": \"image/png\"\n    }\n  ]\n}"
+  },
+  {
+    "path": "/privacy-consent.js",
+    "url": "https://budimse.online/privacy-consent.js",
+    "status": 200,
+    "ttfb_ms": 6611,
+    "total_ms": 6614,
+    "bytes": 4058,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/javascript; charset=utf-8",
+      "Etag": "\"03d015bf02fba669fe8dd9b05a58b58e\"",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:36 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [],
+    "canonical": [],
+    "headings": [],
+    "schema_count": 0
+  },
+  {
+    "path": "/page-that-does-not-exist-seo-audit",
+    "url": "https://budimse.online/page-that-does-not-exist-seo-audit",
+    "status": 200,
+    "ttfb_ms": 6595,
+    "total_ms": 6597,
+    "bytes": 5871,
+    "headers": {
+      "Cache-Control": "public, max-age=0, must-revalidate",
+      "Content-Type": "text/html; charset=utf-8",
+      "Vary": "Accept-Encoding",
+      "Date": "Thu, 08 Oct 2026 16:26:36 GMT",
+      "Connection": "close",
+      "Transfer-Encoding": "chunked"
+    },
+    "title": [
+      "Дигитална и медийна грамотност в България | Център БУДИМ СЕ"
+    ],
+    "canonical": [
+      "<link rel=\"canonical\" href=\"https://budimse.online/\" />"
+    ],
+    "headings": [],
+    "schema_count": 0
+  }
+]

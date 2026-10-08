@@ -11,7 +11,7 @@ const result = await build({
   alias: { '@': path.resolve('src') }, minify: true,
   define: { __BASE_PATH__: JSON.stringify('/'), __IS_PREVIEW__: 'false', 'process.env.NODE_ENV': JSON.stringify('production'), 'import.meta.env': JSON.stringify({ VITE_PUBLIC_SUPABASE_URL: 'https://fixture.supabase.test', VITE_PUBLIC_SUPABASE_ANON_KEY: 'fixture-key' }) },
 });
-const routes = ['/', '/digitalna-gramotnost', '/mediyna-gramotnost-uchenici', '/obucheniya-za-uchilishta', '/center', '/contact', '/sources', '/step-1', '/order'];
+const routes = ['/', '/digitalna-gramotnost', '/mediyna-gramotnost-uchenici', '/obucheniya-za-uchilishta', '/center', '/contact', '/sources', '/step-1', '/order', '/news', '/news/proverka-na-fakti'];
 for (const route of routes) {
   const html = await fs.readFile(path.join('out', route, 'index.html'), 'utf8');
   const console = new VirtualConsole();

@@ -1,0 +1,32 @@
+[
+  {
+    "name": "BRAND_LOGO",
+    "url": "https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5",
+    "bytes": 97290,
+    "size": [
+      1000,
+      1000
+    ],
+    "format": "PNG"
+  },
+  {
+    "name": "BRAND_HERO",
+    "url": "https://public.readdy.ai/ai/img_res/1b7039a97f7212b3c8e4f26cec8179ab.webp",
+    "bytes": 31662,
+    "size": [
+      1440,
+      896
+    ],
+    "format": "WEBP"
+  },
+  {
+    "name": "BOOK_COVER",
+    "url": "https://static.readdy.ai/image/658b459fcf05a7723f8029c45615de2f/7fd715118976d07fe2b11b1e6367a1e7.jpeg",
+    "bytes": 127851,
+    "size": [
+      751,
+      1200
+    ],
+    "format": "JPEG"
+  }
+]

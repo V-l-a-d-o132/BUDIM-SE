@@ -47,7 +47,7 @@ beforeEach(() => {
   globalThis.siteNewsDetail = async () => null;
   container = document.createElement('div'); document.body.append(container); root = createRoot(container);
 });
-afterEach(async () => { await act(async () => root.unmount()); container.remove(); });
+afterEach(async () => { await act(async () => root.unmount()); container.remove(); document.getElementById('news-snapshot')?.remove(); });
 after(async () => { globalThis.fetch = originalFetch; dom.window.close(); await rm(temporary, { recursive: true, force: true }); });
 
 test('mobile navigation opens, Escape restores focus, and selecting a route closes it', async () => {
@@ -128,4 +128,43 @@ test('article HTML is sanitized while useful source links and headings remain', 
   assert.ok(container.querySelector('article a[href="https://example.org/source"]'));
   const schema = JSON.parse(document.getElementById('page-schema-jsonld').textContent);
   assert.equal(schema.dateModified, '2026-10-08T00:00:00Z');
+});
+
+const snapshotArticle = { id: 'snapshot-fixture', slug: 'snapshot-example', title: 'Публикуван материал', body: 'Проверен текст с <strong>контекст</strong>.', image_url: null, created_at: '2026-10-01T00:00:00Z', updated_at: '2026-10-08T00:00:00Z', published: true };
+function addSnapshot(route, items) {
+  const script = document.createElement('script'); script.id = 'news-snapshot'; script.type = 'application/json';
+  script.textContent = JSON.stringify({ route, items }); document.body.append(script);
+}
+async function mountSnapshotDetail() {
+  await act(async () => root.render(h(MemoryRouter, { initialEntries: ['/news/snapshot-example'] }, h(Routes, null, h(Route, { path: '/news/:slug', element: h(components.Detail) })))));
+}
+
+test('a prerendered article stays readable while its public API refresh is pending or unavailable', async () => {
+  addSnapshot('/news/snapshot-example', [snapshotArticle]);
+  let reject;
+  globalThis.siteNewsDetail = () => new Promise((_, fail) => { reject = fail; });
+  await mountSnapshotDetail();
+  assert.equal(container.querySelector('h1').textContent, snapshotArticle.title);
+  assert.equal(container.querySelector('article strong').textContent, 'контекст');
+  await act(async () => reject(new Error('offline')));
+  assert.equal(container.querySelector('h1').textContent, snapshotArticle.title);
+  assert.match(container.textContent, /Не успяхме да проверим за обновяване/);
+});
+
+test('a confirmed withdrawal removes a prerendered article and marks its page noindex', async () => {
+  addSnapshot('/news/snapshot-example', [snapshotArticle]);
+  globalThis.siteNewsDetail = async () => null;
+  await mountSnapshotDetail(); await flush();
+  assert.match(container.textContent, /Този материал не е наличен/);
+  assert.equal(container.querySelector('article'), null);
+  assert.match(document.querySelector('meta[name=robots]').content, /noindex/);
+  assert.equal(document.querySelector('meta[property="article:published_time"]'), null);
+});
+
+test('an authoritative empty list replaces the build snapshot rather than reviving old publications', async () => {
+  addSnapshot('/news', [snapshotArticle]);
+  globalThis.siteNewsList = async () => [];
+  await mount(components.List, '/news'); await flush();
+  assert.match(container.textContent, /Все още няма публикувани материали/);
+  assert.equal(container.querySelectorAll('article').length, 0);
 });
