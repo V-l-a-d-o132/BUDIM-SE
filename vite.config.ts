@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'node:path'
 import AutoImport from 'unplugin-auto-import/vite'
+import { staticPages } from './scripts/static-pages-plugin'
 
 const base = process.env.BASE_PATH || '/'
 const isPreview = process.env.IS_PREVIEW  ? true : false;
@@ -11,7 +12,7 @@ export default defineConfig({
    __BASE_PATH__: JSON.stringify(base),
    __IS_PREVIEW__: JSON.stringify(isPreview)
   },
-  plugins: [react(),
+  plugins: [react(), staticPages(),
     AutoImport({
       imports: [
         {

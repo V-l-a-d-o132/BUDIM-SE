@@ -4,5 +4,7 @@ import './index.css';
 import App from './App';
 const root = document.getElementById('root')!;
 const app = <StrictMode><App /></StrictMode>;
-if (root.hasChildNodes()) hydrateRoot(root, app);
+const renderedRoute = root.dataset.prerenderRoute;
+const requestedRoute = location.pathname.replace(/\/$/, '') || '/';
+if (root.hasChildNodes() && (!renderedRoute || renderedRoute === requestedRoute)) hydrateRoot(root, app);
 else createRoot(root).render(app);

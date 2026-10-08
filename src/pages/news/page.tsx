@@ -1,20 +1,17 @@
 import DOMPurify from 'dompurify';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { fetchNewsListCached, fetchNewsDetailCached } from '@/lib/supabase';
 import PageLayout, { PageIntro } from '@/components/feature/PageLayout';
 import { usePageSeo } from '@/hooks/usePageSeo';
-
-interface NewsItem {
-  id: string; title: string; slug: string; body: string; image_url: string | null;
-  created_at: string; updated_at?: string; published: boolean;
-}
+import { useNewsSnapshot, NewsSanitizerContext, NEWS_HTML_POLICY, type NewsItem } from '@/content/newsSnapshot';
 const plain = (text: string) => text.replace(/<[^>]*>/g, '').replace(/^##?\s+/gm, '').replace(/\s+/g, ' ').trim();
 const date = (value: string) => new Date(value).toLocaleDateString('bg-BG', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
 
 export function NewsListPage() {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const snapshot = useNewsSnapshot();
+  const [news, setNews] = useState<NewsItem[]>(snapshot || []);
+  const [loading, setLoading] = useState(!snapshot);
   const [loadError, setLoadError] = useState(false);
   const [retry, setRetry] = useState(0);
   const [params, setParams] = useSearchParams();
@@ -30,7 +27,8 @@ export function NewsListPage() {
   });
   useEffect(() => {
     let active = true;
-    setLoading(true); setLoadError(false);
+    if (!snapshot) setLoading(true);
+    setLoadError(false);
     fetchNewsListCached().then(data => { if (active) setNews((data as NewsItem[]) ?? []); })
       .catch(() => { if (active) setLoadError(true); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
@@ -39,7 +37,8 @@ export function NewsListPage() {
     <PageIntro eyebrow="Материали" title="По-малко шум. Повече контекст."><p>Кратки обяснения и практически въпроси за информацията, социалните мрежи и дигиталните навици. Учебните примери са отделени от установените факти.</p></PageIntro>
     <section className="site-container pb-12">
       <div className="form-field max-w-xl mb-8"><label htmlFor="news-search">Търси тема или дума</label><input id="news-search" type="search" value={query} placeholder="Например: източници, социални мрежи, пароли" onChange={event => setParams(event.target.value ? { q: event.target.value } : {}, { replace: true })} /></div>
-      {loading ? <p role="status" className="py-12">Зареждане на материалите…</p> : loadError ? <div role="alert" className="py-8"><p>Материалите временно не могат да бъдат заредени.</p><button className="button-secondary mt-4" onClick={() => setRetry(n => n + 1)}>Опитай отново</button></div> : <>
+      {loading ? <p role="status" className="py-12">Зареждане на материалите…</p> : loadError && !news.length ? <div role="alert" className="py-8"><p>Материалите временно не могат да бъдат заредени.</p><button className="button-secondary mt-4" onClick={() => setRetry(n => n + 1)}>Опитай отново</button></div> : <>
+        {loadError && <p role="status">Не успяхме да проверим за по-нови материали. Показваме последно заредените.</p>}
         <p role="status" className="mb-5">{filtered.length} {filtered.length === 1 ? 'материал' : 'материала'}{query ? ' по това търсене' : ''}</p>
         {filtered.length === 0 && <p className="py-8">{query ? 'Няма съвпадение. Опитай с по-кратка дума или друга тема.' : 'Все още няма публикувани материали.'}</p>}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -60,8 +59,11 @@ export function NewsListPage() {
 
 export function NewsDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const [item, setItem] = useState<NewsItem | null>(null);
-  const [loading, setLoading] = useState(true);
+  const snapshot = useNewsSnapshot();
+  const initial = snapshot?.find(article => article.slug === slug) || null;
+  const sanitize = useContext(NewsSanitizerContext) || ((html: string) => DOMPurify.sanitize(html, NEWS_HTML_POLICY));
+  const [item, setItem] = useState<NewsItem | null>(initial);
+  const [loading, setLoading] = useState(!initial);
   const [loadError, setLoadError] = useState(false);
   const [retry, setRetry] = useState(0);
   // Never show or mark up the previous article while a different slug is loading.
@@ -74,24 +76,26 @@ export function NewsDetailPage() {
     ogType: current ? 'article' : 'website', schemaType: current ? 'Article' : 'WebPage', noIndex: missing,
     schemaExtra: current ? { headline: current.title, datePublished: current.created_at,
       dateModified: current.updated_at || current.created_at,
-      author: { '@type': 'Person', name: 'Владимир Атанасов', url: 'https://budimse.online/author' } } : {},
+      mainEntityOfPage: { '@type': 'WebPage', '@id': 'https://budimse.online/news/' + current.slug + '#webpage', url: 'https://budimse.online/news/' + current.slug },
+      author: { '@type': 'Person', '@id': 'https://budimse.online/author#person', name: 'Владимир Атанасов', url: 'https://budimse.online/author' } } : {},
     breadcrumbs: [{ name: 'Начало', url: '/' }, { name: 'Материали', url: '/news' }, ...(current ? [{ name: current.title, url: '/news/' + current.slug }] : [])],
   });
   useEffect(() => {
     let active = true;
-    setLoading(true); setLoadError(false); setItem(null);
+    setLoading(!initial); setLoadError(false); setItem(initial);
     fetchNewsDetailCached(slug || '').then(data => { if (active) setItem((data as NewsItem | null) ?? null); })
       .catch(() => { if (active) setLoadError(true); }).finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, [slug, retry]);
   return <PageLayout>
-    {loading ? <div className="site-container site-section"><p role="status">Зареждане на материала…</p></div> : loadError ? <div role="alert" className="site-container site-section"><h1>Материалът временно не се зарежда.</h1><p className="mt-5">Провери връзката или опитай отново след малко.</p><button className="button-secondary mt-5" onClick={() => setRetry(n => n + 1)}>Опитай отново</button></div> : current ? <>
+    {loading ? <div className="site-container site-section"><p role="status">Зареждане на материала…</p></div> : loadError && !current ? <div role="alert" className="site-container site-section"><h1>Материалът временно не се зарежда.</h1><p className="mt-5">Провери връзката или опитай отново след малко.</p><button className="button-secondary mt-5" onClick={() => setRetry(n => n + 1)}>Опитай отново</button></div> : current ? <>
       <PageIntro eyebrow="Материали" title={current.title}><p className="!text-sm"><Link to="/author" className="underline">Владимир Атанасов</Link> · Публикувано: <time dateTime={current.created_at}>{date(current.created_at)}</time>{current.updated_at && <> · Обновено: <time dateTime={current.updated_at}>{date(current.updated_at)}</time></>}</p></PageIntro>
       <div className="site-container reading-layout"><article className="prose-content">
+        {loadError && <p role="status" className="!text-sm">Не успяхме да проверим за обновяване. Показваме последно заредения текст.</p>}
         {current.image_url && <img src={current.image_url} alt="" width={800} height={420} decoding="async" className="w-full max-h-80 object-cover rounded-sm mb-8" />}
         {current.body.split(/\n+/).filter(line => line.trim()).map((line, index) => {
           const heading = line.match(/^## (.*)$|^<strong>([^<>]+)<\/strong>$/);
-          return heading ? <h2 key={index}>{heading[1] || heading[2]}</h2> : <p key={index} dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(line, { ALLOWED_TAGS: ['a', 'b', 'strong', 'i', 'em', 'br'], ALLOWED_ATTR: ['href', 'title'] }) }} />;
+          return heading ? <h2 key={index}>{heading[1] || heading[2]}</h2> : <p key={index} dangerouslySetInnerHTML={{ __html: sanitize(line) }} />;
         })}
         <div className="source-note"><p>Имаш въпрос или източник за корекция? <Link to="/contact">Пиши ни</Link> с конкретния откъс и линк.</p></div>
       </article><aside className="page-aside"><h2>Продължи с</h2><Link to="/digitalna-gramotnost">Основи на грамотността</Link><Link to="/mediyna-gramotnost-uchenici">Упражнения за ученици</Link><Link to="/news">Всички материали</Link></aside></div>

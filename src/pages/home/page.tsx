@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, BookOpen, Users, SlidersHorizontal } from 'lucide-react';
 import PageLayout from '@/components/feature/PageLayout';
 import { usePageSeo } from '@/hooks/usePageSeo';
-import { BRAND_HERO, BOOK_COVER } from '@/content/brand';
+import { BRAND_HERO, BRAND_HERO_SRCSET, BOOK_COVER } from '@/content/brand';
 
 const paths = [
   { icon: BookOpen, label: 'Разбери', title: 'Преди да повярваш и споделиш', text: 'Източник, доказателства, контекст. Ясно начало за проверка на информация и по-сигурно общуване онлайн.', to: '/digitalna-gramotnost', link: 'Започни с основите' },
@@ -12,18 +12,18 @@ const paths = [
 
 export default function HomePage() {
   usePageSeo({
-    title: 'Дигитална и медийна грамотност в България',
-    description: 'БУДИМ СЕ: практически материали за дигитална и медийна грамотност, упражнения за ученици и пилотни обучения за училища. Проверявай, разбирай и избирай.',
+    title: 'Център за медийна и дигитална грамотност БУДИМ СЕ',
+    description: 'БУДИМ СЕ е център за медийна и дигитална грамотност в България: практически материали, упражнения за ученици и пилотни обучения за училища.',
     canonical: '/',
   });
   return <PageLayout className="home-page">
     <section className="home-hero">
-      <img className="home-hero-image" src={BRAND_HERO} alt="" width={1440} height={900} fetchPriority="high" decoding="async" />
+      <img className="home-hero-image" src={BRAND_HERO} srcSet={BRAND_HERO_SRCSET} sizes="100vw" alt="" width={1440} height={896} fetchPriority="high" decoding="async" />
       <div className="hero-grid" aria-hidden="true" />
       <div className="site-container home-hero-content">
         <p className="eyebrow">Център БУДИМ СЕ · България</p>
         <h1>Повече разбиране.<br /><strong>По-осъзнат избор.</strong></h1>
-        <p className="lead">Дигитална и медийна грамотност за всекидневието. Учим се да проверяваме информацията, да разбираме социалните мрежи и да използваме технологиите с ясна цел.</p>
+        <p className="lead">БУДИМ СЕ е център за медийна и дигитална грамотност в България. Учим се да проверяваме информацията, да разбираме социалните мрежи и да използваме технологиите с ясна цел.</p>
         <div className="button-row"><Link className="button-primary" to="/digitalna-gramotnost">Започни оттук <ArrowRight size={18} aria-hidden="true" /></Link><Link className="button-secondary" to="/obucheniya-za-uchilishta">За училища и учители</Link></div>
       </div>
     </section>

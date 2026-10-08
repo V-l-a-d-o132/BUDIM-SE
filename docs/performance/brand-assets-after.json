@@ -1,0 +1,66 @@
+[
+  {
+    "file": "public/brand/book-208.webp",
+    "bytes": 6918,
+    "size": [
+      208,
+      332
+    ]
+  },
+  {
+    "file": "public/brand/hero-1440.webp",
+    "bytes": 31662,
+    "size": [
+      1440,
+      896
+    ]
+  },
+  {
+    "file": "public/brand/hero-768.webp",
+    "bytes": 11974,
+    "size": [
+      768,
+      478
+    ]
+  },
+  {
+    "file": "public/brand/logo-180.png",
+    "bytes": 19931,
+    "size": [
+      180,
+      180
+    ]
+  },
+  {
+    "file": "public/brand/logo-192.png",
+    "bytes": 21828,
+    "size": [
+      192,
+      192
+    ]
+  },
+  {
+    "file": "public/brand/logo-32.png",
+    "bytes": 1825,
+    "size": [
+      32,
+      32
+    ]
+  },
+  {
+    "file": "public/brand/logo-512.png",
+    "bytes": 77999,
+    "size": [
+      512,
+      512
+    ]
+  },
+  {
+    "file": "public/brand/logo-96.webp",
+    "bytes": 2812,
+    "size": [
+      96,
+      96
+    ]
+  }
+]

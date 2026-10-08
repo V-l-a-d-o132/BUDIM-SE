@@ -13,13 +13,16 @@ export interface PageSeoOptions {
 }
 const BASE_URL = 'https://budimse.online';
 const SITE_NAME = 'Център БУДИМ СЕ';
-const IMAGE = 'https://static.readdy.ai/image/658b459fcf05a7723f8029c45615de2f/8c4d6cc5432264247b91f41184c4fe25.png';
-const LOGO = 'https://storage.readdy-site.link/project_files/f310a09a-6cb0-4fe3-a3ef-e12bf0036316/c92e355b-473f-4387-a3bb-8e40a8c53bde_DIGITAL-MEDIA-CENTRE-------.png?v=edaa6d50d88bec1dd7055e86d801cea5';
+const IMAGE = BASE_URL + '/brand/hero-1440.webp';
+const LOGO = BASE_URL + '/brand/logo-192.png';
+const FULL_NAME = 'Център за медийна и дигитална грамотност БУДИМ СЕ';
+const SCHEMA_IDS = ['organization-schema-jsonld', 'website-schema-jsonld', 'person-schema-jsonld', 'page-schema-jsonld', 'page-breadcrumb-jsonld'];
+export const metaAttribute = (name: string) => name.startsWith('og:') || name.startsWith('article:') ? 'property' : 'name';
 export const SeoCaptureContext = createContext<((options: PageSeoOptions) => void) | null>(null);
 export function buildSeo(options: PageSeoOptions) {
   const title = options.title.includes('БУДИМ СЕ') ? options.title : options.title + ' | ' + SITE_NAME;
   const url = BASE_URL + (options.canonical ?? '/');
-  const image = options.ogImage || IMAGE;
+  const image = new URL(options.ogImage || IMAGE, BASE_URL).href;
   const meta: Record<string, string> = {
     description: options.description,
     robots: options.noIndex ? 'noindex, follow' : 'index, follow, max-image-preview:large',
@@ -28,16 +31,36 @@ export function buildSeo(options: PageSeoOptions) {
     'twitter:title': title, 'twitter:description': options.description,
     'twitter:image': image, 'twitter:card': 'summary_large_image',
   };
+  if (options.schemaType === 'Article') {
+    for (const [key, property] of [['article:published_time', 'datePublished'], ['article:modified_time', 'dateModified']]) {
+      const value = options.schemaExtra?.[property];
+      if (typeof value === 'string') meta[key] = value;
+    }
+    meta['article:author'] = BASE_URL + '/author';
+  }
   const schemas: Record<string, object> = {
     'organization-schema-jsonld': {
-      '@context': 'https://schema.org', '@type': 'Organization', '@id': BASE_URL + '/#organization',
-      name: SITE_NAME, url: BASE_URL, logo: LOGO, email: 'budimseonline@gmail.com',
-      description: 'Гражданска и образователна инициатива за медийна и дигитална грамотност в България.',
+      '@context': 'https://schema.org', '@type': 'EducationalOrganization', '@id': BASE_URL + '/#organization',
+      name: FULL_NAME, alternateName: [SITE_NAME, 'БУДИМ СЕ'], url: BASE_URL + '/',
+      logo: { '@type': 'ImageObject', url: LOGO, width: 192, height: 192 }, email: 'budimseonline@gmail.com',
+      description: 'Център за медийна и дигитална грамотност в България. Гражданска и образователна инициатива с практически материали, упражнения за ученици и пилотни обучения за училища.',
+      areaServed: { '@type': 'Country', name: 'България' },
+      founder: { '@id': BASE_URL + '/author#person' },
+      contactPoint: { '@type': 'ContactPoint', contactType: 'Запитвания за образователни занимания', email: 'budimseonline@gmail.com', url: BASE_URL + '/contact', availableLanguage: 'bg' },
+    },
+    'website-schema-jsonld': {
+      '@context': 'https://schema.org', '@type': 'WebSite', '@id': BASE_URL + '/#website',
+      url: BASE_URL + '/', name: SITE_NAME, alternateName: 'БУДИМ СЕ', inLanguage: 'bg',
+      publisher: { '@id': BASE_URL + '/#organization' },
+    },
+    'person-schema-jsonld': {
+      '@context': 'https://schema.org', '@type': 'Person', '@id': BASE_URL + '/author#person',
+      name: 'Владимир Атанасов', url: BASE_URL + '/author',
     },
     'page-schema-jsonld': {
       '@context': 'https://schema.org', '@type': options.schemaType || 'WebPage',
-      name: title, description: options.description, url, inLanguage: 'bg', image,
-      isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: BASE_URL },
+      '@id': url + (options.schemaType === 'Article' ? '#article' : '#webpage'), name: title, description: options.description, url, inLanguage: 'bg', image,
+      isPartOf: { '@id': BASE_URL + '/#website' },
       publisher: { '@id': BASE_URL + '/#organization' },
       ...options.schemaExtra,
     },
@@ -60,15 +83,18 @@ export function usePageSeo(options: PageSeoOptions) {
     document.title = seo.title;
     document.querySelector('meta[name="keywords"]')?.remove();
     for (const [name, content] of Object.entries(seo.meta)) {
-      const attr = name.startsWith('og:') ? 'property' : 'name';
+      const attr = metaAttribute(name);
       let element = document.querySelector('meta[' + attr + '="' + name + '"]');
       if (!element) { element = document.createElement('meta'); element.setAttribute(attr, name); document.head.append(element); }
       element.setAttribute('content', content);
     }
+    for (const name of ['article:published_time', 'article:modified_time', 'article:author']) {
+      if (!(name in seo.meta)) document.querySelector('meta[property="' + name + '"]')?.remove();
+    }
     let canonical = document.querySelector('link[rel="canonical"]');
     if (!canonical) { canonical = document.createElement('link'); canonical.setAttribute('rel', 'canonical'); document.head.append(canonical); }
     canonical.setAttribute('href', seo.url);
-    for (const id of ['organization-schema-jsonld', 'page-schema-jsonld', 'page-breadcrumb-jsonld']) {
+    for (const id of SCHEMA_IDS) {
       document.getElementById(id)?.remove();
       if (!seo.schemas[id]) continue;
       const script = document.createElement('script');

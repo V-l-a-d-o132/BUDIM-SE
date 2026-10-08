@@ -79,7 +79,7 @@
   .hero-note-heading .text-link { margin-top: 18px; }
   .hero-note ol { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
   .hero-note li { padding-top: 13px; border-top: 1px solid #aeb0b7; }
-  .hero-note li > span { display: block; font-size: 12px; color: #737780; font-variant-numeric: tabular-nums; margin-bottom: 14px; }
+  .hero-note li > span { display: block; font-size: 12px; color: #626771; font-variant-numeric: tabular-nums; margin-bottom: 14px; }
   .hero-note strong { font-size: 16px; font-weight: 500; }
   .hero-note li p { font-size: 14px; margin-top: 8px; line-height: 1.65; }
   .site-section { padding-block: clamp(44px, 5.8vw, 80px); }
@@ -97,7 +97,7 @@
   .resource-section .resource-card:last-child { border-right: 0; }
   .resource-section .card-kicker { color: #b9bbc3; }
   .resource-section .resource-card p { color: #bec0c8; }
-  .resource-section .text-link { color: #e1e2e6; text-decoration-color: #737780; }
+  .resource-section .text-link { color: #e1e2e6; text-decoration-color: #626771; }
   .split-section { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 80px); align-items: start; }
   .split-section p:not(.eyebrow) { margin-top: 18px; }
   .split-section .text-link { margin-top: 16px; }
@@ -113,7 +113,7 @@
   .book-links { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
 
   .page-intro { padding-block: 28px 52px; }
-  .page-breadcrumb { display: flex; flex-wrap: wrap; gap: 10px; color: #737780; font-size: 12px; margin-bottom: 40px; }
+  .page-breadcrumb { display: flex; flex-wrap: wrap; gap: 10px; color: #626771; font-size: 12px; margin-bottom: 40px; }
   .page-breadcrumb a { text-decoration: underline; text-underline-offset: 3px; }
   .page-intro h1 { max-width: 23ch; }
   .intro-rule { width: 56px; height: 1px; background: #bfc1c7; margin-top: 28px; }

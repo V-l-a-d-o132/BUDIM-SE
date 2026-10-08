@@ -19,10 +19,12 @@ export default function Author() {
       dateModified: '2026-10-07',
       about: {
         '@type': 'Person',
+        '@id': 'https://budimse.online/author#person',
         name: 'Владимир Атанасов',
         jobTitle: 'Автор и създател',
         worksFor: {
           '@type': 'EducationalOrganization',
+          '@id': 'https://budimse.online/#organization',
           name: 'Център за медийна и дигитална грамотност БУДИМ СЕ',
           url: 'https://budimse.online',
         },
