@@ -36,6 +36,7 @@ export function corsHeaders(req: Request): Record<string, string> {
     ...(origin && ALLOWED_ORIGINS.includes(origin) ? { 'Access-Control-Allow-Origin': origin } : {}),
     'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
     'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Max-Age': '600',
     'Vary': 'Origin',
     'Cache-Control': 'no-store',
   };

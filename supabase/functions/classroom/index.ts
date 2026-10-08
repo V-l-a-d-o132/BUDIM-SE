@@ -1,20 +1,27 @@
 import { corsHeaders, ownerHash, publicRequestError, rateLimit, rateLimitResponse, readBody,
-  requestBodyErrorResponse, serviceClient } from '../_shared/security.ts';
+  requestBodyErrorResponse, serviceClient, sha256 } from '../_shared/security.ts';
 
 const operations = ['state','join','prepare_upload','publish','react','comment','save','share','view',
   'follow','message','read_notifications','delete_post'];
 const payloadFields = ['post_id','app_id','kind','content','media_id','reaction','active',
   'target_id','recipient_id','subject','mime_type','size','request_id'];
 
+// Cache file URLs only after authorized snapshots, never data or permissions.
+const mediaUrls=new Map<string,{url:string;expires:number}>();
+
 async function signedState(client: any, state: any) {
   const media = (state.posts ?? []).map((post: any) => post.media).filter(Boolean);
   const paths = [...new Set<string>(media.map((file: any) => file.path))];
-  if (paths.length) {
-    const signed = await client.storage.from('classroom-media').createSignedUrls(paths, 300);
+  const missing=paths.filter(path=>(mediaUrls.get(path)?.expires??0)<Date.now()+60000);
+  if (missing.length) {
+    const signed = await client.storage.from('classroom-media').createSignedUrls(missing, 300);
     if (signed.error) throw new Error('Media service unavailable');
-    const urls = new Map((signed.data ?? []).map((item: any) => [item.path, item.signedUrl]));
-    for (const file of media) { file.url = urls.get(file.path) ?? null; file.url_expires_at=Date.now()+300000; delete file.path; }
+    for(const item of signed.data??[])if(item.signedUrl){
+      mediaUrls.delete(item.path);mediaUrls.set(item.path,{url:item.signedUrl,expires:Date.now()+300000});
+    }
+    while(mediaUrls.size>1000)mediaUrls.delete(mediaUrls.keys().next().value!);
   }
+  for(const file of media){const cached=mediaUrls.get(file.path);file.url=cached?.url??null;file.url_expires_at=cached?.expires??0;delete file.path;}
   return state;
 }
 
@@ -28,14 +35,14 @@ Deno.serve(async (req: Request) => {
     try { hash = await ownerHash(body.access_token); }
     catch { return Response.json({error:'Влез в занимание и заяви достъп от водещия.'},{status:403,headers}); }
     const client = serviceClient();
-    if (!await rateLimit(req, 'classroom-' + (body.action === 'join' ? 'join' : 'activity'), body.action === 'join' ? 100 : 2000)) return rateLimitResponse(headers);
+    if (!await rateLimit(req, 'classroom-' + (body.action === 'join' ? 'join' : 'activity'), body.action === 'join' ? 1000 : 10000)) return rateLimitResponse(headers);
     const limit = await client.rpc('consume_rate_limit', {
-      bucket_key: hash + ':classroom:' + Math.floor(Date.now()/60000), max_requests: 120,
+      bucket_key: await sha256(hash + ':classroom:' + Math.floor(Date.now()/60000)), max_requests: 120,
     });
     if (limit.error) throw new Error('Limit unavailable');
     if (!limit.data) return rateLimitResponse(headers);
     let result;
-    if (body.action === 'state') result = await client.rpc('lab_state',{actor_hash:hash});
+    if (body.action === 'state') result = await client.rpc('lab_sync',{actor_hash:hash,known_revision:typeof body.revision==='string'&&body.revision.length<30?body.revision:null});
     else if (body.action === 'join') {
       if (typeof body.code !== 'string' || !/^[A-Z0-9]{8,12}$/.test(body.code)
         || typeof body.alias !== 'string' || body.alias.trim().length<2 || body.alias.length>40)

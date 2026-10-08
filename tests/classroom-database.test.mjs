@@ -40,6 +40,25 @@ before(async()=>{
   }
 });
 after(async()=>{await db?.close();});
+test('conditional sync omits unchanged content and rechecks expiry and current grants',async()=>{
+  const created=await admin('create_room',{name:'Conditional synchronization fixture'});
+  const selected=created.rooms.find(item=>item.id===created.selected_room),hash='9'.repeat(64);
+  const joined=(await query('service_role','select public.lab_join($1,$2,$3) result',[hash,selected.code,'Sync fixture'])).rows[0].result;
+  const member=joined.access.member_id;
+  await admin('approve_member',{room_id:selected.id,member_id:member,approved:true,simulators:true});
+  const sync=revision=>query('service_role','select public.lab_sync($1,$2) result',[hash,revision??null]).then(result=>result.rows[0].result);
+  const initial=await sync();assert.equal(typeof initial.revision,'string');
+  const unchanged=await sync(initial.revision);assert.equal(unchanged.unchanged,true);assert.equal('posts' in unchanged,false);
+  await command(hash,'publish',{app_id:'facebook',content:'A synchronization change'});
+  const changed=await sync(initial.revision);assert.notEqual(changed.revision,initial.revision);assert.equal(changed.posts.length,1);
+  await admin('approve_member',{room_id:selected.id,member_id:member,approved:false,simulators:false});
+  const revoked=await sync(changed.revision);assert.equal(revoked.access.status,'revoked');assert.deepEqual(revoked.posts,[]);assert.equal(revoked.unchanged,undefined);
+  await admin('approve_member',{room_id:selected.id,member_id:member,approved:true,simulators:true});
+  const approved=await sync();
+  await db.query("update private.lab_rooms set expires_at=now()-interval '1 second' where id=$1",[selected.id]);
+  const expired=await sync(approved.revision);assert.deepEqual(expired.posts,[]);assert.equal(expired.unchanged,undefined);
+  for(const role of ['anon','authenticated'])await assert.rejects(query(role,'select public.lab_sync($1,$2)',[hash,initial.revision]),error=>error.code==='42501');
+});
 test('public and authenticated clients cannot read private room content or call capability RPCs',async()=>{
   for(const role of ['anon','authenticated']){
     await assert.rejects(query(role,'select * from private.lab_members'),error=>error.code==='42501');
