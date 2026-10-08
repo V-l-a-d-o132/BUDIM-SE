@@ -1,4 +1,4 @@
-import { verifyRecaptcha, rateLimit, readBody, publicRequestError, corsHeaders, requestBodyErrorResponse, rateLimitResponse, ownerHash, serviceClient } from '../_shared/security.ts';
+import { verifyRecaptcha, rateLimit, readBody, publicRequestError, corsHeaders, requestBodyErrorResponse, rateLimitResponse, ownerHash, serviceClient, sha256 } from '../_shared/security.ts';
 import { ANALYSIS_MODEL, ANALYSIS_INSTRUCTIONS, validatedContentAnalysis } from '../_shared/content-analysis.ts';
 
 Deno.serve(async (req: Request) => {
@@ -13,7 +13,7 @@ Deno.serve(async (req: Request) => {
   const access = await serviceClient().rpc('lab_check_access',{actor_hash:actor,required_scope:'analyzer'});
   if (access.error) throw new Error('Access service unavailable');
   if (!access.data) return Response.json({error:'Анализаторът не е разрешен за това занимание.'},{status:403,headers});
-  const budget=await serviceClient().rpc('consume_rate_limit',{bucket_key:actor+':analysis:'+Math.floor(Date.now()/60000),max_requests:6});
+  const budget=await serviceClient().rpc('consume_rate_limit',{bucket_key:await sha256(actor+':analysis:'+Math.floor(Date.now()/60000)),max_requests:6});
   if(budget.error) throw new Error('Analysis budget unavailable');
   if(!budget.data) return rateLimitResponse(headers);
   if (typeof body.text !== 'string' || body.text.trim().length < 10 || body.text.length > 1500) return Response.json({ error:'Въведи текст от 10 до 1500 символа.' }, { status:400, headers });

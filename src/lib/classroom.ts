@@ -33,6 +33,7 @@ export interface LabNotification {
   id: string; app_id: LabApp; content: string; created_at: string; read: boolean;
 }
 export interface LabState {
+  revision?: string;
   access: LabAccess | null; participants: LabMember[]; posts: LabPost[];
   comments: LabComment[]; follows: string[]; messages: LabMessage[]; notifications: LabNotification[];
   app_follows?: {app_id:LabApp;target_id:string}[];
@@ -40,6 +41,14 @@ export interface LabState {
 export const emptyLabState: LabState = {
   access: null, participants: [], posts: [], comments: [], follows: [], messages: [], notifications: [],
 };
+export function labSyncPayload(state: LabState, now = Date.now()): Record<string, unknown> {
+  // Time can change a snapshot even when nobody posts: renew signed media and
+  // remove expired stories through a full, authorized server read.
+  const expired = state.posts.some(post =>
+    (post.media && (!post.media.url || (post.media.url_expires_at ?? 0) <= now + 30000))
+    || (post.kind === 'story' && Date.parse(post.created_at) + 86400000 <= now));
+  return state.revision && !expired ? { revision: state.revision } : {};
+}
 export function retainMediaUrls(previous: LabState, next: LabState): LabState {
   const known = new Map(previous.posts.filter(post => post.media).map(post => [post.media!.id, post.media!]));
   for (const post of next.posts) {
@@ -78,7 +87,7 @@ export function labAllowed(state: LabState, scope: LabScope): boolean {
     && access.room.status === 'open' && Date.parse(access.room.expires_at) > Date.now()
     && access.room[scope === 'simulators' ? 'simulators_enabled' : 'analyzer_enabled']);
 }
-export async function labRequest(action: string, payload: Record<string, unknown> = {}, token = existingLabToken()): Promise<LabState> {
+export async function labRequest(action: string, payload: Record<string, unknown> = {}, token = existingLabToken(), previous?:LabState): Promise<LabState> {
   const { data, error } = await supabase.functions.invoke('classroom', { body: { action, ...payload, access_token: token } });
   if (error) {
     const context = (error as { context?: Response }).context;
@@ -87,6 +96,9 @@ export async function labRequest(action: string, payload: Record<string, unknown
       if (typeof result?.error === 'string' && result.error.length < 500) throw new Error(result.error);
     }
     throw new Error('Връзката със заниманието се прекъсна. Опитай отново.');
+  }
+  if(data?.success===true&&data.state?.unchanged===true&&previous?.revision&&data.state.revision===previous.revision){
+    return {...previous,access:data.state.access,revision:data.state.revision};
   }
   if (data?.success !== true || !data.state || !Array.isArray(data.state.posts)) throw new Error('Заниманието временно не може да бъде заредено.');
   return data.state;

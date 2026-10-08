@@ -1,5 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import { clearLabToken, createLabToken, emptyLabState, existingLabToken, labAllowed, labRequest,
+import { clearLabToken, createLabToken, emptyLabState, existingLabToken, labAllowed, labRequest, labSyncPayload,
   retainMediaUrls, type LabScope, type LabState } from '@/lib/classroom';
 
 export interface Classroom {
@@ -14,6 +14,7 @@ export const useClassroom = () => useContext(Context);
 
 export function ClassroomProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<LabState>(emptyLabState);
+  const stateRef=useRef(state);
   const [loading, setLoading] = useState(Boolean(existingLabToken()));
   const [error, setError] = useState('');
   const mounted = useRef(true);
@@ -26,8 +27,9 @@ export function ClassroomProvider({ children }: { children: ReactNode }) {
     reading.current = true;
     const current = ++generation.current;
     try {
-      const result = await labRequest('state', {}, token);
-      if (mounted.current && current === generation.current) { setState(previous => retainMediaUrls(previous,result)); setError(''); }
+      const previous=stateRef.current;
+      const result = await labRequest('state', labSyncPayload(previous), token,previous);
+      if (mounted.current && current === generation.current) { stateRef.current=retainMediaUrls(previous,result);setState(stateRef.current);setError(''); }
     } catch (err) {
       if (mounted.current && current === generation.current) setError(err instanceof Error ? err.message : 'Връзката се прекъсна.');
     } finally {
@@ -38,7 +40,7 @@ export function ClassroomProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     mounted.current = true;
     void refresh();
-    const timer = window.setInterval(() => { if (document.visibilityState !== 'hidden') void refresh(); }, 8000);
+    const timer = window.setInterval(() => { if (document.visibilityState !== 'hidden') void refresh(); }, 8000+Math.floor(Math.random()*2000));
     const focus = () => { void refresh(); };
     window.addEventListener('focus', focus);
     return () => { mounted.current = false; generation.current++; window.clearInterval(timer); window.removeEventListener('focus', focus); };
@@ -48,7 +50,7 @@ export function ClassroomProvider({ children }: { children: ReactNode }) {
     writes.current++;
     try {
       const result = await labRequest(action, payload);
-      if (mounted.current && current === generation.current) { setState(previous => retainMediaUrls(previous,result)); setError(''); }
+      if (mounted.current && current === generation.current) { stateRef.current=retainMediaUrls(stateRef.current,result);setState(stateRef.current);setError(''); }
     } catch (err) {
       if (mounted.current && current === generation.current) setError(err instanceof Error ? err.message : 'Действието не е записано.');
       throw err;
@@ -59,15 +61,16 @@ export function ClassroomProvider({ children }: { children: ReactNode }) {
   }, [refresh]);
   const join = async (code: string, alias: string) => {
     const current = ++generation.current;
+    writes.current++;
     setLoading(true);
     try {
       const result = await labRequest('join', { code: code.trim().toUpperCase(), alias: alias.trim() }, createLabToken());
-      if (mounted.current && current === generation.current) { setState(result); setError(''); }
+      if (mounted.current && current === generation.current) { stateRef.current=result;setState(result);setError(''); }
     } catch (err) {
       if (mounted.current) setError(err instanceof Error ? err.message : 'Заявката не е изпратена.');
       throw err;
-    } finally { if (mounted.current) setLoading(false); }
+    } finally { writes.current--;if (mounted.current) setLoading(false); }
   };
-  const leave = () => { generation.current++; clearLabToken(); setState(emptyLabState); setError(''); setLoading(false); };
+  const leave = () => { generation.current++; clearLabToken(); stateRef.current=emptyLabState;setState(emptyLabState); setError(''); setLoading(false); };
   return <Context.Provider value={{ state, loading, error, allowed: scope => !loading && !error && labAllowed(state, scope), join, command, refresh, leave }}>{children}</Context.Provider>;
 }

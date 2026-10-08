@@ -7,7 +7,7 @@ import {build} from 'esbuild';
 import {JSDOM} from 'jsdom';
 import {createElement,act} from 'react';
 const project=fileURLToPath(new URL('../',import.meta.url));
-let dom,root,container,components,createRoot,Router,temp,state,requests=[];
+let dom,root,container,components,createRoot,Router,temp,state,requests=[],deferJoin;
 const token='d'.repeat(64),member='10000000-0000-4000-8000-000000000099';
 const originalFetch=globalThis.fetch;
 const blank=()=>({access:null,participants:[],posts:[],comments:[],follows:[],messages:[],notifications:[]});
@@ -35,6 +35,8 @@ before(async()=>{
     const url=typeof input==='string'?input:input.url;
     assert.match(url,/\/functions\/v1\/classroom$/);
     const body=JSON.parse(init.body);requests.push(body);
+    if(body.action==='join'&&deferJoin)await deferJoin;
+    if(body.action==='state'&&state.revision&&body.revision===state.revision&&state.access?.status==='approved')return Response.json({success:true,state:{access:state.access,revision:state.revision,unchanged:true}});
     if(body.action==='react'){const post=state.posts.find(post=>post.id===body.post_id);post.reaction=body.reaction;post.likes=body.reaction?1:0;}
     if(body.action==='publish')state.posts.unshift({id:'published',member_id:member,alias:'Student',app_id:body.app_id,kind:body.kind,content:body.content,approved:true,created_at:new Date().toISOString(),media:null,likes:0,comments:0,shares:0,views:0,reaction:null,saved:false,shared:false});
     if(body.action==='comment'){state.comments.push({id:'comment',post_id:body.post_id,member_id:member,alias:'Student',content:body.content,approved:true,created_at:new Date().toISOString()});state.posts.find(post=>post.id===body.post_id).comments++;}
@@ -43,13 +45,50 @@ before(async()=>{
   };
   ({createRoot}=await import('react-dom/client'));({MemoryRouter:Router}=await import('react-router-dom'));
   await mkdir(path.join(project,'node_modules/.tmp'),{recursive:true});temp=await mkdtemp(path.join(project,'node_modules/.tmp/classroom-ui-'));
-  const output=await build({stdin:{contents:"export {default as Focus} from './src/pages/tavora-shield/components/GrayscaleGuide';export {default as Page} from './src/pages/tavora-shield/page';export {ClassroomProvider as Provider} from './src/pages/tavora-shield/components/classroom/ClassroomContext';export {clearLabToken} from './src/lib/classroom';",resolveDir:project,loader:'tsx'},bundle:true,write:false,platform:'node',format:'esm',packages:'external',jsx:'automatic',alias:{'@':path.join(project,'src')},loader:{'.css':'empty'},define:{'import.meta.env':JSON.stringify({VITE_PUBLIC_SUPABASE_URL:'https://fixture.supabase.test',VITE_PUBLIC_SUPABASE_ANON_KEY:'fixture-public-key'})}});
+  const output=await build({stdin:{contents:"export {default as Focus} from './src/pages/tavora-shield/components/GrayscaleGuide';export {default as Page} from './src/pages/tavora-shield/page';export {ClassroomProvider as Provider,useClassroom} from './src/pages/tavora-shield/components/classroom/ClassroomContext';export {clearLabToken,labRequest} from './src/lib/classroom';",resolveDir:project,loader:'tsx'},bundle:true,write:false,platform:'node',format:'esm',packages:'external',jsx:'automatic',alias:{'@':path.join(project,'src')},loader:{'.css':'empty'},define:{'import.meta.env':JSON.stringify({VITE_PUBLIC_SUPABASE_URL:'https://fixture.supabase.test',VITE_PUBLIC_SUPABASE_ANON_KEY:'fixture-public-key'})}});
   const file=path.join(temp,'fixture.mjs');await writeFile(file,output.outputFiles[0].text);components=await import(pathToFileURL(file).href);
 });
-beforeEach(()=>{state=approved();requests=[];components.clearLabToken();window.sessionStorage.clear();window.sessionStorage.setItem('budimse_classroom_capability_v1',token);container=document.createElement('div');document.body.appendChild(container);root=createRoot(container);});
+beforeEach(()=>{state=approved();requests=[];deferJoin=null;components.clearLabToken();window.sessionStorage.clear();window.sessionStorage.setItem('budimse_classroom_capability_v1',token);container=document.createElement('div');document.body.appendChild(container);root=createRoot(container);});
 afterEach(async()=>{await act(async()=>root.unmount());container.remove();components.clearLabToken();});
 after(async()=>{globalThis.fetch=originalFetch;dom.window.close();await rm(temp,{recursive:true,force:true});});
 async function mountFocus(){await act(async()=>root.render(createElement(components.Provider,null,createElement(components.Focus))));}
+test('unchanged synchronization retains content while a revoked grant returns an empty snapshot',async()=>{
+  state.revision='7';const previous=structuredClone(state);
+  const same=await components.labRequest('state',{revision:'7'},token,previous);assert.equal(same.posts.length,6);
+  state={...blank(),access:{...previous.access,status:'revoked'},revision:'8'};
+  const revoked=await components.labRequest('state',{revision:'7'},token,previous);assert.equal(revoked.access.status,'revoked');assert.deepEqual(revoked.posts,[]);
+});
+test('idle polling renews expiring media and removes stories whose lifetime has elapsed',async()=>{
+  const now=Date.now(),originalNow=Date.now;let connection;
+  state.revision='7';state.posts[0].media={id:'fixture-media',mime_type:'image/png',url:'https://fixture.test/old.png',url_expires_at:now+20000};
+  state.posts[1].kind='story';state.posts[1].created_at=new Date(now-86400000+60000).toISOString();
+  function Harness(){connection=components.useClassroom();return createElement('div');}
+  try{
+    await act(async()=>root.render(createElement(components.Provider,null,createElement(Harness))));
+    state.posts[0].media={...state.posts[0].media,url:'https://fixture.test/renewed.png',url_expires_at:now+300000};
+    await act(async()=>connection.refresh());
+    assert.equal(requests.at(-1).revision,undefined);assert.match(connection.state.posts[0].media.url,/renewed/);
+    await act(async()=>connection.refresh());assert.equal(requests.at(-1).revision,'7');
+    Date.now=()=>now+61000;state.posts=state.posts.filter(post=>post.kind!=='story');
+    await act(async()=>connection.refresh());
+    assert.equal(requests.at(-1).revision,undefined);assert.equal(connection.state.posts.some(post=>post.kind==='story'),false);
+  }finally{Date.now=originalNow;}
+});
+test('background polling cannot overtake an in-flight classroom join',async()=>{
+  components.clearLabToken();window.sessionStorage.clear();
+  const originalInterval=window.setInterval;let poll,release,connection,joining;
+  window.setInterval=callback=>{poll=callback;return 999;};
+  deferJoin=new Promise(resolve=>{release=resolve;});
+  function Harness(){connection=components.useClassroom();return createElement('div',null,connection.state.access?.status??'');}
+  try{
+    await act(async()=>root.render(createElement(components.Provider,null,createElement(Harness))));
+    await act(async()=>{joining=connection.join('CODE1234','Pending');await Promise.resolve();});
+    await act(async()=>{poll();await Promise.resolve();});
+    assert.equal(requests.filter(request=>request.action==='state').length,0);
+    state.access.status='pending';await act(async()=>{release();await joining;});
+    assert.match(container.textContent,/pending/);
+  }finally{release();await joining?.catch(()=>{});window.setInterval=originalInterval;deferJoin=null;}
+});
 test('the public page locks both tools and never invokes analysis without permission',async()=>{
   window.sessionStorage.clear();await act(async()=>root.render(createElement(Router,null,createElement(components.Page))));
   assert.match(container.textContent,/Симулаторите се включват от водещия/);
