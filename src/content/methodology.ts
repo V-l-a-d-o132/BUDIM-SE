@@ -1,4 +1,4 @@
-import resource from '../../content/methodology-resource.json';
+import resource from './methodology-resource';
 
 export const methodology = {
   ...resource,
