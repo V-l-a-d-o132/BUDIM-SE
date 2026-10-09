@@ -12,7 +12,7 @@ export default function ResourcesPage() {
     schemaType: 'CollectionPage',
     breadcrumbs: [{ name: 'Начало', url: '/' }, { name: 'Ресурси', url: '/resursi' }],
     schemaExtra: {
-      hasPart: {
+      hasPart: [{
         '@type': 'LearningResource', '@id': 'https://budimse.online/resursi#metodologiya',
         name: methodology.title,
         description: 'Образователна методология с цели, шест занятия, разгърнати казуси, оценяване и шест работни листа.',
@@ -22,7 +22,18 @@ export default function ResourcesPage() {
         publisher: { '@id': 'https://budimse.online/#organization' },
         encoding: { '@type': 'MediaObject', encodingFormat: 'application/pdf',
           contentUrl: 'https://budimse.online' + methodology.href, contentSize: methodology.sizeLabel },
-      },
+      }, {
+        '@type': 'LearningResource', '@id': 'https://budimse.online/resursi#uchenicheski-paket',
+        name: methodology.studentPack.title,
+        description: 'Учебни казуси на етапи и шест работни листа, без решенията за водещия.',
+        inLanguage: 'bg', version: methodology.version, isAccessibleForFree: true,
+        learningResourceType: 'Работни листове',
+        author: { '@id': 'https://budimse.online/author#person' },
+        publisher: { '@id': 'https://budimse.online/#organization' },
+        encoding: { '@type': 'MediaObject', encodingFormat: 'application/pdf',
+          contentUrl: 'https://budimse.online' + methodology.studentPack.href,
+          contentSize: methodology.studentPackSizeLabel },
+      }],
     },
   });
 
@@ -42,8 +53,19 @@ export default function ResourcesPage() {
               <a className="button-primary" href={methodology.href} download={methodology.href.split('/').pop()} type="application/pdf"><Download size={18} aria-hidden="true" />Изтегли наръчника</a>
               <a className="button-secondary" href={methodology.href} target="_blank" rel="noopener noreferrer" type="application/pdf">Прегледай PDF<ArrowUpRight size={17} aria-hidden="true" /><span className="sr-only"> (в нов раздел)</span></a>
             </div>
-            <p className="resource-access-note">Без регистрация. Може да се използва на хартия, без сайта и книгата.</p>
+            <p className="resource-access-note">Без регистрация. Разрешено е разпечатване и споделяне за нетърговски учебни занимания с посочени автор, версия и източник.</p>
           </div>
+        </section>
+
+        <section id="uchenicheski-paket" aria-labelledby="student-pack-title">
+          <h2 id="student-pack-title">Казуси и работни листове за учениците</h2>
+          <p>Отделен пакет без решенията и бележките за оценяващия. Документите и новите условия са на отделни страници, за да се дават след самостоятелния отговор.</p>
+          <p className="resource-file-meta">{methodology.studentPack.pages} страници · {methodology.studentPackSizeLabel} · Български · Версия {methodology.version}</p>
+          <div className="button-row">
+            <a className="button-primary" href={methodology.studentPack.href} download={methodology.studentPack.href.split('/').pop()} type="application/pdf"><Download size={18} aria-hidden="true" />Изтегли ученическия пакет</a>
+            <a className="button-secondary" href={methodology.studentPack.href} target="_blank" rel="noopener noreferrer" type="application/pdf">Прегледай PDF<ArrowUpRight size={17} aria-hidden="true" /><span className="sr-only"> (в нов раздел)</span></a>
+          </div>
+          <p>Шестте листа за печат са на страници {methodology.studentPack.worksheetPages}. Указанията на първата страница обясняват кога да се дадат отделните документи.</p>
         </section>
 
         <section id="v-narachnika"><h2>Какво включва методологията</h2>
@@ -68,7 +90,7 @@ export default function ResourcesPage() {
         <section id="za-vodeshti"><h2>Откъде да започне един учител?</h2>
           <p>Започни с целите и подготовката на страници 3-8. Програмата от шест занятия е на страница {methodology.sections.course}. За отделен час използвай пакета документи на страници {methodology.sections.caseStudy} и плана на страница {methodology.sections.lesson}. Казусите за постове и видимост са на страници {methodology.sections.socialPosts}.</p>
           <p>Съобрази езика, времето и сложността с групата. Упражненията могат да се изпълнят без лични профили, лични съобщения и публично публикуване от ученици.</p>
-          <p>Авторската рамка се развива от <Link to="/author">Владимир Атанасов</Link> и център БУДИМ СЕ. Версия 2.0 е разработена за пилотно прилагане. Стъпва върху проучени образователни подходи; ефектът на цялата програма и трудността на задачите предстои да се проверят.</p>
+          <p>Авторската рамка се развива от <Link to="/author">Владимир Атанасов</Link> и център БУДИМ СЕ. Версия {methodology.version} е разработена за пилотно прилагане. Стъпва върху проучени образователни подходи; ефектът на цялата програма и трудността на задачите предстои да се проверят.</p>
         </section>
 
         <section id="razrabotvane"><h2>Как е разработена?</h2>
@@ -88,6 +110,7 @@ export default function ResourcesPage() {
       </article>
       <aside className="page-aside"><h2>На тази страница</h2>
         <a href="#metodologiya">Изтегляне на наръчника</a>
+        <a href="#uchenicheski-paket">Ученически пакет</a>
         <a href="#v-narachnika">Съдържание</a>
         <a href="#pet-stapki">Петте стъпки</a>
         <a href="#za-vodeshti">За учители и водещи</a>

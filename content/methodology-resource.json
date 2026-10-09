@@ -1,11 +1,11 @@
 {
   "title": "Методология „Будим се“",
-  "version": "2.0",
+  "version": "2.1",
   "publishedAt": "2026-10-09",
   "dateLabel": "9 октомври 2026 г.",
   "pages": 46,
-  "bytes": 238731,
-  "href": "/resources/metodologiya-budim-se-v2.pdf",
+  "bytes": 239413,
+  "href": "/resources/metodologiya-budim-se-v2-1.pdf",
   "worksheetPages": "39-44",
   "worksheets": 6,
   "sections": {
@@ -15,5 +15,13 @@
     "lesson": "29",
     "assessment": "33-38"
   },
-  "sha256": "5313120bf35cb1e7af6aec3ec27f30dab14f7ceb2ec3302f5d64a3daa843fc5a"
+  "sha256": "087c0b41583111039ec9fd9f84998619fdfe66fe1053e3a92cbc0d60ab5a06e5",
+  "studentPack": {
+    "title": "Казуси и работни листове",
+    "pages": 13,
+    "href": "/resources/uchenicheski-paket-budim-se-v2-1.pdf",
+    "bytes": 103890,
+    "sha256": "f562f19d742dcad74c7b220d80c1724c0e51a2e6baeb7b6f04be837d5f681343",
+    "worksheetPages": "8-13"
+  }
 }

@@ -25,7 +25,9 @@ from reportlab.pdfbase.pdfdoc import PDFString
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'content/metodologiya-budim-se-v2.md'
+VERSION = '2.1'
+SOURCE = ROOT / 'content/metodologiya-budim-se-v2-1.md'
+STUDENT_SOURCE = ROOT / 'content/uchenicheski-paket-budim-se-v2-1.md'
 FONT_ROOT = Path('/usr/share/fonts/truetype/dejavu')
 for name, filename in [('Body', 'DejaVuSans.ttf'), ('Bold', 'DejaVuSans-Bold.ttf'),
                        ('Title', 'DejaVuSerif.ttf')]:
@@ -105,7 +107,8 @@ def page_frame(canvas, doc):
         canvas.setFillColor(MUTED)
         canvas.setFont('Body', 8)
         canvas.drawString(MARGIN, HEIGHT - 36, 'БУДИМ СЕ  /  Методология')
-        canvas.drawRightString(WIDTH - MARGIN, HEIGHT - 36, 'Образователна методология')
+        canvas.drawRightString(WIDTH - MARGIN, HEIGHT - 36,
+                               getattr(doc, 'resource_label', 'Образователна методология'))
         canvas.setStrokeColor(RULE)
         canvas.setLineWidth(.5)
         canvas.line(MARGIN, HEIGHT - 46, WIDTH - MARGIN, HEIGHT - 46)
@@ -113,7 +116,7 @@ def page_frame(canvas, doc):
     canvas.line(MARGIN, 43, WIDTH - MARGIN, 43)
     canvas.setFillColor(MUTED)
     canvas.setFont('Body', 8)
-    canvas.drawString(MARGIN, 28, 'budimse.online  /  Версия 2.0')
+    canvas.drawString(MARGIN, 28, 'budimse.online  /  Версия ' + VERSION)
     canvas.drawRightString(WIDTH - MARGIN, 28, str(doc.page))
     canvas.restoreState()
 
@@ -218,13 +221,14 @@ def cover():
         Spacer(1, 44),
         Paragraph('За учители, обучители и водещи на групи', styles['body']),
         Paragraph('Авторска рамка: Владимир Атанасов', styles['small']),
-        Paragraph('Версия 2.0 • 9 октомври 2026 г.', styles['small']),
+        Paragraph('Версия ' + VERSION + ' • 9 октомври 2026 г.', styles['small']),
     ]
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--output', type=Path, default=ROOT / 'output/pdf/metodologiya-budim-se-v2.pdf')
+    parser.add_argument('--output', type=Path, default=ROOT / 'output/pdf/metodologiya-budim-se-v2-1.pdf')
+    parser.add_argument('--student-output', type=Path, default=ROOT / 'output/pdf/uchenicheski-paket-budim-se-v2-1.pdf')
     args = parser.parse_args()
     text = SOURCE.read_text(encoding='utf-8')
     for char in ('\u2011', '\u2013', '\u2014'):
@@ -250,14 +254,42 @@ def main():
     for index, (page, title) in enumerate(zip(reader.pages, expected_titles)):
         extracted = re.sub(r'\s+', ' ', page.extract_text())
         assert title in extracted, f'Wrong page break before page {index + 1}: {title}'
+    student_pages = STUDENT_SOURCE.read_text(encoding='utf-8').split('<!-- page -->')
+    assert len(student_pages) == 13
+    args.student_output.parent.mkdir(parents=True, exist_ok=True)
+    student_doc = Guide(str(args.student_output), pagesize=A4, rightMargin=MARGIN, leftMargin=MARGIN,
+                        topMargin=65, bottomMargin=59, pageCompression=1,
+                        title='Казуси и работни листове - Будим се',
+                        author='Център БУДИМ СЕ; Владимир Атанасов',
+                        subject='Ученически пакет без решенията за водещия',
+                        keywords='медийна грамотност, дигитална грамотност, работни листове')
+    student_doc.resource_label = 'Казуси и работни листове'
+    student_story = []
+    for index, part in enumerate(student_pages):
+        if index:
+            student_story.append(PageBreak())
+        student_story.extend(render_page(part))
+    student_doc.build(student_story, onFirstPage=page_frame, onLaterPages=page_frame)
+    student_reader = PdfReader(args.student_output)
+    assert len(student_reader.pages) == len(student_pages), 'Student packet overflow'
+    for index, (page, part) in enumerate(zip(student_reader.pages, student_pages)):
+        title = re.search(r'^# (.+)$', part, re.M)[1]
+        assert title in re.sub(r'\s+', ' ', page.extract_text()), f'Student page break {index + 1}'
     metadata = {
         'title': 'Методология „Будим се“',
-        'version': '2.0', 'publishedAt': '2026-10-09', 'dateLabel': '9 октомври 2026 г.', 'pages': len(reader.pages),
+        'version': VERSION, 'publishedAt': '2026-10-09', 'dateLabel': '9 октомври 2026 г.', 'pages': len(reader.pages),
         'bytes': args.output.stat().st_size,
-        'href': '/resources/metodologiya-budim-se-v2.pdf',
+        'href': '/resources/metodologiya-budim-se-v2-1.pdf',
         'worksheetPages': '39-44', 'worksheets': 6,
         'sections': {'caseStudy': '15-16', 'socialPosts': '20-23', 'course': '28', 'lesson': '29', 'assessment': '33-38'},
         'sha256': hashlib.sha256(args.output.read_bytes()).hexdigest(),
+        'studentPack': {
+            'title': 'Казуси и работни листове', 'pages': len(student_reader.pages),
+            'href': '/resources/uchenicheski-paket-budim-se-v2-1.pdf',
+            'bytes': args.student_output.stat().st_size,
+            'sha256': hashlib.sha256(args.student_output.read_bytes()).hexdigest(),
+            'worksheetPages': '8-13',
+        },
     }
     (ROOT / 'content/methodology-resource.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps(metadata, ensure_ascii=False))
