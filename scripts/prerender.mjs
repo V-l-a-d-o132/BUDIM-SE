@@ -54,7 +54,13 @@ try {
     for (const script of document.querySelectorAll('script[type="application/ld+json"]')) JSON.parse(script.textContent);
     for (const link of document.querySelectorAll('a[href]')) {
       const target = new URL(link.getAttribute('href'), 'https://budimse.online' + route);
-      if (target.origin === 'https://budimse.online') assert.ok(routes.includes(target.pathname) || target.pathname.startsWith('/news/') || (target.pathname === route && target.hash), route + ': unknown internal link ' + target.pathname);
+      if (target.origin === 'https://budimse.online') {
+        const downloadableFile = target.pathname.startsWith('/resources/')
+          && (await fs.stat(path.join(outputDir, target.pathname)).catch(() => null))?.isFile();
+        assert.ok(routes.includes(target.pathname) || target.pathname.startsWith('/news/')
+          || (target.pathname === route && target.hash) || downloadableFile,
+        route + ': unknown internal link ' + target.pathname);
+      }
     }
     document.defaultView.close();
     const file = route === '/404' ? path.join(outputDir, '404.html') : path.join(outputDir, route, 'index.html');

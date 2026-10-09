@@ -8,6 +8,7 @@ const STATIC_PAGES = [
   { url: '/digitalna-gramotnost', priority: '0.9', changefreq: 'monthly' },
   { url: '/mediyna-gramotnost-uchenici', priority: '0.9', changefreq: 'monthly' },
   { url: '/obucheniya-za-uchilishta', priority: '0.9', changefreq: 'monthly' },
+  { url: '/resursi', priority: '0.9', changefreq: 'monthly' },
   { url: '/sources', priority: '0.7', changefreq: 'monthly' },
   { url: '/center', priority: '0.9', changefreq: 'monthly' },
   { url: '/author', priority: '0.8', changefreq: 'monthly' },

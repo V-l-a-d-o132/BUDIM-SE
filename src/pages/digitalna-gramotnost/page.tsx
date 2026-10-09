@@ -36,11 +36,11 @@ export default function DigitalnaGramotnostPage() {
         </ul><p>Няма еднакъв подход за всички. Важни са целта, възрастта, ситуацията и това как употребата се отразява на ежедневието.</p></section>
         <section id="uchilishte"><h2>Медийна грамотност в българското училище</h2><p>Може да започнем с познати примери: училищна кауза, реклама, заглавие за спорт или снимка без дата. Задачата е учениците да обяснят как са стигнали до извода си и какво би ги накарало да го променят.</p><p>Подготвили сме <Link to="/mediyna-gramotnost-uchenici">упражнения за ученици</Link> и <Link to="/obucheniya-za-uchilishta">пилотен формат за обучения</Link>. Примерите се съобразяват с класа; не изискват лични профили в социални мрежи.</p></section>
         <section className="source-note"><h2>На какво стъпваме</h2><p>Тази страница е образователно въведение, а не тест или оценка на отделен човек. Определенията се опират на:</p><ul>
-          <li><a href="https://publications.jrc.ec.europa.eu/repository/handle/JRC128415" target="_blank" rel="noopener noreferrer">Европейската рамка DigComp 2.2 (2022)</a></li>
+          <li><a href="https://publications.jrc.ec.europa.eu/repository/handle/JRC144121" target="_blank" rel="noopener noreferrer">Европейската рамка DigComp 3.0 (2025)</a></li>
           <li><a href="https://www.unesco.org/en/media-information-literacy" target="_blank" rel="noopener noreferrer">UNESCO: медийна и информационна грамотност</a></li>
         </ul><p>Редактирано: 8 октомври 2026 г. <Link to="/sources">Още източници и ограничения.</Link></p></section>
       </article>
-      <aside className="page-aside"><h2>В тази страница</h2><a href="#razlika">Две свързани умения</a><a href="#proverka">Проверка на информация</a><a href="#navitsi">Практически навици</a><a href="#uchilishte">Работа в училище</a><p>Следваща стъпка</p><Link to="/mediyna-gramotnost-uchenici">Опитай с конкретна задача</Link></aside>
+      <aside className="page-aside"><h2>В тази страница</h2><a href="#razlika">Две свързани умения</a><a href="#proverka">Проверка на информация</a><a href="#navitsi">Практически навици</a><a href="#uchilishte">Работа в училище</a><p>Следваща стъпка</p><Link to="/resursi">Методология и ресурси</Link><Link to="/mediyna-gramotnost-uchenici">Опитай с конкретна задача</Link></aside>
     </div>
   </PageLayout>;
 }

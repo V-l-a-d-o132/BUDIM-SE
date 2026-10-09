@@ -15,6 +15,7 @@ export default function Footer() {
           <li><Link to="/digitalna-gramotnost">Дигитална и медийна грамотност</Link></li>
           <li><Link to="/mediyna-gramotnost-uchenici">Упражнения за ученици</Link></li>
           <li><Link to="/obucheniya-za-uchilishta">Обучения за училища</Link></li>
+          <li><Link to="/resursi">Ресурси и методология</Link></li>
           <li><Link to="/news">Материали</Link></li>
           <li><Link to="/analizator">Анализатор и симулатори</Link></li>
         </ul></div>
