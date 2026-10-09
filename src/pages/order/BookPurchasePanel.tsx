@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/base/Icon';
-import { bookApi, euro, paymentLabels, deliveryLabels, orderAccess, privateOrderLink } from '@/lib/book-orders';
+import { bookApi, BookApiError, savedOrderForAttempt, euro, paymentLabels, deliveryLabels, orderAccess, privateOrderLink } from '@/lib/book-orders';
 import type { BookStore, BookOrder, BookFormat } from '@/lib/book-orders';
 
 export default function BookPurchasePanel() {
@@ -13,6 +13,7 @@ export default function BookPurchasePanel() {
   const [error, setError] = useState('');
   const [order, setOrder] = useState<BookOrder | null>(null);
   const [orderId, setOrderId] = useState<string | null>(null);
+  const [orderRefresh, setOrderRefresh] = useState(0);
   const [notice, setNotice] = useState('');
   const pollCount = useRef(0);
   const tokenRef = useRef<string | null>(null);
@@ -44,15 +45,16 @@ export default function BookPurchasePanel() {
     };
     refresh();
     return () => { cancelled = true; if (timer) clearTimeout(timer); };
-  }, [orderId]);
+  }, [orderId, orderRefresh]);
 
   const checkout = async () => {
     setBusy(true); setError(''); setNotice('');
+    const qty = format === 'digital' ? 1 : quantity;
+    const storageKey = `book-attempt:${format}:${qty}`;
+    let attempt: { request_id: string; order_token: string; order_id?: string } | undefined;
     try {
-      const qty = format === 'digital' ? 1 : quantity;
-      const storageKey = `book-attempt:${format}:${qty}`;
       const existing = sessionStorage.getItem(storageKey);
-      const attempt = existing ? JSON.parse(existing) : {
+      attempt = existing ? JSON.parse(existing) : {
         request_id: crypto.randomUUID(),
         order_token: Array.from(crypto.getRandomValues(new Uint8Array(32)), b => b.toString(16).padStart(2, '0')).join(''),
       };
@@ -60,10 +62,27 @@ export default function BookPurchasePanel() {
       sessionStorage.setItem(storageKey, JSON.stringify(attempt));
       const result = await bookApi('create-book-checkout', { ...attempt, quantity: qty, format, currency: 'eur', immediate_delivery: immediate });
       sessionStorage.setItem(`book-order:${result.orderId}`, result.orderToken);
+      sessionStorage.setItem(storageKey, JSON.stringify({ ...attempt, order_id: result.orderId }));
       const url = new URL(result.url);
       if (url.protocol !== 'https:' || url.hostname !== 'checkout.stripe.com') throw new Error('Платежната страница не е достъпна.');
       window.location.assign(url.href);
-    } catch (err) { setError(err instanceof Error ? err.message : 'Покупката временно не е достъпна.'); setBusy(false); }
+    } catch (err) {
+      const closed = err instanceof BookApiError && err.status === 409
+        && (err.code === 'checkout_closed' || err.message === 'Тази платежна сесия е приключила. Провери статуса на поръчката.');
+      const previousId = closed && attempt?.order_token
+        ? err.orderId ?? attempt.order_id ?? savedOrderForAttempt(attempt.order_token) : null;
+      if (previousId && attempt) {
+        try {
+          sessionStorage.setItem(`book-order:${previousId}`, attempt.order_token);
+          window.history.replaceState(null, '', `/order?order=${encodeURIComponent(previousId)}`);
+          setNotice('Показваме предишната поръчка. Провери статуса ѝ, преди да започнеш нова покупка.');
+          setOrder(null);
+          setOrderId(previousId);
+          setOrderRefresh(previous => previous + 1);
+        } catch { setError('Браузърът не може да запази достъпа до поръчката. Свържи се с нас, преди да опиташ ново плащане.'); }
+      } else setError(err instanceof Error ? err.message : 'Покупката временно не е достъпна.');
+      setBusy(false);
+    }
   };
 
   const refreshOrder = async () => {
@@ -112,7 +131,7 @@ export default function BookPurchasePanel() {
       <div className="flex flex-wrap gap-3 text-sm">
         <button onClick={refreshOrder} disabled={busy} className="underline underline-offset-4">Провери статуса</button>
         <button onClick={saveAccess} className="underline underline-offset-4">Запази личния линк</button>
-        {['paid', 'partially_refunded', 'refunded', 'expired'].includes(order.payment_status) && <button onClick={newPurchase} className="underline underline-offset-4">Нова покупка</button>}
+        {['paid', 'partially_refunded', 'refunded', 'expired', 'failed'].includes(order.payment_status) && <button onClick={newPurchase} disabled={busy} className="underline underline-offset-4">Нова покупка</button>}
       </div>
     </section>}
     {notice && <p className="text-sm text-gray-600" role="status">{notice}</p>}
@@ -137,7 +156,7 @@ export default function BookPurchasePanel() {
     </label>}
     <div className="text-3xl font-medium text-gray-900">{euro(total)}</div>
     {format === 'digital' && store && !store.digital_available && <p className="text-sm text-gray-500">Електронното издание се подготвя. Покупката ще бъде достъпна при публикуването му.</p>}
-    <button onClick={checkout} disabled={busy || !ready || (format === 'digital' && !immediate)} className="w-full py-4 bg-gray-900 text-white rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
+    <button onClick={checkout} disabled={busy || !ready || Boolean(orderId && (!order || !['created', 'failed'].includes(order.payment_status))) || (format === 'digital' && !immediate)} className="w-full py-4 bg-gray-900 text-white rounded-xl flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed">
       <Icon name={busy ? 'ri-loader-4-line' : 'ri-shopping-bag-line'} size={20} className={busy ? 'animate-spin' : ''} />
       {busy ? 'Обработване…' : `Купи — ${euro(total)}`}
     </button>

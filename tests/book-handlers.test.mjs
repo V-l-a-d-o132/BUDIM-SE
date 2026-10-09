@@ -10,6 +10,7 @@ registerHooks({ resolve(specifier,context,next) {
   return next(specifier,context);
 }});
 const handlers={}; let capture; let requests=[]; let authorized=false; let eventFailure=false; let downloadAllowed=false; let modeMismatch=false; let orderUnavailable=false;
+let previousCheckout=null;
 const token='a'.repeat(64); const tokenHash=createHash('sha256').update(token).digest('hex');
 const id='41000000-0000-4000-8000-000000000001';
 const requestId='51000000-0000-4000-8000-000000000001';
@@ -28,7 +29,7 @@ before(async()=>{
     if(url.pathname.endsWith('/auth/v1/user')) return Response.json({id:'10000000-0000-4000-8000-000000000001',role:'authenticated',aud:'authenticated'});
     if(url.pathname.endsWith('/rpc/admin_authorize')) return Response.json(authorized);
     if(url.pathname.endsWith('/rpc/consume_rate_limit')) return Response.json(true);
-    if(url.pathname.endsWith('/rpc/begin_book_order')) return Response.json({...savedOrder,format:body.book_format,quantity:body.book_quantity,unit_amount:body.book_format==='digital'?399:1499,expected_amount:(body.book_format==='digital'?399:1499)*body.book_quantity});
+    if(url.pathname.endsWith('/rpc/begin_book_order')) return Response.json({...savedOrder,stripe_session_id:previousCheckout?'cs_test_previous':null,format:body.book_format,quantity:body.book_quantity,unit_amount:body.book_format==='digital'?399:1499,expected_amount:(body.book_format==='digital'?399:1499)*body.book_quantity});
     if(url.pathname.endsWith('/rpc/bind_book_checkout')) return Response.json(null);
     if(url.pathname.endsWith('/rpc/book_order_for_owner')) return Response.json(body.token_hash===tokenHash && !orderUnavailable?savedOrder:null);
     if(url.pathname.endsWith('/rpc/book_download_for_owner')) return Response.json(downloadAllowed?{object_path:'editions/fixture/'+'a'.repeat(64)+'.pdf'}:null);
@@ -38,6 +39,7 @@ before(async()=>{
     if(url.pathname.endsWith('/rpc/configure_book_payment_secret')) return Response.json('configured');
     if(url.pathname.endsWith('/rpc/apply_book_payment_event')) return eventFailure?Response.json({message:'fixture storage failure'},{status:503}):Response.json({order_id:id,payment_status:'paid'});
     if(url.pathname.endsWith('/book_orders')) return Response.json([{...savedOrder,stripe_session_id:'cs_test_fixture',stripe_payment_intent_id:'pi_fixture'}]);
+    if(url.hostname==='api.stripe.com' && url.pathname==='/v1/checkout/sessions/cs_test_previous') return Response.json({id:'cs_test_previous',object:'checkout.session',livemode:false,status:previousCheckout,url:null,metadata:{order_id:id}});
     if(url.hostname==='api.stripe.com' && url.pathname==='/v1/checkout/sessions' && init.method==='GET') return Response.json({object:'list',has_more:false,data:[{id:'cs_test_fixture',created:1,status:'complete',payment_status:'paid',livemode:false,currency:'eur',amount_total:1499,metadata:{store:'budimse_books_v1',order_id:id,format:'physical'},payment_intent:{id:'pi_fixture',livemode:false,currency:'eur',amount_received:1499,status:'succeeded',latest_charge:{livemode:false,currency:'eur',amount_refunded:0,balance_transaction:{id:'txn_fixture',currency:'eur',amount:1499,fee:72,net:1427,status:'pending'}}}}]});
     if(url.hostname==='api.stripe.com' && url.pathname==='/v1/checkout/sessions') return Response.json({id:'cs_test_fixture',object:'checkout.session',url:'https://checkout.stripe.com/c/pay/cs_test_fixture',livemode:modeMismatch,metadata:{order_id:id},status:'open'});
     if(url.hostname==='api.stripe.com' && url.pathname==='/v1/webhook_endpoints') return Response.json({id:'we_fixture',object:'webhook_endpoint',secret:'whsec_setup_fixture',livemode:false});
@@ -46,10 +48,20 @@ before(async()=>{
     throw new Error('Unexpected fixture request: '+url.hostname+url.pathname);
   };
 });
-beforeEach(()=>{requests=[];authorized=false;eventFailure=false;downloadAllowed=false;modeMismatch=false;orderUnavailable=false;env.STRIPE_BOOK_WEBHOOK_SECRET_TEST=secret;});
+beforeEach(()=>{requests=[];authorized=false;eventFailure=false;downloadAllowed=false;modeMismatch=false;orderUnavailable=false;previousCheckout=null;env.STRIPE_BOOK_WEBHOOK_SECRET_TEST=secret;});
 after(()=>{globalThis.fetch=originalFetch;delete globalThis.Deno;});
 const call=(name,body,headers={})=>handlers[name](new Request('https://fixture.supabase.test/functions/v1/'+name,{method:'POST',headers:{'Content-Type':'application/json',...headers},body:JSON.stringify(body)}));
 const input={request_id:requestId,order_token:token,quantity:1,format:'physical',currency:'eur'};
+test('completed or expired Checkout returns the authenticated previous order without a second payment',async()=>{
+  for(const status of ['complete','expired']){
+    previousCheckout=status;requests=[];
+    const response=await call('create-book-checkout',input);assert.equal(response.status,409);
+    const body=await response.json();assert.equal(body.code,'checkout_closed');assert.equal(body.order_id,id);
+    assert.equal(JSON.stringify(body).includes(token),false);
+    assert.equal(requests.some(request=>request.url.includes('/bind_book_checkout')),false);
+    assert.equal(requests.filter(request=>new URL(request.url).pathname==='/v1/checkout/sessions').length,0);
+  }
+});
 const signed=(changes={},type='checkout.session.completed',time=Math.floor(Date.now()/1000))=>{
   const payload=JSON.stringify({id:'evt_fixture',type,created:time,livemode:false,data:{object:{id:'cs_test_fixture',metadata:{store:'budimse_books_v1',order_id:id,format:'physical'},currency:'eur',amount_total:1499,status:'complete',payment_status:'paid',payment_intent:'pi_fixture',...changes}}});
   return handlers['book-payment-webhook'](new Request('https://fixture.supabase.test/functions/v1/book-payment-webhook?mode=test',{method:'POST',headers:{'Stripe-Signature':signer.webhooks.generateTestHeaderString({payload,secret,timestamp:time})},body:payload}));

@@ -11,7 +11,8 @@ export const UUID = /^[a-f0-9]{8}-[a-f0-9]{4}-[1-8][a-f0-9]{3}-[89ab][a-f0-9]{3}
 
 export class BookError extends Error {
   status: number;
-  constructor(message: string, status = 400) { super(message); this.status = status; }
+  readonly orderId?: string;
+  constructor(message: string, status = 400, orderId?: string) { super(message); this.status = status; this.orderId = orderId; }
 }
 
 export function bookMode(): boolean {
@@ -113,7 +114,9 @@ export function bookEventData(event: Stripe.Event): Record<string, any> | null {
 export function bookResponse(error: unknown, headers: Record<string, string>): Response {
   const bodyError = requestBodyErrorResponse(error, headers); if (bodyError) return bodyError;
   if (error instanceof BookError && error.status === 429) return rateLimitResponse(headers);
-  if (error instanceof BookError) return Response.json({ error: error.message }, { status: error.status, headers });
+  if (error instanceof BookError) return Response.json({ error: error.message,
+    ...(error.orderId ? { code: 'checkout_closed', order_id: error.orderId } : {}),
+  }, { status: error.status, headers });
   console.error('Book operation failed', error instanceof Error ? error.name : 'UnknownError');
   return Response.json({ error: 'Операцията временно не е достъпна. Опитай отново.' }, { status: 503, headers });
 }

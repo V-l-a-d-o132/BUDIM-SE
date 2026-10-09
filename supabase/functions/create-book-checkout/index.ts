@@ -24,7 +24,7 @@ Deno.serve(async (req: Request) => {
     if (order.stripe_session_id) {
       const previous = await stripe.checkout.sessions.retrieve(order.stripe_session_id);
       if (previous.livemode !== isLive || previous.metadata?.order_id !== order.id) throw new Error('Checkout mode mismatch');
-      if (previous.status !== 'open' || !previous.url) throw new BookError('Тази платежна сесия е приключила. Провери статуса на поръчката.', 409);
+      if (previous.status !== 'open' || !previous.url) throw new BookError('Тази платежна сесия е приключила. Провери статуса на поръчката.', 409, order.id);
       return Response.json({ orderId: order.id, sessionId: previous.id, url: previous.url, orderToken: input.token, livemode: isLive }, { headers });
     }
     const origin = returnOrigin(req);
