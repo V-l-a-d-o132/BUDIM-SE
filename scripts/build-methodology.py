@@ -25,7 +25,7 @@ from reportlab.pdfbase.pdfdoc import PDFString
 from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / 'content/metodologiya-budim-se-v1.md'
+SOURCE = ROOT / 'content/metodologiya-budim-se-v2.md'
 FONT_ROOT = Path('/usr/share/fonts/truetype/dejavu')
 for name, filename in [('Body', 'DejaVuSans.ttf'), ('Bold', 'DejaVuSans-Bold.ttf'),
                        ('Title', 'DejaVuSerif.ttf')]:
@@ -105,7 +105,7 @@ def page_frame(canvas, doc):
         canvas.setFillColor(MUTED)
         canvas.setFont('Body', 8)
         canvas.drawString(MARGIN, HEIGHT - 36, 'БУДИМ СЕ  /  Методология')
-        canvas.drawRightString(WIDTH - MARGIN, HEIGHT - 36, 'Практически наръчник')
+        canvas.drawRightString(WIDTH - MARGIN, HEIGHT - 36, 'Образователна методология')
         canvas.setStrokeColor(RULE)
         canvas.setLineWidth(.5)
         canvas.line(MARGIN, HEIGHT - 46, WIDTH - MARGIN, HEIGHT - 46)
@@ -113,7 +113,7 @@ def page_frame(canvas, doc):
     canvas.line(MARGIN, 43, WIDTH - MARGIN, 43)
     canvas.setFillColor(MUTED)
     canvas.setFont('Body', 8)
-    canvas.drawString(MARGIN, 28, 'budimse.online  /  Версия 1.0')
+    canvas.drawString(MARGIN, 28, 'budimse.online  /  Версия 2.0')
     canvas.drawRightString(WIDTH - MARGIN, 28, str(doc.page))
     canvas.restoreState()
 
@@ -210,32 +210,32 @@ def cover():
         Spacer(1, 76),
         Paragraph('Методология<br/>„Будим се“', title),
         Spacer(1, 22),
-        Paragraph('Практически наръчник за медийна<br/>и дигитална грамотност', subtitle),
+        Paragraph('Медийна и дигитална грамотност<br/>Основания, учебен процес и оценяване', subtitle),
         Spacer(1, 24),
         HRFlowable(width='100%', thickness=.8, color=INK),
         Spacer(1, 18),
         Paragraph('Наблюдение • Проверка • Избор • Опит • Преглед', styles['body']),
         Spacer(1, 44),
-        Paragraph('За самостоятелна работа, класове и групи', styles['body']),
+        Paragraph('За учители, обучители и водещи на групи', styles['body']),
         Paragraph('Авторска рамка: Владимир Атанасов', styles['small']),
-        Paragraph('Версия 1.0 • 8 октомври 2026 г.', styles['small']),
+        Paragraph('Версия 2.0 • 9 октомври 2026 г.', styles['small']),
     ]
 
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--output', type=Path, default=ROOT / 'output/pdf/metodologiya-budim-se-v1.pdf')
+    parser.add_argument('--output', type=Path, default=ROOT / 'output/pdf/metodologiya-budim-se-v2.pdf')
     args = parser.parse_args()
     text = SOURCE.read_text(encoding='utf-8')
     for char in ('\u2011', '\u2013', '\u2014'):
         if char in text:
             raise ValueError('Use ASCII hyphens in the guide source.')
     pages = text.split('<!-- page -->')
-    assert len(pages) == 28, f'Expected 28 designed pages, got {len(pages)}'
+    assert len(pages) == 46, f'Expected 46 designed pages, got {len(pages)}'
     args.output.parent.mkdir(parents=True, exist_ok=True)
     doc = Guide(str(args.output), pagesize=A4, rightMargin=MARGIN, leftMargin=MARGIN,
                 topMargin=65, bottomMargin=59, pageCompression=1,
-                title='Методология „Будим се“ - практически наръчник',
+                title='Методология „Будим се“ - основания, учебен процес и оценяване',
                 author='Център БУДИМ СЕ; Владимир Атанасов',
                 subject='Медийна и дигитална грамотност: практика, занятия и работни листове',
                 keywords='медийна грамотност, дигитална грамотност, Будим се, методология')
@@ -252,9 +252,11 @@ def main():
         assert title in extracted, f'Wrong page break before page {index + 1}: {title}'
     metadata = {
         'title': 'Методология „Будим се“',
-        'version': '1.0', 'publishedAt': '2026-10-08', 'pages': len(reader.pages),
+        'version': '2.0', 'publishedAt': '2026-10-09', 'dateLabel': '9 октомври 2026 г.', 'pages': len(reader.pages),
         'bytes': args.output.stat().st_size,
-        'href': '/resources/metodologiya-budim-se-v1.pdf',
+        'href': '/resources/metodologiya-budim-se-v2.pdf',
+        'worksheetPages': '39-44', 'worksheets': 6,
+        'sections': {'caseStudy': '15-16', 'socialPosts': '20-23', 'course': '28', 'lesson': '29', 'assessment': '33-38'},
         'sha256': hashlib.sha256(args.output.read_bytes()).hexdigest(),
     }
     (ROOT / 'content/methodology-resource.json').write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n')

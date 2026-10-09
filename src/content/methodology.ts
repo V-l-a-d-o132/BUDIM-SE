@@ -2,7 +2,6 @@ import resource from '../../content/methodology-resource.json';
 
 export const methodology = {
   ...resource,
-  dateLabel: '8 октомври 2026 г.',
   sizeLabel: `${Math.ceil(resource.bytes / 1024)} KB`,
   steps: [
     { name: 'Наблюдение', question: 'Какво точно се случи? Отделяме видимото действие от собствената реакция и предположението.' },

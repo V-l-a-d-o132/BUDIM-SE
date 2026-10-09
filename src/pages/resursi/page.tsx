@@ -7,7 +7,7 @@ import { methodology } from '@/content/methodology';
 export default function ResourcesPage() {
   usePageSeo({
     title: 'Ресурси по медийна и дигитална грамотност',
-    description: 'Изтегли методологията „Будим се“: практичен наръчник с пет стъпки, примери, занятия за ученици и работни листове. PDF на български, без регистрация.',
+    description: 'Изтегли методологията „Будим се“: образователна програма с цели, казуси, шест занятия, критерии за оценяване и работни листове. PDF на български, без регистрация.',
     canonical: '/resursi',
     schemaType: 'CollectionPage',
     breadcrumbs: [{ name: 'Начало', url: '/' }, { name: 'Ресурси', url: '/resursi' }],
@@ -15,9 +15,9 @@ export default function ResourcesPage() {
       hasPart: {
         '@type': 'LearningResource', '@id': 'https://budimse.online/resursi#metodologiya',
         name: methodology.title,
-        description: 'Практически наръчник за медийна и дигитална грамотност с примери, занятия и пет работни листа.',
+        description: 'Образователна методология с цели, шест занятия, разгърнати казуси, оценяване и шест работни листа.',
         inLanguage: 'bg', version: methodology.version, datePublished: methodology.publishedAt,
-        isAccessibleForFree: true, learningResourceType: 'Практически наръчник',
+        isAccessibleForFree: true, learningResourceType: 'Образователна методология',
         author: { '@id': 'https://budimse.online/author#person' },
         publisher: { '@id': 'https://budimse.online/#organization' },
         encoding: { '@type': 'MediaObject', encodingFormat: 'application/pdf',
@@ -34,26 +34,28 @@ export default function ResourcesPage() {
       <article className="prose-content">
         <section id="metodologiya" aria-labelledby="methodology-title">
           <div className="methodology-download">
-            <p className="eyebrow">Практически наръчник · PDF</p>
+            <p className="eyebrow">Образователна методология · PDF</p>
             <h2 id="methodology-title">Методология „Будим се“</h2>
-            <p>Пет стъпки за разглеждане на дигитална ситуация: наблюдение, проверка, избор, опит и преглед. С подробни примери, занятия и листове за разпечатване.</p>
+            <p>Пет стъпки за разглеждане на дигитална ситуация: наблюдение, проверка, избор, опит и преглед. С обяснени основания, учебна програма, разгърнати казуси и критерии за оценяване.</p>
             <p className="resource-file-meta">{methodology.pages} страници · {methodology.sizeLabel} · Български<br />Версия {methodology.version} · {methodology.dateLabel}</p>
             <div className="button-row">
-              <a className="button-primary" href={methodology.href} download="metodologiya-budim-se-v1.pdf" type="application/pdf"><Download size={18} aria-hidden="true" />Изтегли наръчника</a>
+              <a className="button-primary" href={methodology.href} download={methodology.href.split('/').pop()} type="application/pdf"><Download size={18} aria-hidden="true" />Изтегли наръчника</a>
               <a className="button-secondary" href={methodology.href} target="_blank" rel="noopener noreferrer" type="application/pdf">Прегледай PDF<ArrowUpRight size={17} aria-hidden="true" /><span className="sr-only"> (в нов раздел)</span></a>
             </div>
             <p className="resource-access-note">Без регистрация. Може да се използва на хартия, без сайта и книгата.</p>
           </div>
         </section>
 
-        <section id="v-narachnika"><h2>Какво има в наръчника</h2>
+        <section id="v-narachnika"><h2>Какво включва методологията</h2>
           <ul>
-            <li>Петте стъпки, с въпроси, примери и чести затруднения.</li>
+            <li>Цели на обучението и връзка между всяка цел, задача и видим резултат.</li>
+            <li>Петте стъпки, с обяснение кога продължаваме и кога се връщаме към проверката.</li>
             <li>Проверка на новини, снимки, числа и съдържание, създадено с ИИ.</li>
             <li>Сравнение на постове за една кауза: емоция, видимост, реакции и участие.</li>
             <li>Учебна симулация с ясни правила и кратък опит за фокус.</li>
-            <li>План за 40 минути и лаборатория за два учебни часа.</li>
-            <li>Насоки за водещи, обратна връзка и пет работни листа на страници 23-27.</li>
+            <li>Основна програма от шест занятия, отделни планове за 40 и 80 минути и последваща проверка.</li>
+            <li>Критерии за оценяване, примерни отговори с разбор и план за пилотно прилагане.</li>
+            <li>Шест работни листа за разпечатване на страници {methodology.worksheetPages}.</li>
           </ul>
         </section>
 
@@ -64,9 +66,14 @@ export default function ResourcesPage() {
         </section>
 
         <section id="za-vodeshti"><h2>Откъде да започне един учител?</h2>
-          <p>Избери един казус и съответния работен лист. За първи час е подходящ примерът с училищното съобщение на страница 12 и планът на страница 18. За постове и социални мрежи започни от страници 13-15.</p>
+          <p>Започни с целите и подготовката на страници 3-8. Програмата от шест занятия е на страница {methodology.sections.course}. За отделен час използвай пакета документи на страници {methodology.sections.caseStudy} и плана на страница {methodology.sections.lesson}. Казусите за постове и видимост са на страници {methodology.sections.socialPosts}.</p>
           <p>Съобрази езика, времето и сложността с групата. Упражненията могат да се изпълнят без лични профили, лични съобщения и публично публикуване от ученици.</p>
-          <p>Авторската рамка се развива от <Link to="/author">Владимир Атанасов</Link> и център БУДИМ СЕ. Това е образователно предложение с посочени източници и ограничения; няма независимо доказан ефект като цялостна програма.</p>
+          <p>Авторската рамка се развива от <Link to="/author">Владимир Атанасов</Link> и център БУДИМ СЕ. Версия 2.0 е разработена за пилотно прилагане. Стъпва върху проучени образователни подходи; ефектът на цялата програма и трудността на задачите предстои да се проверят.</p>
+        </section>
+
+        <section id="razrabotvane"><h2>Как е разработена?</h2>
+          <p>Структурата свързва цели, учебни действия и оценяване. Използвани са ръководства на UNESCO за медийна и информационна грамотност, DigComp 3.0, подходи на IES за преподаване и оценка на програми и изследвания за странично четене.</p>
+          <p>Петте стъпки, програмата и българските казуси са авторско предложение. В документа са посочени източниците, какво подкрепят и кои решения трябва да се проверят в пилот. Оценяваме конкретна работа и оказаната помощ, без да поставяме общ етикет на участника.</p>
         </section>
 
         <section id="oshte"><h2>Още материали за подготовка</h2>
@@ -84,6 +91,7 @@ export default function ResourcesPage() {
         <a href="#v-narachnika">Съдържание</a>
         <a href="#pet-stapki">Петте стъпки</a>
         <a href="#za-vodeshti">За учители и водещи</a>
+        <a href="#razrabotvane">Основания и разработване</a>
         <a href="#oshte">Още материали</a>
       </aside>
     </div>
