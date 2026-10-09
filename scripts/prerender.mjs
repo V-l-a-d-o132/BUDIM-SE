@@ -70,7 +70,7 @@ try {
   }
   const sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + routes.map(route => {
     const article = articles.find(article => route === '/news/' + article.slug);
-    const lastmod = article ? (article.updated_at || article.created_at).slice(0, 10) : '2026-10-08';
+    const lastmod = article ? (article.updated_at || article.created_at).slice(0, 10) : ['/resursi', '/center'].includes(route) ? '2026-10-09' : '2026-10-08';
     return '  <url><loc>https://budimse.online' + escape(route) + '</loc><lastmod>' + escape(lastmod) + '</lastmod></url>';
   }).join('\n') + '\n</urlset>\n';
   await fs.writeFile(path.join(outputDir, 'sitemap.xml'), sitemap);
